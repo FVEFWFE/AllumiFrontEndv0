@@ -20,6 +20,7 @@ export async function middleware(request: NextRequest) {
     '/demo',
     '/sitemap-test',
     '/launch',
+    '/migrate-now',
   ];
 
   // Check if current path needs protection
