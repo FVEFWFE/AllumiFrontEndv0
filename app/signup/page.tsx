@@ -11,6 +11,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
+import { createClient } from '@/lib/supabase/client';
 
 const audienceSizes = [
   { 
@@ -49,6 +50,7 @@ export default function SignupPage() {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const supabase = createClient();
   
   // Form data
   const [formData, setFormData] = useState({
@@ -155,7 +157,33 @@ export default function SignupPage() {
     setLoading(true);
     
     try {
-      // Store signup data with UTM params
+      // Create the user account with Supabase
+      const { data, error: signUpError } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+        options: {
+          data: {
+            full_name: formData.fullName,
+            audience_size: formData.audienceSize,
+            ...utmParams
+          }
+        }
+      });
+
+      if (signUpError) {
+        // Handle specific error messages
+        if (signUpError.message.includes('already registered')) {
+          setErrors({ submit: 'This email is already registered. Please login instead.' });
+        } else if (signUpError.message.includes('Password')) {
+          setErrors({ submit: 'Password must be at least 6 characters long.' });
+        } else {
+          setErrors({ submit: signUpError.message || 'Failed to create account. Please try again.' });
+        }
+        setLoading(false);
+        return;
+      }
+
+      // Store signup data with UTM params for attribution
       const signupData = {
         ...formData,
         ...utmParams,
@@ -173,15 +201,22 @@ export default function SignupPage() {
           }
         });
       }
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Redirect to dashboard
-      router.push('/dashboard');
+
+      if (data?.user) {
+        // Check if email confirmation is required
+        if (data.user.confirmed_at === null) {
+          setErrors({ submit: 'Please check your email to confirm your account before signing in.' });
+          setTimeout(() => {
+            router.push('/login');
+          }, 3000);
+        } else {
+          // User is confirmed, redirect to dashboard
+          router.push('/dashboard');
+        }
+      }
     } catch (error) {
-      setErrors({ submit: 'Something went wrong. Please try again.' });
-    } finally {
+      console.error('Signup error:', error);
+      setErrors({ submit: 'An unexpected error occurred. Please try again.' });
       setLoading(false);
     }
   };

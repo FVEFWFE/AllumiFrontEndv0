@@ -6,30 +6,53 @@ import {
   ChevronRight, AlertCircle
 } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { createClient } from '@/lib/supabase/client';
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const supabase = createClient();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
 
-    // Mock authentication
-    setTimeout(() => {
-      if (email && password) {
-        router.push('/dashboard');
-      } else {
-        setError('Please enter your email and password');
+    try {
+      const { data, error: authError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (authError) {
+        // Handle specific error messages
+        if (authError.message.includes('Invalid login credentials')) {
+          setError('Invalid email or password. Please try again.');
+        } else if (authError.message.includes('Email not confirmed')) {
+          setError('Please verify your email address before signing in.');
+        } else {
+          setError(authError.message || 'Failed to sign in. Please try again.');
+        }
         setIsLoading(false);
+        return;
       }
-    }, 1000);
+
+      if (data?.user) {
+        // Redirect to the page they were trying to access, or dashboard
+        const redirectTo = searchParams.get('redirectTo') || '/dashboard';
+        router.push(redirectTo);
+      }
+    } catch (err) {
+      console.error('Login error:', err);
+      setError('An unexpected error occurred. Please try again.');
+      setIsLoading(false);
+    }
   };
 
 
