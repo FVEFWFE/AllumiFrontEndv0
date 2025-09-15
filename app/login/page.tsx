@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { 
   Sparkles, Mail, Lock, Eye, EyeOff, 
-  ChevronRight, AlertCircle, Github, Chrome
+  ChevronRight, AlertCircle
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -32,10 +32,6 @@ export default function LoginPage() {
     }, 1000);
   };
 
-  const handleSocialLogin = (provider: string) => {
-    // Mock social login
-    router.push('/dashboard');
-  };
 
   return (
     <div className="min-h-screen bg-black flex">
@@ -137,32 +133,6 @@ export default function LoginPage() {
               )}
             </button>
           </form>
-
-          <div className="relative my-8">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-800"></div>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-black text-gray-500">Or continue with</span>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            <button
-              onClick={() => handleSocialLogin('google')}
-              className="px-4 py-3 bg-gray-900 border border-gray-800 rounded-lg text-white hover:bg-gray-800 transition-colors flex items-center justify-center gap-2"
-            >
-              <Chrome className="w-5 h-5" />
-              Google
-            </button>
-            <button
-              onClick={() => handleSocialLogin('github')}
-              className="px-4 py-3 bg-gray-900 border border-gray-800 rounded-lg text-white hover:bg-gray-800 transition-colors flex items-center justify-center gap-2"
-            >
-              <Github className="w-5 h-5" />
-              GitHub
-            </button>
-          </div>
         </div>
       </div>
 
