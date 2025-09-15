@@ -1,8 +1,6 @@
-import NextForm from "next/form"
 import { Section } from "../../../common/section-wrapper"
-import { Input } from "../../../common/input"
 import { fragmentOn } from "basehub"
-import { submitNewsletter } from "./actions"
+import { NewsletterForm } from "./newsletter-form"
 
 export const newsletterFragment = fragmentOn("Newsletter", {
   title: true,
@@ -32,11 +30,7 @@ export function Newsletter({ newsletter }: { newsletter: NewsletterFragment }) {
           </p>
         </div>
 
-        <NextForm
-          action={submitNewsletter.bind(null, newsletter.submissions.ingestKey, newsletter.submissions.schema)}
-        >
-          <Input {...emailInput} />
-        </NextForm>
+        <NewsletterForm emailInput={emailInput} />
       </div>
     </Section>
   )

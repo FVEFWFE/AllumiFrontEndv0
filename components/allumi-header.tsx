@@ -5,9 +5,11 @@ import { Sparkles } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter, usePathname } from 'next/navigation';
+import { EmailCaptureModal } from './email-capture-modal';
 
 export function AllumiHeader() {
   const [user, setUser] = useState<any>(null);
+  const [emailCaptureOpen, setEmailCaptureOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
   const supabase = createClient();
@@ -116,16 +118,22 @@ export function AllumiHeader() {
               >
                 Login
               </Link>
-              <Link
-                href="/signup"
+              <button
+                onClick={() => setEmailCaptureOpen(true)}
                 className="px-4 py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 transition-colors"
               >
                 Start Free Trial
-              </Link>
+              </button>
             </>
           )}
         </div>
       </div>
+      <EmailCaptureModal
+        open={emailCaptureOpen}
+        onOpenChange={setEmailCaptureOpen}
+        title="Get Early Access to Open Beta"
+        description="Open beta is about to start. Be first to get access!"
+      />
     </header>
   );
 }

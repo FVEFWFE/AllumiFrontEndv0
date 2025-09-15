@@ -1,11 +1,13 @@
 "use client"
 
+import { useState } from "react"
 import { Hero } from "./_sections/hero"
 import { FeaturesGrid } from "./_sections/features/features-grid"
 import { TestimonialsGrid } from "./_sections/testimonials-grid"
 import { Pricing } from "./_sections/pricing"
 import { AccordionFaq } from "./_sections/accordion-faq"
 import { DemoModal } from "../components/demo-modal"
+import { EmailCaptureModal } from "../components/email-capture-modal"
 
 const scrollToPricing = () => {
   const pricingSection = document.getElementById("pricing-section")
@@ -472,31 +474,45 @@ const backstoryData = {
 const contextSection = {
   _analyticsKey: "why-attribution",
   heading: {
-    title: "Why Attribution Unlocks MRR Growth",
-    subtitle: "Every day without attribution costs you compound revenue",
+    title: "See What Actually Gets You Paying Members",
+    subtitle: "You're already losing money - even without running ads",
     align: "center" as const,
   },
   points: [
     {
-      title: "You're Losing $5K/Month Right Now",
+      title: "You're Creating The Wrong Content",
       description:
-        "Wasting $3K on ads that don't convert. Missing members who would pay for years. Creating wrong content for months. Attribution finds your hidden $10K+ immediately.",
+        "Sarah posted motivational content for 2 YEARS. Attribution revealed technical tutorials converted 8x better. Two years wasted because she couldn't see what worked.",
     },
     {
-      title: "MRR Amplifies Every Decision",
-      description: "That YouTube video bringing 10 members isn't worth $490 - it's worth $14,700 over their lifetime. But you have no idea which video it was.",
+      title: "Every Post Is Worth $0 or $10,000",
+      description: "That Reddit comment that brought 5 members? Worth $6,000 in lifetime revenue. That Instagram post you spent 3 hours on? Worth $0. But you have no idea which is which.",
     },
     {
-      title: "Break Your $5K MRR Ceiling",
+      title: "Stop Wasting Months on Dead Channels",
       description:
-        "Most communities plateau because they can't see what drives high-LTV members vs quick churners. Attribution users break through in 60 days.",
+        "You're grinding on Instagram, LinkedIn, YouTube, Twitter... What if 90% of your paying members come from ONE channel? Most creators waste 6-12 months before randomly discovering what works. Attribution shows you on day one.",
+    },
+    {
+      title: "Your Successful Posts Are Gold - But You Can't Replicate Them",
+      description:
+        "You got 10 members last month. Great! But from where? That viral Twitter thread? Your YouTube tutorial? A random Reddit comment? Without attribution, you're shooting in the dark.",
     },
   ],
 }
 
 export default function HomePage() {
+  const [emailCaptureOpen, setEmailCaptureOpen] = useState(false)
+  const [emailCaptureType, setEmailCaptureType] = useState<"demo" | "trial">("demo")
+
   return (
     <>
+      <EmailCaptureModal
+        open={emailCaptureOpen}
+        onOpenChange={setEmailCaptureOpen}
+        title="Get Early Access to Open Beta"
+        description="Open beta is about to start. Be first to get access!"
+      />
       <DemoModal>
         <div>
           <Hero
@@ -504,10 +520,12 @@ export default function HomePage() {
             eventsKey="allumi-events"
             onActionClick={(action) => {
               if (action.onClick === "demo") {
-                // Modal will handle opening
+                setEmailCaptureType("demo")
+                setEmailCaptureOpen(true)
                 return
               } else if (action.onClick === "scroll") {
-                scrollToPricing()
+                setEmailCaptureType("trial")
+                setEmailCaptureOpen(true)
               }
             }}
           />
@@ -523,7 +541,7 @@ export default function HomePage() {
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-balance">{contextSection.heading.title}</h2>
             <p className="text-lg text-muted-foreground">{contextSection.heading.subtitle}</p>
           </div>
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
             {contextSection.points.map((point, index) => (
               <div key={index} className="text-center">
                 <h3 className="text-xl font-semibold mb-4">{point.title}</h3>
