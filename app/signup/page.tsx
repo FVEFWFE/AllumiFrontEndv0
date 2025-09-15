@@ -201,7 +201,7 @@ export default function SignupPage() {
         {/* Logo */}
         <div className="relative z-10">
           <Link href="/" className="inline-block">
-            <img src="/allumi.png" alt="Allumi" className="h-10 w-auto" />
+            <img src="/allumi.png" alt="Allumi" className="h-10 w-auto brightness-0 invert" />
           </Link>
         </div>
 

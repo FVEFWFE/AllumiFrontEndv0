@@ -60,7 +60,7 @@ export function AllumiHeader() {
       <div className="container mx-auto flex h-16 items-center px-6">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 mr-8">
-          <img src="/allumi.png" alt="Allumi" className="h-10 w-auto" />
+          <img src="/allumi.png" alt="Allumi" className="h-10 w-auto brightness-0 invert" />
         </Link>
 
         {/* Nav Links - Only show when not logged in */}

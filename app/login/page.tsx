@@ -40,7 +40,7 @@ export default function LoginPage() {
         <div className="w-full max-w-md">
           {/* Logo */}
           <Link href="/" className="mb-8 inline-block">
-            <img src="/allumi.png" alt="Allumi" className="h-10 w-auto" />
+            <img src="/allumi.png" alt="Allumi" className="h-10 w-auto brightness-0 invert" />
           </Link>
 
           <div className="mb-8">
