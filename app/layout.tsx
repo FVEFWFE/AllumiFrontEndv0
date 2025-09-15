@@ -12,6 +12,8 @@ import { PlaygroundSetupModal } from "../components/playground-notification"
 import { AllumiHeader } from "@/components/allumi-header"
 import { Footer } from "@/components/footer"
 import { AttributionProvider } from "@/components/providers/attribution-provider"
+import { PHProvider, PostHogPageView } from "@/components/posthog-provider"
+import { Suspense } from "react"
 
 const geist = Geist({
   subsets: ["latin"],
@@ -133,18 +135,23 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body
         className={`min-h-svh max-w-[100vw] bg-[--surface-primary] text-[--text-primary] dark:bg-[--dark-surface-primary] dark:text-[--dark-text-primary] ${geistMono.variable} ${geist.variable} font-sans`}
       >
-        <Providers theme={settings.theme}>
-          <AttributionProvider>
-            {!isMainV0 && <Toolbar />}
-            {playgroundNotification}
-            {/* Header */}
-            <AllumiHeader />
-            <main className="min-h-[calc(100svh-var(--header-height))]">{children}</main>
-            <NewsletterWrapper newsletter={footer.newsletter} />
-            {/* Footer */}
-            <Footer footer={footer} logo={settings.logo} />
-          </AttributionProvider>
-        </Providers>
+        <PHProvider>
+          <Suspense>
+            <PostHogPageView />
+          </Suspense>
+          <Providers theme={settings.theme}>
+            <AttributionProvider>
+              {!isMainV0 && <Toolbar />}
+              {playgroundNotification}
+              {/* Header */}
+              <AllumiHeader />
+              <main className="min-h-[calc(100svh-var(--header-height))]">{children}</main>
+              <NewsletterWrapper newsletter={footer.newsletter} />
+              {/* Footer */}
+              <Footer footer={footer} logo={settings.logo} />
+            </AttributionProvider>
+          </Providers>
+        </PHProvider>
       </body>
     </html>
   )
