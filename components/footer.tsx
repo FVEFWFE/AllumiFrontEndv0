@@ -16,7 +16,7 @@ export const Footer = ({
     <footer className="border-t border-[--border] py-16 dark:border-[--dark-border]">
       <div className="container mx-auto grid grid-cols-2 grid-rows-[auto_auto] place-items-start items-center gap-y-7 px-6 sm:grid-cols-[1fr_auto_1fr] sm:grid-rows-1 sm:gap-x-3">
         <Link aria-label="Homepage" href="/">
-          <img src="/allumi-logo.svg" alt="Allumi" className="h-10 w-auto dark:brightness-0 dark:invert" />
+          <img src="/allumi.png" alt="Allumi" className="h-10 w-auto" />
         </Link>
         <nav className="col-start-1 row-start-2 flex flex-col gap-x-2 gap-y-3 self-center sm:col-span-1 sm:col-start-2 sm:row-start-1 sm:flex-row sm:items-center sm:place-self-center md:gap-x-4 lg:gap-x-8">
           {footer.navbar.items.map(({ _title, url }) => (
