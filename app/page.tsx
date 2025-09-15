@@ -67,18 +67,18 @@ const heroData = {
     {
       _id: "secondary-cta",
       href: "#",
-      label: "Watch 2-Min Demo",
-      sublabel: "(See what Skool hides from you)",
+      label: "Watch Demo",
+      sublabel: "(Coming January 2025)",
       type: "secondary" as const,
-      onClick: "demo", // Added demo action
+      onClick: "waitlist", // Trigger waitlist modal
     },
     {
       _id: "primary-cta",
-      href: "#pricing-section",
-      label: "Start Free 14-Day Trial",
-      sublabel: "(No credit card required)",
+      href: "#",
+      label: "Get Early Access",
+      sublabel: "(Join 500+ on the waitlist)",
       type: "primary" as const,
-      onClick: "scroll", // Added scroll action
+      onClick: "waitlist", // Trigger waitlist modal
     },
   ],
 }
@@ -525,6 +525,9 @@ export default function HomePage() {
                 return
               } else if (action.onClick === "scroll") {
                 setEmailCaptureType("trial")
+                setEmailCaptureOpen(true)
+              } else if (action.onClick === "waitlist") {
+                setEmailCaptureType("waitlist")
                 setEmailCaptureOpen(true)
               }
             }}
