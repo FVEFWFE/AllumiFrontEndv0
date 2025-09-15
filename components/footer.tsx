@@ -19,17 +19,18 @@ export const Footer = ({
           <img src="/allumi.png" alt="Allumi" className="h-10 w-auto brightness-0 dark:invert" />
         </Link>
         <nav className="col-start-1 row-start-2 flex flex-col gap-x-2 gap-y-3 self-center sm:col-span-1 sm:col-start-2 sm:row-start-1 sm:flex-row sm:items-center sm:place-self-center md:gap-x-4 lg:gap-x-8">
-          {footer.navbar.items.map(({ _title, url }) => (
-            <ButtonLink
-              key={_title}
-              unstyled
-              className="px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"
-              href={url ?? "#"}
-              target={isExternalLink(url) ? "_blank" : "_self"}
-            >
-              {_title}
-            </ButtonLink>
-          ))}
+          <Link
+            className="px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"
+            href="/privacy"
+          >
+            Privacy Policy
+          </Link>
+          <Link
+            className="px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"
+            href="/terms"
+          >
+            Terms of Service
+          </Link>
         </nav>
         <div className="col-start-2 row-start-1 flex items-center gap-3 self-center justify-self-end sm:col-span-1 sm:col-start-3 sm:row-start-1">
           <p className="hidden text-[--text-tertiary] dark:text-[--dark-text-tertiary] sm:block">Appearance</p>
