@@ -78,18 +78,6 @@ export function AllumiHeader() {
             >
               Pricing
             </button>
-            <Link
-              href="/blog"
-              className="text-sm font-medium text-gray-300 hover:text-white transition-colors"
-            >
-              Blog
-            </Link>
-            <Link
-              href="/sitemap-test"
-              className="text-sm font-medium text-gray-300 hover:text-white transition-colors"
-            >
-              Admin
-            </Link>
           </nav>
         )}
 

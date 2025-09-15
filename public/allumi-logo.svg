@@ -1,60 +1,42 @@
-<svg width="280" height="70" viewBox="0 0 280 70" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- allumi text in bold, modern font -->
+<svg width="320" height="80" viewBox="0 0 320 80" fill="none" xmlns="http://www.w3.org/2000/svg">
   <g fill="currentColor">
-    <!-- "a" -->
-    <path d="M25 50C12 50 5 42 5 30C5 18 12 10 25 10C32 10 37 13 40 17V12H55V50H40V45C37 48 32 50 25 50ZM28 38C33 38 37 34 37 28C37 22 33 18 28 18C23 18 19 22 19 28C19 34 23 38 28 38Z"/>
+    <!-- "a" with rounded bold style -->
+    <path d="M35 60C18 60 8 50 8 35C8 20 18 10 35 10C44 10 51 14 55 20V11H70V60H55V51C51 56 44 60 35 60ZM38 45C44 45 49 40 49 33C49 26 44 21 38 21C32 21 27 26 27 33C27 40 32 45 38 45Z"/>
     
-    <!-- first "l" -->
-    <rect x="65" y="5" width="15" height="45" rx="2"/>
-    
-    <!-- second "l" -->
-    <rect x="85" y="5" width="15" height="45" rx="2"/>
+    <!-- double "ll" -->
+    <rect x="80" y="8" width="18" height="52" rx="3"/>
+    <rect x="102" y="8" width="18" height="52" rx="3"/>
     
     <!-- "u" -->
-    <path d="M105 12H120V30C120 33 122 35 126 35C130 35 132 33 132 30V12H147V32C147 43 140 50 126 50C112 50 105 43 105 32V12Z"/>
+    <path d="M125 11H143V38C143 41 145 43 149 43C153 43 155 41 155 38V11H173V40C173 52 165 60 149 60C133 60 125 52 125 40V11Z"/>
     
-    <!-- "m" -->
-    <path d="M155 12H170V15C172 13 175 10 180 10C185 10 189 12 191 16C194 12 198 10 203 10C211 10 217 16 217 24V50H202V27C202 23 200 21 196 21C192 21 190 23 190 27V50H175V27C175 23 173 21 169 21C165 21 163 23 163 27V50H155V12Z"/>
+    <!-- "m" with rounded edges -->
+    <path d="M180 11H198V15C201 12 206 10 212 10C218 10 223 13 225 18C228 13 234 10 240 10C250 10 258 18 258 30V60H240V33C240 28 237 25 232 25C227 25 224 28 224 33V60H206V33C206 28 203 25 198 25C193 25 190 28 190 33V60H180V11Z"/>
     
-    <!-- "i" with integrated starburst -->
+    <!-- "i" with starburst dot -->
     <g>
       <!-- i body -->
-      <rect x="225" y="20" width="15" height="30" rx="2"/>
+      <rect x="265" y="25" width="18" height="35" rx="3"/>
       
-      <!-- Starburst replacing the dot -->
-      <g transform="translate(232.5, 10)">
-        <!-- Central star/dot -->
-        <circle cx="0" cy="0" r="2.5" fill="currentColor"/>
+      <!-- Starburst replacing the i dot -->
+      <g transform="translate(274, 12)">
+        <!-- Central dot -->
+        <rect x="-3" y="-3" width="6" height="6" rx="1" fill="currentColor"/>
         
-        <!-- Main rays -->
-        <path d="M0 -8 L0 -4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
-        <path d="M0 4 L0 8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
-        <path d="M-8 0 L-4 0" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
-        <path d="M4 0 L8 0" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- Horizontal and vertical rays -->
+        <rect x="-18" y="-1.5" width="12" height="3" fill="currentColor"/>
+        <rect x="6" y="-1.5" width="12" height="3" fill="currentColor"/>
+        <rect x="-1.5" y="-18" width="3" height="12" fill="currentColor"/>
+        <rect x="-1.5" y="6" width="3" height="12" fill="currentColor"/>
         
         <!-- Diagonal rays -->
-        <path d="M-5.7 -5.7 L-3 -3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <path d="M5.7 -5.7 L3 -3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <path d="M-5.7 5.7 L-3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <path d="M5.7 5.7 L3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        
-        <!-- Longer decorative rays -->
-        <path d="M0 -12 L0 -10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
-        <path d="M12 0 L10 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
-        <path d="M-8.5 -8.5 L-7 -7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
-        <path d="M8.5 -8.5 L7 -7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+        <g transform="rotate(45)">
+          <rect x="-13" y="-1" width="8" height="2" fill="currentColor"/>
+          <rect x="5" y="-1" width="8" height="2" fill="currentColor"/>
+          <rect x="-1" y="-13" width="2" height="8" fill="currentColor"/>
+          <rect x="-1" y="5" width="2" height="8" fill="currentColor"/>
+        </g>
       </g>
-    </g>
-    
-    <!-- Extended starburst rays -->
-    <g transform="translate(232.5, 10)" opacity="0.8">
-      <path d="M15 0 L18 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-      <path d="M-15 0 L-18 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-      <path d="M0 -15 L0 -18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-      <path d="M10.6 10.6 L12.7 12.7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-      <path d="M-10.6 10.6 L-12.7 12.7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-      <path d="M10.6 -10.6 L12.7 -12.7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-      <path d="M-10.6 -10.6 L-12.7 -12.7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
     </g>
   </g>
 </svg>

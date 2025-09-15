@@ -43,9 +43,8 @@ export default function LoginPage() {
       <div className="flex-1 flex items-center justify-center px-8 py-12">
         <div className="w-full max-w-md">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 mb-8">
-            <Sparkles className="w-8 h-8 text-emerald-500" />
-            <span className="text-2xl font-bold text-white">Allumi</span>
+          <Link href="/" className="mb-8 inline-block">
+            <img src="/allumi-logo.svg" alt="Allumi" className="h-10 w-auto brightness-0 invert" />
           </Link>
 
           <div className="mb-8">

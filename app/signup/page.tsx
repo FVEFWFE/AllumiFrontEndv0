@@ -200,11 +200,8 @@ export default function SignupPage() {
 
         {/* Logo */}
         <div className="relative z-10">
-          <Link href="/" className="inline-flex items-center gap-2">
-            <div className="w-10 h-10 bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-lg flex items-center justify-center">
-              <BarChart3 className="w-6 h-6 text-white" />
-            </div>
-            <span className="text-2xl font-bold text-white">Allumi</span>
+          <Link href="/" className="inline-block">
+            <img src="/allumi-logo.svg" alt="Allumi" className="h-10 w-auto brightness-0 invert" />
           </Link>
         </div>
 
