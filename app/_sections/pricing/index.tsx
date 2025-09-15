@@ -65,7 +65,7 @@ export function Pricing(pricing: Pricing) {
 
 type PricingPlanItem = fragmentOn.infer<typeof pricingPlanItemFragment>;
 
-interface PricingCardProps extends PricingPlanItem["plan"] {
+type PricingCardProps = PricingPlanItem["plan"] & {
   onGetStarted: () => void;
 }
 
