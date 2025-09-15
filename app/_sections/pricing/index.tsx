@@ -1,12 +1,15 @@
+"use client";
+
 import { CheckIcon } from "@radix-ui/react-icons";
-import { type SVGProps } from "react";
+import { type SVGProps, useState } from "react";
 import clsx from "clsx";
 
 import { Heading } from "../../../common/heading";
 import { Section } from "../../../common/section-wrapper";
-import { ButtonLink } from "../../../common/button";
+import { Button } from "../../../common/button";
 import { fragmentOn } from "basehub";
 import { headingFragment } from "../../../lib/basehub/fragments";
+import { EmailCaptureModal } from "@/components/email-capture-modal";
 
 import s from "./pricing.module.css";
 
@@ -36,23 +39,37 @@ export const pricingFragment = fragmentOn("PricingComponent", {
 type Pricing = fragmentOn.infer<typeof pricingFragment>;
 
 export function Pricing(pricing: Pricing) {
+  const [emailCaptureOpen, setEmailCaptureOpen] = useState(false);
+
   return (
-    <Section className="xl:max-w-screen-xl" id="pricing">
-      <Heading {...pricing.heading}>
-        <h4>{pricing.heading.title}</h4>
-      </Heading>
-      <div className="flex flex-col gap-5 self-stretch lg:flex-row">
-        {pricing.plans.items.map(({ plan }) => (
-          <PricingCard key={plan._title} {...plan} />
-        ))}
-      </div>
-    </Section>
+    <>
+      <Section className="xl:max-w-screen-xl" id="pricing">
+        <Heading {...pricing.heading}>
+          <h4>{pricing.heading.title}</h4>
+        </Heading>
+        <div className="flex flex-col gap-5 self-stretch lg:flex-row">
+          {pricing.plans.items.map(({ plan }) => (
+            <PricingCard key={plan._title} {...plan} onGetStarted={() => setEmailCaptureOpen(true)} />
+          ))}
+        </div>
+      </Section>
+      <EmailCaptureModal
+        open={emailCaptureOpen}
+        onOpenChange={setEmailCaptureOpen}
+        title="Get Early Access to Open Beta"
+        description="Open beta is about to start. Be first to get access!"
+      />
+    </>
   );
 }
 
 type PricingPlanItem = fragmentOn.infer<typeof pricingPlanItemFragment>;
 
-function PricingCard(item: PricingPlanItem["plan"]) {
+interface PricingCardProps extends PricingPlanItem["plan"] {
+  onGetStarted: () => void;
+}
+
+function PricingCard({ onGetStarted, ...item }: PricingCardProps) {
   return (
     <article
       key={item._title}
@@ -92,14 +109,14 @@ function PricingCard(item: PricingPlanItem["plan"]) {
         {item.isMostPopular ? (
           <Shadow className="pointer-events-none absolute left-0 top-0 h-full w-full origin-bottom scale-[2.0] text-[--accent-500]" />
         ) : null}
-        <ButtonLink
+        <Button
           className="z-10 w-full"
-          href="/sign-up"
+          onClick={onGetStarted}
           intent={item.isMostPopular ? "primary" : "secondary"}
           size="lg"
         >
           Get started
-        </ButtonLink>
+        </Button>
       </footer>
     </article>
   );
