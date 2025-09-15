@@ -1,0 +1,14 @@
+<svg width="200" height="50" viewBox="0 0 200 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <text x="10" y="35" font-family="Arial, sans-serif" font-size="36" font-weight="bold" fill="currentColor">allumi</text>
+  <g transform="translate(150, 25)">
+    <circle cx="0" cy="0" r="3" fill="currentColor"/>
+    <path d="M -15 -15 L -8 -8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    <path d="M 15 -15 L 8 -8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    <path d="M 15 15 L 8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    <path d="M -15 15 L -8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    <path d="M 0 -20 L 0 -10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    <path d="M 20 0 L 10 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    <path d="M 0 20 L 0 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    <path d="M -20 0 L -10 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  </g>
+</svg>
