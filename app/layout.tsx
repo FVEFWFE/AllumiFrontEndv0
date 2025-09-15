@@ -6,7 +6,7 @@ import { basehub } from "basehub"
 import { Toolbar } from "basehub/next-toolbar"
 import { Providers } from "./providers"
 import { footerFragment, headerFragment } from "../lib/basehub/fragments"
-import { Newsletter } from "./_sections/newsletter"
+import { NewsletterWrapper } from "@/components/newsletter-wrapper"
 import { themeFragment } from "../context/basehub-theme-provider"
 import { PlaygroundSetupModal } from "../components/playground-notification"
 import { AllumiHeader } from "@/components/allumi-header"
@@ -140,7 +140,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             {/* Header */}
             <AllumiHeader />
             <main className="min-h-[calc(100svh-var(--header-height))]">{children}</main>
-            <Newsletter newsletter={footer.newsletter} />
+            <NewsletterWrapper newsletter={footer.newsletter} />
             {/* Footer */}
             <Footer footer={footer} logo={settings.logo} />
           </AttributionProvider>
