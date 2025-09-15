@@ -5,7 +5,7 @@ import {
   TrendingUp, Users, DollarSign, Target, 
   Calendar, Download, Filter, ChevronRight,
   ArrowUpRight, ArrowDownRight, Activity,
-  BarChart3, PieChart, Globe, Zap
+  BarChart3, PieChart, Globe, Zap, Trophy
 } from 'lucide-react';
 import { 
   LineChart, Line, AreaChart, Area, BarChart, Bar,
