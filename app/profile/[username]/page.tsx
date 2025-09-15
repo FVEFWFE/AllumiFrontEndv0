@@ -60,16 +60,16 @@ export default function ProfilePage({ params }: ProfilePageProps) {
   const recentPosts = [
     {
       id: 1,
-      title: 'How Attribution Tracking 10x'd My Community Revenue',
-      excerpt: 'After implementing Allumi's attribution dashboard, I discovered that my YouTube content was driving 80% of high-value members...',
+      title: "How Attribution Tracking 10x'd My Community Revenue",
+      excerpt: "After implementing Allumi's attribution dashboard, I discovered that my YouTube content was driving 80% of high-value members...",
       likes: 234,
       comments: 45,
       date: '2 days ago'
     },
     {
       id: 2,
-      title: 'The Hidden Cost of Skool's Discovery Page',
-      excerpt: 'Lost 3 of my top members to competitors they found browsing Discovery. Here's what I learned...',
+      title: "The Hidden Cost of Skool's Discovery Page",
+      excerpt: "Lost 3 of my top members to competitors they found browsing Discovery. Here's what I learned...",
       likes: 189,
       comments: 67,
       date: '5 days ago'

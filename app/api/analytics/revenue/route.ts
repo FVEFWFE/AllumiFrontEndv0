@@ -2,13 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { requireCommunityOwner } from '@/lib/middleware/auth';
 import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
-
 // GET /api/analytics/revenue - Get revenue analytics for a community
 export async function GET(req: NextRequest) {
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
   try {
     const searchParams = req.nextUrl.searchParams;
     const communitySlug = searchParams.get('community');
