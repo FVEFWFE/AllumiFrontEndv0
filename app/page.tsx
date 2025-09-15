@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Hero } from "./_sections/hero"
 import { FeaturesGrid } from "./_sections/features/features-grid"
 import { TestimonialsGrid } from "./_sections/testimonials-grid"
@@ -67,7 +67,7 @@ const heroData = {
       _id: "secondary-cta",
       href: "#",
       label: "Watch Demo",
-      sublabel: "(Coming January 2025)",
+      sublabel: "(Coming January 2026)",
       type: "secondary" as const,
       onClick: "waitlist", // Trigger waitlist modal
     },
@@ -503,6 +503,25 @@ const contextSection = {
 export default function HomePage() {
   const [emailCaptureOpen, setEmailCaptureOpen] = useState(false)
   const [emailCaptureType, setEmailCaptureType] = useState<"demo" | "trial">("demo")
+
+  useEffect(() => {
+    // Handle hash navigation when coming from other pages
+    if (window.location.hash === '#features') {
+      setTimeout(() => {
+        const featuresSection = document.querySelector('[data-section="features"]');
+        if (featuresSection) {
+          featuresSection.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    } else if (window.location.hash === '#pricing') {
+      setTimeout(() => {
+        const pricingSection = document.getElementById('pricing-section');
+        if (pricingSection) {
+          pricingSection.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    }
+  }, []);
 
   return (
     <>

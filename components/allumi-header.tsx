@@ -35,6 +35,11 @@ export function AllumiHeader() {
 
   const scrollToFeatures = (e: React.MouseEvent) => {
     e.preventDefault();
+    // If we're on waitlist page, redirect to homepage with hash
+    if (pathname === '/waitlist' || pathname === '/waitlist-thank-you') {
+      router.push('/#features');
+      return;
+    }
     const featuresSection = document.querySelector('[data-section="features"]');
     if (featuresSection) {
       featuresSection.scrollIntoView({ behavior: 'smooth' });
@@ -43,6 +48,11 @@ export function AllumiHeader() {
 
   const scrollToPricing = (e: React.MouseEvent) => {
     e.preventDefault();
+    // If we're on waitlist page, redirect to homepage with hash
+    if (pathname === '/waitlist' || pathname === '/waitlist-thank-you') {
+      router.push('/#pricing');
+      return;
+    }
     const pricingSection = document.getElementById('pricing-section');
     if (pricingSection) {
       pricingSection.scrollIntoView({ behavior: 'smooth' });
