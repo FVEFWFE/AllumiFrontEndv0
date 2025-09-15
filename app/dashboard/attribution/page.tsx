@@ -5,7 +5,7 @@ import {
   TrendingUp, TrendingDown, DollarSign, Users, ShoppingCart, 
   Target, Filter, Download, Calendar, ExternalLink, 
   ChevronRight, Info, Settings, RefreshCw, ArrowUpRight,
-  Link2, Zap, Eye, MousePointer, UserCheck
+  Link2, Zap, Eye, MousePointer, UserCheck, Copy
 } from 'lucide-react';
 import { 
   LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, 
