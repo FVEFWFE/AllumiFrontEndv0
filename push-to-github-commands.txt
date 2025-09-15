@@ -1,0 +1,21 @@
+# Push to GitHub - Commands to Run
+
+## After creating your GitHub repository, run these commands:
+
+# Replace YOUR_GITHUB_USERNAME with your actual GitHub username
+git remote add origin https://github.com/YOUR_GITHUB_USERNAME/AllumiFrontEndv0.git
+
+# Push all commits to GitHub
+git push -u origin master
+
+## Alternative if using GitHub CLI:
+# This will create the repo and push in one command
+gh repo create AllumiFrontEndv0 --private --source=. --push
+
+## Your latest commit includes:
+- Email capture modal for demo/trial buttons
+- Waitlist thank you page
+- MailerLite integration with local fallback
+- Footer newsletter feedback
+- Open Beta messaging clarification
+- Simplified signup (removed name field)
