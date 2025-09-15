@@ -6,7 +6,6 @@ import { FeaturesGrid } from "./_sections/features/features-grid"
 import { TestimonialsGrid } from "./_sections/testimonials-grid"
 import { Pricing } from "./_sections/pricing"
 import { AccordionFaq } from "./_sections/accordion-faq"
-import { DemoModal } from "../components/demo-modal"
 import { EmailCaptureModal } from "../components/email-capture-modal"
 
 const scrollToPricing = () => {
@@ -513,27 +512,25 @@ export default function HomePage() {
         title="Get Early Access to Open Beta"
         description="Open beta is about to start. Be first to get access!"
       />
-      <DemoModal>
-        <div>
-          <Hero
-            {...heroData}
-            eventsKey="allumi-events"
-            onActionClick={(action) => {
-              if (action.onClick === "demo") {
-                setEmailCaptureType("demo")
-                setEmailCaptureOpen(true)
-                return
-              } else if (action.onClick === "scroll") {
-                setEmailCaptureType("trial")
-                setEmailCaptureOpen(true)
-              } else if (action.onClick === "waitlist") {
-                setEmailCaptureType("waitlist")
-                setEmailCaptureOpen(true)
-              }
-            }}
-          />
-        </div>
-      </DemoModal>
+      <div>
+        <Hero
+          {...heroData}
+          eventsKey="allumi-events"
+          onActionClick={(action) => {
+            if (action.onClick === "demo") {
+              setEmailCaptureType("demo")
+              setEmailCaptureOpen(true)
+              return
+            } else if (action.onClick === "scroll") {
+              setEmailCaptureType("trial")
+              setEmailCaptureOpen(true)
+            } else if (action.onClick === "waitlist") {
+              setEmailCaptureType("waitlist")
+              setEmailCaptureOpen(true)
+            }
+          }}
+        />
+      </div>
       <div data-section="features">
         <FeaturesGrid {...featuresData} eventsKey="allumi-events" />
       </div>
