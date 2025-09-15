@@ -3,16 +3,8 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
-
-// Whop webhook secret for signature verification
-const webhookSecret = process.env.WHOP_WEBHOOK_SECRET!;
-
 // Verify Whop webhook signature
-function verifyWhopSignature(payload: string, signature: string): boolean {
+function verifyWhopSignature(payload: string, signature: string, webhookSecret: string): boolean {
   const expectedSignature = crypto
     .createHmac('sha256', webhookSecret)
     .update(payload)
@@ -25,6 +17,13 @@ function verifyWhopSignature(payload: string, signature: string): boolean {
 }
 
 export async function POST(req: Request) {
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+
+  // Whop webhook secret for signature verification
+  const webhookSecret = process.env.WHOP_WEBHOOK_SECRET!;
   const body = await req.text();
   const signature = headers().get('x-whop-signature');
 
@@ -36,7 +35,7 @@ export async function POST(req: Request) {
   }
 
   // Verify webhook signature
-  if (!verifyWhopSignature(body, signature)) {
+  if (!verifyWhopSignature(body, signature, webhookSecret)) {
     return NextResponse.json(
       { error: 'Invalid signature' },
       { status: 401 }
