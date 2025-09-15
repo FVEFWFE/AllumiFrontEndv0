@@ -162,12 +162,12 @@ const testimonialsData = {
       quote:
         "I was worried about losing Skool's features. Turns out Allumi has everything - courses, community, gamification - PLUS I can finally see what drives revenue. Saving $600/year is just a bonus.",
       author: {
-        _title: "Sarah Chen",
+        _title: "Emily Thompson",
         role: "Community Owner",
         company: { _title: "The Smooth Switcher" },
         image: {
           url: "https://i.pravatar.cc/150?img=10",
-          alt: "Sarah Chen",
+          alt: "Emily Thompson",
         },
       },
     },
@@ -176,12 +176,12 @@ const testimonialsData = {
       quote:
         "Thought cheaper meant fewer features. Wrong. Same course builder, same discussions, same events. But with attribution showing my YouTube drives 10x more than Instagram. Game changer.",
       author: {
-        _title: "Marcus Rodriguez",
+        _title: "Michael Anderson",
         role: "Community Owner",
         company: { _title: "The Feature Skeptic" },
         image: {
           url: "https://i.pravatar.cc/150?img=11",
-          alt: "Marcus Rodriguez",
+          alt: "Michael Anderson",
         },
       },
     },
@@ -190,12 +190,12 @@ const testimonialsData = {
       quote:
         "Run 500+ members with courses, events, and heavy gamification. Everything transferred perfectly. Now I see which course modules drive upgrades. Why doesn't Skool show this?",
       author: {
-        _title: "Jennifer Park",
+        _title: "Sophie Laurent",
         role: "Community Owner",
         company: { _title: "The Power User" },
         image: {
           url: "https://i.pravatar.cc/150?img=12",
-          alt: "Jennifer Park",
+          alt: "Sophie Laurent",
         },
       },
     },
@@ -204,12 +204,12 @@ const testimonialsData = {
       quote:
         "The Discovery page was killing me. Members would join, browse other communities, and leave. Now they focus on MY content. Revenue up 40% since switching.",
       author: {
-        _title: "David Kim",
+        _title: "James Mitchell",
         role: "Coach",
         company: { _title: "Focus Academy" },
         image: {
           url: "https://i.pravatar.cc/150?img=13",
-          alt: "David Kim",
+          alt: "James Mitchell",
         },
       },
     },
@@ -218,12 +218,12 @@ const testimonialsData = {
       quote:
         "Attribution dashboard shows my podcast drives 3x more lifetime value than social media. This data alone pays for the platform. Wish I'd switched sooner.",
       author: {
-        _title: "Lisa Thompson",
+        _title: "Anna Bergström",
         role: "Host",
         company: { _title: "Revenue Insights Podcast" },
         image: {
           url: "https://i.pravatar.cc/150?img=14",
-          alt: "Lisa Thompson",
+          alt: "Anna Bergström",
         },
       },
     },
@@ -232,12 +232,12 @@ const testimonialsData = {
       quote:
         "Same gamification system, same course structure, same everything - but members aren't distracted by competitors. Engagement up 60% since migration.",
       author: {
-        _title: "Alex Johnson",
+        _title: "Thomas Mueller",
         role: "Founder",
         company: { _title: "Engagement Masters" },
         image: {
           url: "https://i.pravatar.cc/150?img=15",
-          alt: "Alex Johnson",
+          alt: "Thomas Mueller",
         },
       },
     },

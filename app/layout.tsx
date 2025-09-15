@@ -158,5 +158,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 }
 
 export const metadata = {
+  title: "Allumi: Illuminate Your Empire",
+  description: "The only community platform with full attribution tracking. Know exactly where every member and dollar comes from.",
+  icons: {
+    icon: "/favicon.png",
+    shortcut: "/favicon.png",
+    apple: "/favicon.png",
+  },
   generator: "v0.dev",
 }
