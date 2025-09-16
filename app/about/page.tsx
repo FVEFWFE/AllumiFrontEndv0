@@ -10,21 +10,23 @@ export default function AboutPage() {
     <div className="min-h-screen bg-background py-16">
       <div className="container mx-auto px-4 max-w-6xl">
         {/* LaserFlow effect above the story box */}
-        <div className="relative h-48 mb-8 rounded-xl overflow-hidden">
-          <LaserFlow 
-            horizontalSizing={1.83}
-            verticalSizing={3.6}
-            wispDensity={1.8}
-            wispSpeed={15}
-            wispIntensity={5.3}
-            flowSpeed={0.47}
-            flowStrength={0.25}
-            fogIntensity={0.45}
-            fogScale={0.3}
-            fogFallSpeed={0.6}
-            decay={1.23}
-            falloffStart={1.2}
-          />
+        <div className="relative h-64 -mb-32 flex justify-center">
+          <div className="w-96">
+            <LaserFlow 
+              horizontalSizing={1.83}
+              verticalSizing={4.5}
+              wispDensity={1.8}
+              wispSpeed={15}
+              wispIntensity={5.3}
+              flowSpeed={0.47}
+              flowStrength={0.25}
+              fogIntensity={0.45}
+              fogScale={0.3}
+              fogFallSpeed={0.6}
+              decay={1.23}
+              falloffStart={1.2}
+            />
+          </div>
         </div>
         
         {/* Story content in a box */}

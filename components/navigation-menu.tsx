@@ -202,7 +202,7 @@ export function DesktopCTAs({ rightCtas, onCtaClick }: Pick<HeaderFragment, 'rig
               }}
               color="cyan"
               speed="5s"
-              className="no-underline cursor-pointer"
+              className="no-underline cursor-pointer cursor-target"
             >
               {cta.label}
             </StarBorder>
