@@ -2,11 +2,15 @@
 
 import Image from "next/image"
 import Link from "next/link"
+import LaserFlow from "../../components/LaserFlow"
 import "./about.css"
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-background py-16">
+    <div className="min-h-screen bg-background py-16 relative overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none opacity-30">
+        <LaserFlow />
+      </div>
       <div className="container mx-auto px-4 max-w-4xl">
         {/* Header */}
         <div className="mb-12 text-center">
@@ -136,7 +140,7 @@ export default function AboutPage() {
         </div>
 
         {/* CTA Button */}
-        <div className="mt-8 mb-4 text-center">
+        <div className="mt-8 mb-2 text-center">
           <Link
             href="/#pricing-section"
             className="inline-block px-8 py-4 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors"
