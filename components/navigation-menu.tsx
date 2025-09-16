@@ -310,7 +310,22 @@ export function MobileMenu({ navbar, rightCtas, onCtaClick }: HeaderFragment & {
                 </Link>
               </nav>
               <div className="flex items-center justify-start gap-2">
-                {rightCtas.items.map((cta) => {
+                {rightCtas.items.map((cta, index) => {
+                  // Make "Get Started Today" button open popup
+                  if (index === 0 && cta.label === "Get Started Today") {
+                    return (
+                      <button
+                        key={cta._id}
+                        onClick={() => {
+                          onCtaClick?.()
+                          handleOff()
+                        }}
+                        className={$button({ intent: cta.type, size: "lg", className: "w-full" })}
+                      >
+                        {cta.label}
+                      </button>
+                    )
+                  }
                   return (
                     <ButtonLink key={cta._id} href={cta.href} intent={cta.type} size="lg">
                       {cta.label}

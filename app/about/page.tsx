@@ -7,9 +7,9 @@ import "./about.css"
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden">
-      {/* LaserFlow on the right side */}
-      <div className="absolute right-0 top-0 w-[50%] h-full pointer-events-none opacity-60">
+    <div className="min-h-screen bg-background relative">
+      {/* LaserFlow on the right side - fixed positioning to ensure full height */}
+      <div className="fixed right-0 top-0 w-[50%] h-screen pointer-events-none opacity-60 z-0">
         <LaserFlow 
           horizontalSizing={0.77}
           verticalSizing={2}
