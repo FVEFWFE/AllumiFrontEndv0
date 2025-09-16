@@ -7,9 +7,9 @@ import "./about.css"
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-background relative">
-      {/* LaserFlow fixed to viewport - doesn't scroll */}
-      <div className="fixed right-0 bottom-0 w-[50%] h-screen pointer-events-none opacity-60 z-0">
+    <>
+      {/* LaserFlow truly fixed to viewport outside of scrollable content */}
+      <div className="fixed inset-y-0 right-0 w-[50%] pointer-events-none opacity-60 z-0">
         <LaserFlow 
           horizontalSizing={1.83}
           verticalSizing={3.6}
@@ -25,7 +25,8 @@ export default function AboutPage() {
           falloffStart={1.2}
         />
       </div>
-      <div className="container mx-auto px-4 max-w-4xl relative z-10 py-16">
+      <div className="min-h-screen bg-background relative">
+        <div className="container mx-auto px-4 max-w-4xl relative z-10 py-16">
         {/* Header */}
         <div className="mb-12 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">The Long Road to Attribution</h1>
@@ -151,7 +152,8 @@ export default function AboutPage() {
             Start Your 14-Day Free Trial
           </Link>
         </div>
+        </div>
       </div>
-    </div>
+    </>
   )
 }

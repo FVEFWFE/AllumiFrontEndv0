@@ -195,7 +195,11 @@ export function DesktopCTAs({ rightCtas, onCtaClick }: Pick<HeaderFragment, 'rig
             <StarBorder 
               key={cta._id} 
               as="button"
-              onClick={() => onCtaClick?.()}
+              type="button"
+              onClick={() => {
+                console.log('Header CTA clicked');
+                onCtaClick?.();
+              }}
               color="cyan"
               speed="5s"
               className="no-underline cursor-pointer"
