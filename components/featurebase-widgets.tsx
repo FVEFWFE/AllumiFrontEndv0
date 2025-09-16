@@ -22,7 +22,7 @@ export function FeaturebaseWidgets() {
 
     // Initialize feedback widget (for bug reports and feature requests)
     win.Featurebase("initialize_feedback_widget", {
-      organization: "janjegen", // Using your Featurebase organization subdomain
+      organization: "allumi", // Using your Featurebase organization subdomain
       theme: "light",
       placement: null, // No floating button, we'll use custom buttons
       locale: "en",
@@ -43,7 +43,7 @@ export function FeaturebaseWidgets() {
       
       // Update feedback widget theme
       win.Featurebase("initialize_feedback_widget", {
-        organization: "janjegen",
+        organization: "allumi",
         theme: theme,
         placement: null,
         locale: "en",

@@ -185,7 +185,7 @@ export function DesktopNavigation({ navbar }: Pick<HeaderFragment, 'navbar'>) {
   return <NavigationMenuHeader className="hidden lg:flex" links={navbar.items} />
 }
 
-export function DesktopCTAs({ rightCtas }: Pick<HeaderFragment, 'rightCtas'>) {
+export function DesktopCTAs({ rightCtas, onCtaClick }: Pick<HeaderFragment, 'rightCtas'> & { onCtaClick?: () => void }) {
   return (
     <div className="hidden lg:flex items-center gap-2">
       {rightCtas.items.map((cta, index) => {
@@ -194,11 +194,11 @@ export function DesktopCTAs({ rightCtas }: Pick<HeaderFragment, 'rightCtas'>) {
           return (
             <StarBorder 
               key={cta._id} 
-              as="a"
-              href={cta.href}
+              as="button"
+              onClick={() => onCtaClick?.()}
               color="cyan"
               speed="5s"
-              className="no-underline"
+              className="no-underline cursor-pointer"
             >
               {cta.label}
             </StarBorder>
@@ -228,7 +228,7 @@ export function DesktopMenu({ navbar, rightCtas }: HeaderFragment) {
 /*                                   Mobile                                   */
 /* -------------------------------------------------------------------------- */
 
-export function MobileMenu({ navbar, rightCtas }: HeaderFragment) {
+export function MobileMenu({ navbar, rightCtas, onCtaClick }: HeaderFragment & { onCtaClick?: () => void }) {
   const { handleToggle, isOn, handleOff } = useToggleState()
 
   const handleMobileClick = (href: string, title?: string) => {

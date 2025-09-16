@@ -9,10 +9,10 @@ import { footerFragment, headerFragment } from "../lib/basehub/fragments"
 import { NewsletterMailerLite } from "./_sections/newsletter/newsletter-mailerlite"
 import { themeFragment } from "../context/basehub-theme-provider"
 import { PlaygroundSetupModal } from "../components/playground-notification"
-import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { FeaturebaseWidgets } from "@/components/featurebase-widgets"
 import { PHProvider, PostHogPageview } from "@/components/posthog-provider"
+import { ClientLayout } from "@/components/layout-client"
 
 const geist = Geist({
   subsets: ["latin"],
@@ -138,12 +138,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <Providers theme={settings.theme}>
             <PostHogPageview />
             <FeaturebaseWidgets />
-            {/* Header */}
-            <Header logo={settings.logo} header={header} />
-            <main>{children}</main>
-          <NewsletterMailerLite />
-          {/* Footer */}
-          <Footer footer={footer} logo={settings.logo} />
+            <ClientLayout logo={settings.logo} header={header}>
+              <main>{children}</main>
+              <NewsletterMailerLite />
+              {/* Footer */}
+              <Footer footer={footer} logo={settings.logo} />
+            </ClientLayout>
           </Providers>
         </PHProvider>
       </body>

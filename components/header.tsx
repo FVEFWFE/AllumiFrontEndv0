@@ -8,9 +8,11 @@ import Image from "next/image"
 export const Header = ({
   logo,
   header,
+  onCtaClick,
 }: {
   logo: DarkLightImageFragment
   header: HeaderFragment
+  onCtaClick?: () => void
 }) => {
   return (
     <header className="sticky left-0 top-0 z-[110] flex w-full flex-col border-b border-[--border] bg-[--surface-primary] dark:border-[--dark-border] dark:bg-[--dark-surface-primary]">
@@ -37,8 +39,8 @@ export const Header = ({
             </Link>
             <DesktopNavigation navbar={header.navbar} />
           </div>
-          <DesktopCTAs rightCtas={header.rightCtas} />
-          <MobileMenu {...header} />
+          <DesktopCTAs rightCtas={header.rightCtas} onCtaClick={onCtaClick} />
+          <MobileMenu {...header} onCtaClick={onCtaClick} />
         </div>
       </div>
     </header>
