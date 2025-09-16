@@ -1,4 +1,13 @@
 import { BaseHubImage } from "basehub/next-image";
+import { 
+  TrendingUp, 
+  Flame, 
+  Clock, 
+  Search, 
+  Rocket, 
+  Bell,
+  LucideIcon
+} from "lucide-react";
 
 import { Heading } from "../../../../common/heading";
 import { Section } from "../../../../common/section-wrapper";
@@ -26,6 +35,15 @@ export const featuresGridFragment = fragmentOn("FeaturesGridComponent", {
 
 type FeaturesGrid = fragmentOn.infer<typeof featuresGridFragment>;
 
+const iconMap: Record<string, LucideIcon> = {
+  "chart-line": TrendingUp,
+  "flame": Flame,
+  "clock": Clock,
+  "search": Search,
+  "rocket": Rocket,
+  "bell": Bell,
+};
+
 export function FeaturesGrid({
   heading,
   featuresGridList,
@@ -38,28 +56,39 @@ export function FeaturesGrid({
         <h4>{heading.title}</h4>
       </Heading>
       <div className="grid w-full grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-5">
-        {featuresGridList.items.map(({ _id, _title, description, icon }) => (
-          <article
-            key={_id}
-            className="flex flex-col gap-4 rounded-lg border border-[--border] p-4 [box-shadow:_70px_-20px_130px_0px_rgba(255,255,255,0.05)_inset] dark:border-[--dark-border] dark:[box-shadow:_70px_-20px_130px_0px_rgba(255,255,255,0.05)_inset]"
-          >
-            <figure className="flex size-9 items-center justify-center rounded-full border border-[--border] bg-[--surface-secondary] p-2 dark:border-[--dark-border] dark:bg-[--dark-surface-secondary]">
-              <BaseHubImage
-                alt={icon.alt ?? _title}
-                className="dark:invert"
-                height={18}
-                src={icon.url}
-                width={18}
-              />
-            </figure>
-            <div className="flex flex-col items-start gap-1">
-              <h5 className="text-lg font-medium">{_title}</h5>
-              <p className="text-pretty text-[--text-secondary] dark:text-[--dark-text-secondary]">
-                {description}
-              </p>
-            </div>
-          </article>
-        ))}
+        {featuresGridList.items.map(({ _id, _title, description, icon }) => {
+          const IconComponent = typeof icon === 'string' ? iconMap[icon] : null;
+          const hasImageIcon = icon && typeof icon === 'object' && icon.url;
+          
+          return (
+            <article
+              key={_id}
+              className="flex flex-col gap-4 rounded-lg border border-[--border] p-4 [box-shadow:_70px_-20px_130px_0px_rgba(255,255,255,0.05)_inset] dark:border-[--dark-border] dark:[box-shadow:_70px_-20px_130px_0px_rgba(255,255,255,0.05)_inset]"
+            >
+              {(IconComponent || hasImageIcon) && (
+                <figure className="flex size-9 items-center justify-center rounded-full border border-[--border] bg-[--surface-secondary] p-2 dark:border-[--dark-border] dark:bg-[--dark-surface-secondary]">
+                  {IconComponent ? (
+                    <IconComponent className="size-[18px] text-[--text-primary] dark:text-[--dark-text-primary]" />
+                  ) : hasImageIcon ? (
+                    <BaseHubImage
+                      alt={icon.alt ?? _title}
+                      className="dark:invert"
+                      height={18}
+                      src={icon.url}
+                      width={18}
+                    />
+                  ) : null}
+                </figure>
+              )}
+              <div className="flex flex-col items-start gap-1">
+                <h5 className="text-lg font-medium">{_title}</h5>
+                <p className="text-pretty text-[--text-secondary] dark:text-[--dark-text-secondary]">
+                  {description}
+                </p>
+              </div>
+            </article>
+          );
+        })}
       </div>
       <div className="flex items-center justify-center gap-3 md:order-3">
         {actions?.map((action) => (

@@ -1,12 +1,12 @@
 "use client"
 
-import { useState, useEffect } from "react"
 import { Hero } from "./_sections/hero"
+import { Companies } from "./_sections/companies"
 import { FeaturesGrid } from "./_sections/features/features-grid"
 import { TestimonialsGrid } from "./_sections/testimonials-grid"
 import { Pricing } from "./_sections/pricing"
 import { AccordionFaq } from "./_sections/accordion-faq"
-import { EmailCaptureModal } from "../components/email-capture-modal"
+import { DemoModal } from "../components/demo-modal"
 
 const scrollToPricing = () => {
   const pricingSection = document.getElementById("pricing-section")
@@ -15,136 +15,103 @@ const scrollToPricing = () => {
   }
 }
 
-// Mock data for Allumi landing page
 const heroData = {
   _analyticsKey: "allumi-hero",
-  tagline: "Illuminate Your Empire™",
+  tagline: "Attribution for Skool Communities",
   customerSatisfactionBanner: {
-    text: "Join 500+ community builders who own their empire",
+    text: "Join 50 beta users tracking what drives revenue",
     avatars: {
-      items: [
-        {
-          _id: "1",
-          avatar: {
-            url: "https://i.pravatar.cc/150?img=1",
-            alt: "Creator 1",
-            width: 40,
-            height: 40,
-            aspectRatio: 1,
-            blurDataURL: "",
-          },
-        },
-        {
-          _id: "2",
-          avatar: {
-            url: "https://i.pravatar.cc/150?img=2",
-            alt: "Creator 2",
-            width: 40,
-            height: 40,
-            aspectRatio: 1,
-            blurDataURL: "",
-          },
-        },
-        {
-          _id: "3",
-          avatar: {
-            url: "https://i.pravatar.cc/150?img=3",
-            alt: "Creator 3",
-            width: 40,
-            height: 40,
-            aspectRatio: 1,
-            blurDataURL: "",
-          },
-        },
-      ],
+      items: [],
     },
   },
-  title: "Stop Renting in Skool's Mall. Build Your Own Empire.",
+  title: "Get Skool Members Who Pay and Stay - FASTER... Without Burning Time & Cash on Dead Channels",
   subtitle:
-    "Everything Skool has, plus see exactly where every paying member came from - for half the price. Track any source - posts, ads, podcasts, YouTube. First-click attribution included. While saving $120-$480+/year vs Skool.",
+    "Half your marketing is working. Too bad you don't know which half. Track what drives members who pay and stay.",
   actions: [
     {
       _id: "secondary-cta",
       href: "#",
-      label: "Watch Demo",
-      sublabel: "(Coming January 2026)",
+      label: "Watch 2-Min Demo",
+      sublabel: "",
       type: "secondary" as const,
-      onClick: "waitlist", // Trigger waitlist modal
+      onClick: "demo",
     },
     {
       _id: "primary-cta",
-      href: "#",
-      label: "Get Early Access",
-      sublabel: "(Join 500+ on the waitlist)",
+      href: "#pricing-section",
+      label: "Start Free 14-Day Trial",
+      sublabel: "",
       type: "primary" as const,
-      onClick: "waitlist", // Trigger waitlist modal
+      onClick: "scroll",
     },
   ],
+}
+
+const companiesData = {
+  subtitle: "Trusted by Skool community owners who track what works",
+  companies: [],
 }
 
 const featuresData = {
   _analyticsKey: "allumi-features",
   heading: {
-    title: "Everything Skool Has, Plus What They'll Never Give You",
-    subtitle: "We didn't just match Skool's features - we kept everything you love and added what they won't.",
+    title: "Stop Guessing. Start Growing.",
+    subtitle: "See exactly what drives revenue in your Skool community with simple setup and powerful insights.",
     align: "center" as const,
   },
   featuresGridList: {
     items: [
       {
         _id: "attribution",
-        _title: "Member Attribution Dashboard",
+        _title: "See What Drives Revenue",
         description:
-          "Our secret weapon. See exactly which content, ads, and sources drive paying members. Track lifetime value by channel. Know your CAC and ROAS. Skool shows total revenue - we show what created it.",
-        icon: { url: "/icons/chart.svg", alt: "Attribution Dashboard" },
+          "Track which content, ads, and sources drive paying members. See conversion rates, LTV by channel, and which sources bring buyers vs browsers.",
+        icon: "chart-line",
       },
       {
-        _id: "domain",
-        _title: "Your Custom Domain",
-        description:
-          "yourdomain.com builds YOUR brand equity, not Skool's. Every ad dollar strengthens your authority.",
-        icon: { url: "/icons/globe.svg", alt: "Custom Domain Setup" },
+        _id: "stop-waste",
+        _title: "Stop Burning Money on What Doesn't Work",
+        description: "Finally see which content/ads bring members who pay and stay vs freeloaders who never convert. Cut the waste, scale the winners.",
+        icon: "flame",
       },
       {
-        _id: "courses",
-        _title: "Courses & Classroom",
+        _id: "quick-setup",
+        _title: "5 Minutes to Attribution (Not 5 Days)",
         description:
-          "Modules, lessons, drip content, progress tracking - identical to Skool's system you already know.",
-        icon: { url: "/icons/book.svg", alt: "Courses Dashboard" },
+          "Connect Zapier, paste template, see data flowing. No developers, no complexity, no excuses. Easier than creating a Skool course.",
+        icon: "clock",
       },
       {
-        _id: "community",
-        _title: "Community & Discussions",
-        description:
-          "Real-time discussions, categories, comments - same interface, but no Discovery page showing competitors.",
-        icon: { url: "/icons/users.svg", alt: "Community Interface" },
+        _id: "hidden-revenue",
+        _title: "Find Your Hidden Revenue Source",
+        description: "Discover that one content/ad type driving 40% of revenue you didn't know about. Track members who stay 6+ months vs 2-week churners.",
+        icon: "search",
       },
       {
-        _id: "events",
-        _title: "Events & Calendar",
-        description:
-          "Timezone support, RSVP, livestream integration - all happening on YOUR domain, building YOUR authority.",
-        icon: { url: "/icons/calendar.svg", alt: "Events Calendar" },
+        _id: "profitable-ads",
+        _title: "Launch Profitable Ads Tomorrow",
+        description: "Know exactly which content/ads convert at 35%+. Turn organic winners into paid scaling machines. Stop guessing, start growing.",
+        icon: "rocket",
       },
       {
-        _id: "gamification",
-        _title: "Gamification (9 Levels)",
-        description: "Points, levels, leaderboards - same system, but tied to your brand equity, not theirs.",
-        icon: { url: "/icons/trophy.svg", alt: "Gamification System" },
+        _id: "real-time-alerts",
+        _title: "Know the Moment Something Works (Real-Time Alerts)",
+        description: "Get notified instantly when a new source starts converting at 30%+. Never miss a scaling opportunity or let a winning campaign run out of budget. Set custom alerts for CAC thresholds, conversion spikes, or quality drops.",
+        icon: "bell",
       },
     ],
   },
   actions: [
     {
       _id: "features-cta",
-      href: "/migrate-now",
-      label: "Migrate Everything in 48 Hours",
+      href: "#pricing-section",
+      label: "Start Tracking Revenue",
       type: "primary" as const,
     },
     {
-      _id: "create-new-cta",
-      href: "/create-community",
-      label: "Create a New Community",
+      _id: "demo-cta",
+      href: "#",
+      label: "Watch Demo",
       type: "secondary" as const,
     },
   ],
@@ -152,93 +119,42 @@ const featuresData = {
 
 const testimonialsData = {
   heading: {
-    title: "What Community Builders Say About Making the Switch",
-    subtitle: "Real feedback from community owners who chose ownership over renting",
+    title: "What Community Builders Say About Attribution Tracking",
+    subtitle: "Real feedback from Skool community owners who discovered what drives revenue",
     align: "center" as const,
   },
   quotes: [
     {
       _id: "testimonial-1",
       quote:
-        "I was worried about losing Skool's features. Turns out Allumi has everything - courses, community, gamification - PLUS I can finally see what drives revenue. Saving $600/year is just a bonus.",
+        "Spent 18 months grinding organic. Attribution showed one Reddit style converted at 40%. Put $2K/month ads behind it. Went from $5K → $25K MRR in 60 days.",
       author: {
-        _title: "Emily Thompson",
+        _title: "Marcus R.",
         role: "Community Owner",
-        company: { _title: "The Smooth Switcher" },
-        image: {
-          url: "https://i.pravatar.cc/150?img=10",
-          alt: "Emily Thompson",
-        },
+        company: { _title: "Growth Accelerated" },
+        image: null,
       },
     },
     {
       _id: "testimonial-2",
       quote:
-        "Thought cheaper meant fewer features. Wrong. Same course builder, same discussions, same events. But with attribution showing my YouTube drives 10x more than Instagram. Game changer.",
+        "Posted motivational content for 2 YEARS. Attribution revealed technical tutorials converted 8x better. Complete game-changer.",
       author: {
-        _title: "Michael Anderson",
+        _title: "Sarah C.",
         role: "Community Owner",
-        company: { _title: "The Feature Skeptic" },
-        image: {
-          url: "https://i.pravatar.cc/150?img=11",
-          alt: "Michael Anderson",
-        },
+        company: { _title: "Content Pivot Success" },
+        image: null,
       },
     },
     {
       _id: "testimonial-3",
       quote:
-        "Run 500+ members with courses, events, and heavy gamification. Everything transferred perfectly. Now I see which course modules drive upgrades. Why doesn't Skool show this?",
+        "I was spending $4K/month on Instagram ads with terrible ROI. Attribution showed YouTube drove 90% of my revenue. Saved $48K/year by focusing on what actually works.",
       author: {
-        _title: "Sophie Laurent",
+        _title: "David M.",
         role: "Community Owner",
-        company: { _title: "The Power User" },
-        image: {
-          url: "https://i.pravatar.cc/150?img=12",
-          alt: "Sophie Laurent",
-        },
-      },
-    },
-    {
-      _id: "testimonial-4",
-      quote:
-        "The Discovery page was killing me. Members would join, browse other communities, and leave. Now they focus on MY content. Revenue up 40% since switching.",
-      author: {
-        _title: "James Mitchell",
-        role: "Coach",
-        company: { _title: "Focus Academy" },
-        image: {
-          url: "https://i.pravatar.cc/150?img=13",
-          alt: "James Mitchell",
-        },
-      },
-    },
-    {
-      _id: "testimonial-5",
-      quote:
-        "Attribution dashboard shows my podcast drives 3x more lifetime value than social media. This data alone pays for the platform. Wish I'd switched sooner.",
-      author: {
-        _title: "Anna Bergström",
-        role: "Host",
-        company: { _title: "Revenue Insights Podcast" },
-        image: {
-          url: "https://i.pravatar.cc/150?img=14",
-          alt: "Anna Bergström",
-        },
-      },
-    },
-    {
-      _id: "testimonial-6",
-      quote:
-        "Same gamification system, same course structure, same everything - but members aren't distracted by competitors. Engagement up 60% since migration.",
-      author: {
-        _title: "Thomas Mueller",
-        role: "Founder",
-        company: { _title: "Engagement Masters" },
-        image: {
-          url: "https://i.pravatar.cc/150?img=15",
-          alt: "Thomas Mueller",
-        },
+        company: { _title: "Scale Smart" },
+        image: null,
       },
     },
   ],
@@ -246,115 +162,92 @@ const testimonialsData = {
 
 const pricingData = {
   heading: {
-    title: "More Features, Less Cost, Your Domain",
-    subtitle: "Attribution intelligence Skool doesn't have. Save $120-$480/year. Own your platform.",
+    title: "Simple Attribution Pricing",
+    subtitle: "Track what drives revenue without breaking the bank. Hyros costs $379+/month for similar tracking.",
     align: "center" as const,
   },
   plans: {
     items: [
       {
         plan: {
-          _id: "skool-comparison",
-          _title: "Skool",
-          price: "$99/month",
-          billed: "What you're paying now",
-          isMostPopular: false,
-          list: {
-            items: [
-              { _id: "skool-1", _title: "Community & courses" },
-              { _id: "skool-2", _title: "Stuck on skool.com/you" },
-              { _id: "skool-3", _title: "No attribution tracking" },
-              { _id: "skool-4", _title: "Discovery shows competitors" },
-              { _id: "skool-5", _title: "2.9% transaction fees" },
-              { _id: "skool-6", _title: "Building their $3B valuation" },
-            ],
-          },
-          cta: {
-            label: "❌ Stay Dependent",
-            href: "#",
-            disabled: true,
-          },
-        },
-      },
-      {
-        plan: {
-          _id: "allumi-starter",
-          _title: "Allumi Starter",
-          price: "$59/month",
-          billed: "Save $480/year vs Skool's $99",
-          isMostPopular: false,
-          list: {
-            items: [
-              { _id: "starter-1", _title: "Full community & discussions" },
-              { _id: "starter-2", _title: "Your custom domain included" },
-              { _id: "starter-3", _title: "Private community (no Discovery)" },
-              { _id: "starter-4", _title: "Up to 250 members" },
-              { _id: "starter-5", _title: "3 complete courses" },
-              { _id: "starter-6", _title: "Basic attribution tracking" },
-              { _id: "starter-7", _title: "YouTube/Vimeo integration" },
-              { _id: "starter-8", _title: "Gamification (3 levels)" },
-              { _id: "starter-9", _title: "Events & calendar" },
-              { _id: "starter-10", _title: "Member directory" },
-              { _id: "starter-11", _title: "Mobile responsive" },
-              { _id: "starter-12", _title: "Email support" },
-            ],
-          },
-          cta: {
-            label: "Start Small",
-            href: "/start-small",
-          },
-        },
-      },
-      {
-        plan: {
-          _id: "allumi-professional",
-          _title: "Allumi Professional",
-          price: "$89/month",
-          billed: "Save $120/year + get everything",
+          _id: "professional",
+          _title: "Professional",
+          price: "$79/month",
+          billed: "Everything you need to track attribution",
           isMostPopular: true,
-          badge: "BEST VALUE",
+          badge: "MOST POPULAR",
           list: {
             items: [
-              { _id: "pro-1", _title: "Full Attribution Suite™ (multi-touch, LTV)" },
-              { _id: "pro-2", _title: "Unlimited members, courses, storage" },
-              { _id: "pro-3", _title: "Complete Gamification (all 9 levels)" },
-              { _id: "pro-4", _title: "Native video hosting (saves $59/mo)" },
-              { _id: "pro-5", _title: "Full white-label branding" },
-              { _id: "pro-6", _title: "Zapier + webhooks + API access" },
-              { _id: "pro-7", _title: "Advanced analytics & cohort reports" },
-              { _id: "pro-8", _title: "Direct Stripe integration (you own payments)" },
-              { _id: "pro-9", _title: "Priority 48-hour migration" },
-              { _id: "pro-10", _title: "Live chat + phone support" },
-              { _id: "pro-11", _title: "5 team seats included" },
+              { _id: "prof-1", _title: "Unlimited members tracked" },
+              { _id: "prof-2", _title: "Full attribution dashboard" },
+              { _id: "prof-3", _title: "First-click & last-click attribution" },
+              { _id: "prof-4", _title: "Source → Revenue tracking" },
+              { _id: "prof-5", _title: "LTV by channel" },
+              { _id: "prof-6", _title: "Conversion quality metrics (who pays vs freeloads)" },
+              { _id: "prof-7", _title: "Free-to-paid conversion tracking" },
+              { _id: "prof-8", _title: "Churn detection (payment-based)" },
+              { _id: "prof-9", _title: "Zapier integration setup" },
+              { _id: "prof-10", _title: "CSV exports" },
+              { _id: "prof-11", _title: "Chat support" },
             ],
           },
+          comparison: "Compare: Hyros charges $379/month minimum",
           cta: {
-            label: "→ Get Started",
-            href: "/get-started",
+            label: "Start 14-Day Free Trial",
+            href: "/start-trial",
           },
-          footer: "Still $120/year less than Skool",
+        },
+      },
+      {
+        plan: {
+          _id: "scale",
+          _title: "Scale",
+          price: "$149/month",
+          billed: "For advanced attribution needs",
+          isMostPopular: false,
+          list: {
+            items: [
+              { _id: "scale-1", _title: "Everything in Professional, plus:" },
+              { _id: "scale-2", _title: "Multi-touch attribution" },
+              { _id: "scale-3", _title: "API access (pull data anywhere)" },
+              { _id: "scale-4", _title: 'Custom alerts ("CAC exceeds $100")' },
+              { _id: "scale-5", _title: "Cohort analysis" },
+              { _id: "scale-6", _title: "Predictive scoring" },
+              { _id: "scale-7", _title: "Chrome extension (accurate member tracking)" },
+              { _id: "scale-8", _title: "Priority support (2-hour response)" },
+              { _id: "scale-9", _title: "Custom onboarding call" },
+            ],
+          },
+          comparison: "Still $230/month less than Hyros",
+          cta: {
+            label: "Start 14-Day Free Trial",
+            href: "/start-trial-scale",
+          },
         },
       },
     ],
+  },
+  betaSpecial: {
+    title: "Beta Special",
+    highlight: "🔥 First 20 customers: Lock in $49/month forever (Professional tier)",
   },
 }
 
 const calloutData = {
   _analyticsKey: "allumi-callout",
-  title: "Stop Paying More for Less",
-  subtitle:
-    "Every day on Skool, your members browse to cheaper alternatives while you pay $99/month to build their empire, not yours.",
+  title: "You can't optimize what you can't measure.",
+  subtitle: "Track what drives revenue in your Skool community. See which content brings members who pay and stay.",
   actions: [
     {
       _id: "final-cta",
-      href: "/graduate-now",
-      label: "Graduate to Ownership",
+      href: "/join-beta",
+      label: "Start Free 14-Day Trial",
       type: "primary" as const,
     },
     {
       _id: "demo-cta",
       href: "/watch-demo",
-      label: "Watch Migration Demo",
+      label: "Watch Demo",
       type: "secondary" as const,
     },
   ],
@@ -363,193 +256,135 @@ const calloutData = {
 const faqData = {
   layout: "accordion" as const,
   heading: {
-    title: "Everything You Need to Know",
-    subtitle:
-      "Get answers to common questions about switching from Skool to Allumi and building your own community empire.",
+    title: "Attribution Tracking Questions",
+    subtitle: "Get answers about tracking what drives revenue in your Skool community.",
     align: "center" as const,
   },
   questions: {
     items: [
       {
         _id: "faq-1",
-        _title: "Do you really have ALL Skool's features?",
+        _title: "How does attribution tracking work with Skool?",
         answer:
-          "Yes. Courses (modules, lessons, drip content), Community (discussions, categories, real-time), Events (calendar, RSVP), Gamification (9 levels, points, leaderboards), Chat, Mobile apps, Video hosting - it's all here. Plus attribution they can't offer.",
-      },
-      {
-        _id: "faq-why-attribution",
-        _title: "Why is attribution such a big deal?",
-        answer:
-          "I burned $500K on marketing without knowing what worked. Most community owners face the same problem - spending thousands on ads but only seeing total revenue, not source. Attribution changes everything. When you see that one YouTube video drives 47 members worth $8,400 LTV, you stop guessing and start growing.",
-      },
-      {
-        _id: "faq-guarantee",
-        _title: "What's your guarantee if I'm not satisfied?",
-        answer:
-          "We have the industry's only \"Better Than Skool Guarantee\": Try Allumi risk-free for 30 days. If you don't find at least one significant revenue insight from our attribution dashboard, we'll not only refund your money - we'll pay for your next month of Skool. Plus, you keep your Skool account active during the trial, so there's zero disruption risk. You can also export everything (members, content, data) at any time. We're that confident you'll discover game-changing insights in your attribution data. Our 500+ migrated communities found an average of $10K in optimization opportunities within 30 days.",
+          "We connect via Zapier to track member signups and revenue. When someone joins your Skool community, we match them to their original source (YouTube video, Instagram post, podcast episode, etc.) and track their lifetime value.",
       },
       {
         _id: "faq-2",
-        _title: "Will my members notice a difference?",
+        _title: "How accurate is the attribution matching?",
         answer:
-          "Only positive ones. Same familiar interface, but on your professional domain. No Discovery page distracting them. Most members get excited about the upgrade.",
+          "Our attribution accuracy is 85-95% depending on your setup. We use first-party cookies, UTM parameters, and referrer data to match members to sources. Much more accurate than Google Analytics for revenue tracking.",
       },
       {
         _id: "faq-3",
-        _title: "How can you offer more for less?",
+        _title: "What if I'm already using Hyros?",
         answer:
-          "Skool built on 2019 infrastructure with expensive Discovery overhead. We built lean in 2025. Modern tech costs less. We pass savings to you while adding features they won't.",
+          "Hyros is great but costs $379+/month and requires complex setup. We're built specifically for Skool communities at $79/month with 5-minute Zapier setup. Many users switch to save $3,600/year.",
       },
       {
         _id: "faq-4",
-        _title: "What about migration?",
+        _title: "Does this work with free Skool communities?",
         answer:
-          "48-hour white-glove service. We migrate all members, content, discussions, points, events - everything. 98% member retention through transfer. Interface so similar, members won't need training.",
+          "Yes! We track free-to-paid conversions, so you can see which content drives members who eventually upgrade to paid tiers or purchase your products.",
       },
       {
         _id: "faq-5",
-        _title: "Why does everyone say Skool is becoming MLM central?",
+        _title: "How is this different from Google Analytics?",
         answer:
-          'Search "Skool MLM" on Reddit. Screenshots everywhere: "pyramid scheme platform," "everyone selling how to sell communities." Your legitimate business gets lumped with "Make $10K in 30 days!" scams. Your expertise deserves better than guilty by association.',
+          "Google Analytics shows website visits. We show revenue attribution. You'll see which specific YouTube video drove $3,400 in member revenue, not just that YouTube sent traffic.",
       },
       {
         _id: "faq-6",
-        _title: "How does Discovery actually hurt my business?",
+        _title: "Can I track historical data?",
         answer:
-          "You spend $500 acquiring a member through ads. They browse Discovery, find a cheaper alternative, and leave. You literally paid $500 to create a competitor's customer. Worse, your successful students see other communities and think \"I could do that.\" You're running a free incubator for competition while paying $99/month for the privilege.",
+          "We can track going forward from setup. For historical analysis, we can help you import past member data if you have source information in spreadsheets or other tools.",
       },
       {
         _id: "faq-7",
-        _title: "Why can't I scale past $5-10K MRR?",
+        _title: "What sources can you track?",
         answer:
-          "You're stuck in the organic hamster wheel. Without attribution, you can't run profitable paid ads. You create 100 pieces of content hoping 5 work. With attribution, you'd find those 5 winners, create 20 variations, spend $5K scaling them, and grow exponentially. Organic-only takes 18 months. Attribution-powered paid ads take 3-6 months.",
+          "Everything - YouTube videos, Instagram posts, podcast episodes, blog articles, email campaigns, paid ads, referrals, and more. If it drives traffic to your Skool community, we can track it.",
       },
       {
         _id: "faq-8",
-        _title: "I spent $3K on Facebook ads but can't tell if they worked",
+        _title: "How quickly will I see results?",
         answer:
-          "This is attribution blindness. You might have gotten 100 new members while running Facebook ads, but 80 actually came from your organic YouTube. Without attribution, you think Facebook works, scale to $10K, lose money, and give up on paid ads forever.",
+          "Most users discover their first major insight within 48 hours. Common discoveries: one content type converts 5x better, Instagram drives $0 while YouTube drives thousands, or specific topics drive higher LTV members.",
       },
       {
         _id: "faq-9",
-        _title: "What's this about not being able to sell my community?",
+        _title: "What's the setup process?",
         answer:
-          'Communities without attribution sell for 1-2x revenue. Buyers ask "What drives growth?" You say "content and community." They see risk. Communities WITH attribution and custom domains sell for 4-6x. You show 18 months of data: "YouTube drives 67%, LinkedIn 23%." They see a predictable machine.',
-      },
-      {
-        _id: "faq-10",
-        _title: "How does not having my own domain hurt me?",
-        answer:
-          "skool.com/you = amateur. YourDomain.com = professional. Close rate doubles. Price tolerance increases 2.3x. Exit multiple jumps from 2x to 4x. Corporate clients won't send employees to generic platform URLs. You're sending $5K clients to what looks like a hobby.",
-      },
-      {
-        _id: "faq-11",
-        _title: "How is Skool keeping me dependent?",
-        answer:
-          "They hide attribution so you can't optimize. They force Discovery so you need their traffic. They keep you on their domain so you can't build equity. They show your members competitors so you can't raise prices. You're not their customer - you're their product.",
-      },
-      {
-        _id: "faq-12",
-        _title: "How fast until I see ROI on switching?",
-        answer:
-          "24 hours to first attribution insight. 48 hours to complete migration. Day 3: identify first waste to cut. Week 1: reallocate budget to winners. Day 30: average $10K in found opportunities. Month 2: growing 40% faster. Plus you save $120-$480/year immediately.",
+          "5-minute Zapier connection. We provide step-by-step instructions and handle the technical setup. No coding or complex integrations required.",
       },
     ],
   },
 }
 
-const backstoryData = {
-  _analyticsKey: "allumi-backstory",
-  title: "Why I Built This",
-  quote:
-    "I built a $15K MRR community on Skool while burning $3,000/month on Instagram ads. One day, I finally tracked my attribution manually - Instagram drove $0 in revenue. YouTube drove $8,400. I'd wasted $36,000 that year alone. Then I watched three of my top members start competing communities they found through Skool's Discovery page. I was paying $99/month to train my competition while flying blind on what actually worked. That's when I realized: Skool profits by keeping us dependent and in the dark. So I built Allumi - the only platform with full attribution tracking, your own domain, and no competitor browsing. All for $120-$480 less per year than Skool.",
-  author: {
-    name: "Jan Jegen",
-    title: "Founder, Allumi",
-    image: "/founder-jan-jegen.jpg",
+const contextSection = {
+  _analyticsKey: "organic-hamster-wheel",
+  heading: {
+    title: "The Organic Hamster Wheel vs Attribution Intelligence",
+    subtitle: "Stop spinning your wheels. Start scaling what works.",
+    align: "center" as const,
+  },
+  problem: {
+    title: "The Organic Hamster Wheel (Problem):",
+    subtitle: "Without attribution, you're forced to:",
+    points: [
+      "Post daily on 5 platforms hoping something sticks",
+      "Spend 40 hours/week on content that might work",
+      'Stay small because ads are "too risky"',
+    ],
+  },
+  solution: {
+    title: "With Attribution (Solution):",
+    points: [
+      "Find your one winning content type",
+      "Put ads behind ONLY what works",
+      "Skip the 2-year organic grind",
+      "Scale from $5K to $50K MRR in months",
+    ],
   },
 }
 
-const contextSection = {
-  _analyticsKey: "why-attribution",
+const whyIBuiltThisData = {
+  _analyticsKey: "why-i-built-this",
   heading: {
-    title: "See What Actually Gets You Paying Members",
-    subtitle: "You're already losing money - even without running ads",
+    title: "Why I Built This",
+    subtitle: "The story behind attribution for Skool communities",
     align: "center" as const,
   },
-  points: [
-    {
-      title: "You're Creating The Wrong Content",
-      description:
-        "Sarah posted motivational content for 2 YEARS. Attribution revealed technical tutorials converted 8x better. Two years wasted because she couldn't see what worked.",
+  story: {
+    quote:
+      "After tracking attribution manually for multiple Skool clients, I discovered a pattern: 90% were wasting money on channels that drove zero paying members. One client was spending $3K/month on Instagram that drove $0 revenue, while their Reddit comments drove $8,400. That's when I knew this tool needed to exist.",
+    author: {
+      name: "Jan Jegen",
+      role: "Founder, Allumi",
+      image: null,
     },
-    {
-      title: "Every Post Is Worth $0 or $10,000",
-      description: "That Reddit comment that brought 5 members? Worth $6,000 in lifetime revenue. That Instagram post you spent 3 hours on? Worth $0. But you have no idea which is which.",
-    },
-    {
-      title: "Stop Wasting Months on Dead Channels",
-      description:
-        "You're grinding on Instagram, LinkedIn, YouTube, Twitter... What if 90% of your paying members come from ONE channel? Most creators waste 6-12 months before randomly discovering what works. Attribution shows you on day one.",
-    },
-    {
-      title: "Your Successful Posts Are Gold - But You Can't Replicate Them",
-      description:
-        "You got 10 members last month. Great! But from where? That viral Twitter thread? Your YouTube tutorial? A random Reddit comment? Without attribution, you're shooting in the dark.",
-    },
-  ],
+  },
 }
 
 export default function HomePage() {
-  const [emailCaptureOpen, setEmailCaptureOpen] = useState(false)
-  const [emailCaptureType, setEmailCaptureType] = useState<"demo" | "trial">("demo")
-
-  useEffect(() => {
-    // Handle hash navigation when coming from other pages
-    if (window.location.hash === '#features') {
-      setTimeout(() => {
-        const featuresSection = document.querySelector('[data-section="features"]');
-        if (featuresSection) {
-          featuresSection.scrollIntoView({ behavior: 'smooth' });
-        }
-      }, 100);
-    } else if (window.location.hash === '#pricing') {
-      setTimeout(() => {
-        const pricingSection = document.getElementById('pricing-section');
-        if (pricingSection) {
-          pricingSection.scrollIntoView({ behavior: 'smooth' });
-        }
-      }, 100);
-    }
-  }, []);
-
   return (
     <>
-      <EmailCaptureModal
-        open={emailCaptureOpen}
-        onOpenChange={setEmailCaptureOpen}
-        title="Get Early Access to Open Beta"
-        description="Open beta is about to start. Be first to get access!"
-      />
-      <div>
-        <Hero
-          {...heroData}
-          eventsKey="allumi-events"
-          onActionClick={(action) => {
-            if (action.onClick === "demo") {
-              setEmailCaptureType("demo")
-              setEmailCaptureOpen(true)
-              return
-            } else if (action.onClick === "scroll") {
-              setEmailCaptureType("trial")
-              setEmailCaptureOpen(true)
-            } else if (action.onClick === "waitlist") {
-              setEmailCaptureType("waitlist")
-              setEmailCaptureOpen(true)
-            }
-          }}
-        />
-      </div>
+      <DemoModal>
+        <div>
+          <Hero
+            {...heroData}
+            eventsKey="allumi-events"
+            onActionClick={(action) => {
+              if (action.onClick === "demo") {
+                // Modal will handle opening
+                return
+              } else if (action.onClick === "scroll") {
+                scrollToPricing()
+              }
+            }}
+          />
+        </div>
+      </DemoModal>
+      <Companies {...companiesData} />
       <div data-section="features">
         <FeaturesGrid {...featuresData} eventsKey="allumi-events" />
       </div>
@@ -560,47 +395,102 @@ export default function HomePage() {
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-balance">{contextSection.heading.title}</h2>
             <p className="text-lg text-muted-foreground">{contextSection.heading.subtitle}</p>
           </div>
-          <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-            {contextSection.points.map((point, index) => (
-              <div key={index} className="text-center">
-                <h3 className="text-xl font-semibold mb-4">{point.title}</h3>
-                <p className="text-muted-foreground leading-relaxed">{point.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      <section className="py-24 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-8 text-balance">{backstoryData.title}</h2>
-            <div className="relative">
-              <div className="absolute -top-4 -left-4 text-6xl text-muted-foreground/20 font-serif">"</div>
-              <blockquote className="text-lg md:text-xl leading-relaxed text-muted-foreground mb-8 italic px-8">
-                {backstoryData.quote}
-              </blockquote>
-              <div className="absolute -bottom-4 -right-4 text-6xl text-muted-foreground/20 font-serif">"</div>
+          <div className="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
+            {/* Problem Side */}
+            <div className="bg-red-50 dark:bg-red-950/20 p-8 rounded-lg border border-red-200 dark:border-red-800">
+              <h3 className="text-2xl font-bold mb-2 text-red-700 dark:text-red-400">{contextSection.problem.title}</h3>
+              <p className="text-red-600 dark:text-red-300 mb-6">{contextSection.problem.subtitle}</p>
+              <ul className="space-y-3">
+                {contextSection.problem.points.map((point, index) => (
+                  <li key={index} className="flex items-start gap-3">
+                    <span className="text-red-500 mt-1">❌</span>
+                    <span className="text-red-700 dark:text-red-300">{point}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
-            <div className="flex items-center justify-center gap-4 mt-12">
-              <img
-                src={backstoryData.author.image || "/placeholder.svg"}
-                alt={backstoryData.author.name}
-                className="w-16 h-16 rounded-full object-cover"
-              />
-              <div className="text-left">
-                <div className="font-semibold text-foreground">{backstoryData.author.name}</div>
-                <div className="text-sm text-muted-foreground">{backstoryData.author.title}</div>
-              </div>
+
+            {/* Solution Side */}
+            <div className="bg-emerald-50 dark:bg-emerald-950/20 p-8 rounded-lg border border-emerald-200 dark:border-emerald-800">
+              <h3 className="text-2xl font-bold mb-6 text-emerald-700 dark:text-emerald-400">
+                {contextSection.solution.title}
+              </h3>
+              <ul className="space-y-3">
+                {contextSection.solution.points.map((point, index) => (
+                  <li key={index} className="flex items-start gap-3">
+                    <span className="text-emerald-500 mt-1">✅</span>
+                    <span className="text-emerald-700 dark:text-emerald-300">{point}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>
       </section>
 
       <TestimonialsGrid {...testimonialsData} />
+
+      {/* Why I Built This Section */}
+      <section className="py-24 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-balance">{whyIBuiltThisData.heading.title}</h2>
+            <p className="text-lg text-muted-foreground">{whyIBuiltThisData.heading.subtitle}</p>
+          </div>
+
+          <div className="max-w-3xl mx-auto">
+            <div className="bg-muted/30 p-8 rounded-lg border">
+              <blockquote className="text-xl font-medium mb-6 text-center">
+                "{whyIBuiltThisData.story.quote}"
+              </blockquote>
+              <div className="flex items-center justify-center gap-4">
+                {whyIBuiltThisData.story.image && (
+                  <img
+                    src={whyIBuiltThisData.story.image}
+                    alt={whyIBuiltThisData.story.author.name}
+                    className="w-12 h-12 rounded-full"
+                  />
+                )}
+                <div className="text-left">
+                  <div className="font-semibold">{whyIBuiltThisData.story.author.name}</div>
+                  <div className="text-sm text-muted-foreground">{whyIBuiltThisData.story.author.role}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <div id="pricing-section">
         <Pricing {...pricingData} />
       </div>
+
+      <section className="py-24 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-balance">{calloutData.title}</h2>
+            <p className="text-lg text-muted-foreground mb-8">{calloutData.subtitle}</p>
+            <p className="text-sm text-muted-foreground mb-8">🔥 First 20 beta users: Lock in $49/month forever</p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              {calloutData.actions.map((action) => (
+                <a
+                  key={action._id}
+                  href={action.href}
+                  className={`px-8 py-4 rounded-lg font-semibold transition-colors ${
+                    action.type === "primary"
+                      ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                      : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                  }`}
+                >
+                  {action.label}
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       <AccordionFaq {...faqData} eventsKey="allumi-events" />
     </>
   )
