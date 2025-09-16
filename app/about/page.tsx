@@ -29,16 +29,16 @@ export default function AboutPage() {
         
         {/* Story content in a box */}
         <div className="bg-card/50 backdrop-blur-sm border border-border rounded-xl shadow-xl p-8 lg:p-12">
-        {/* Header */}
-        <div className="mb-12 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">The Long Road to Attribution</h1>
-          <p className="text-xl text-muted-foreground">
-            Started tracking what converts at 14. Spent 15 years learning what actually drives revenue. Built Allumi to solve the problem that cost me $36,000.
-          </p>
-        </div>
+          {/* Header */}
+          <div className="mb-12 text-center">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">The Long Road to Attribution</h1>
+            <p className="text-xl text-muted-foreground">
+              Started tracking what converts at 14. Spent 15 years learning what actually drives revenue. Built Allumi to solve the problem that cost me $36,000.
+            </p>
+          </div>
 
-        {/* Main Content - Full page */}
-        <div className="prose prose-lg dark:prose-invert mx-auto">
+          {/* Main Content - Full page */}
+          <div className="prose prose-lg dark:prose-invert mx-auto">
             <div className="space-y-6 pt-4">
               <p className="text-lg leading-relaxed">
                 I've been obsessed with one question since 2009: "What actually makes people buy?"
@@ -103,18 +103,18 @@ export default function AboutPage() {
                 <br />
               </div>
             </div>
-        </div>
+          </div>
 
-        {/* Signature */}
-        <div className="mt-8 lg:mt-12 flex items-center justify-center gap-4">
-          <Image
-            src="/founder-jan-jegen2.jpg"
-            alt="Jan Jegen"
-            width={64}
-            height={64}
-            className="w-16 h-16 rounded-full object-cover"
-          />
-          <div>
+          {/* Signature */}
+          <div className="mt-8 lg:mt-12 flex items-center justify-center gap-4">
+            <Image
+              src="/founder-jan-jegen2.jpg"
+              alt="Jan Jegen"
+              width={64}
+              height={64}
+              className="w-16 h-16 rounded-full object-cover"
+            />
+            <div>
             <div className="font-semibold text-lg flex items-center gap-2">
               Jan Jegen
               <a 
@@ -142,17 +142,18 @@ export default function AboutPage() {
               </a>
             </div>
             <div className="text-muted-foreground">Founder, Allumi</div>
+            </div>
           </div>
-        </div>
 
-        {/* CTA Button */}
-        <div className="mt-6 lg:mt-8 text-center">
-          <Link
-            href="/#pricing-section"
-            className="inline-block px-8 py-4 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors"
-          >
-            Start Your 14-Day Free Trial
-          </Link>
+          {/* CTA Button */}
+          <div className="mt-6 lg:mt-8 text-center">
+            <Link
+              href="/#pricing-section"
+              className="inline-block px-8 py-4 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors"
+            >
+              Start Your 14-Day Free Trial
+            </Link>
+          </div>
         </div>
       </div>
     </div>
