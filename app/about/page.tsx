@@ -7,26 +7,28 @@ import "./about.css"
 
 export default function AboutPage() {
   return (
-    <>
-      {/* LaserFlow truly fixed to viewport outside of scrollable content */}
-      <div className="fixed inset-y-0 right-0 w-[50%] pointer-events-none opacity-60 z-0">
-        <LaserFlow 
-          horizontalSizing={1.83}
-          verticalSizing={3.6}
-          wispDensity={1.8}
-          wispSpeed={15}
-          wispIntensity={5.3}
-          flowSpeed={0.47}
-          flowStrength={0.25}
-          fogIntensity={0.45}
-          fogScale={0.3}
-          fogFallSpeed={0.6}
-          decay={1.23}
-          falloffStart={1.2}
-        />
-      </div>
-      <div className="min-h-screen bg-background relative">
-        <div className="container mx-auto px-4 max-w-4xl relative z-10 py-16">
+    <div className="min-h-screen bg-background py-16">
+      <div className="container mx-auto px-4 max-w-6xl">
+        {/* LaserFlow effect above the story box */}
+        <div className="relative h-48 mb-8 rounded-xl overflow-hidden">
+          <LaserFlow 
+            horizontalSizing={1.83}
+            verticalSizing={3.6}
+            wispDensity={1.8}
+            wispSpeed={15}
+            wispIntensity={5.3}
+            flowSpeed={0.47}
+            flowStrength={0.25}
+            fogIntensity={0.45}
+            fogScale={0.3}
+            fogFallSpeed={0.6}
+            decay={1.23}
+            falloffStart={1.2}
+          />
+        </div>
+        
+        {/* Story content in a box */}
+        <div className="bg-card/50 backdrop-blur-sm border border-border rounded-xl shadow-xl p-8 lg:p-12">
         {/* Header */}
         <div className="mb-12 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">The Long Road to Attribution</h1>
@@ -152,8 +154,7 @@ export default function AboutPage() {
             Start Your 14-Day Free Trial
           </Link>
         </div>
-        </div>
       </div>
-    </>
+    </div>
   )
 }

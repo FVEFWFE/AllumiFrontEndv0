@@ -70,40 +70,63 @@ const subscribeEnv = ({
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const [
-    {
-      site: { footer, settings, header },
-    },
-  ] = await Promise.all([
-    basehub().query({
-      site: {
-        settings: {
-          theme: themeFragment,
-          logo: {
-            dark: {
-              url: true,
-              alt: true,
-              width: true,
-              height: true,
-              aspectRatio: true,
-              blurDataURL: true,
-            },
-            light: {
-              url: true,
-              alt: true,
-              width: true,
-              height: true,
-              aspectRatio: true,
-              blurDataURL: true,
-            },
-          },
-          showUseTemplate: true,
-        },
-        header: headerFragment,
-        footer: footerFragment,
+  let footer, settings, header;
+  
+  try {
+    const [
+      {
+        site: { footer: f, settings: s, header: h },
       },
-    }),
-  ])
+    ] = await Promise.all([
+      basehub().query({
+        site: {
+          settings: {
+            theme: themeFragment,
+            logo: {
+              dark: {
+                url: true,
+                alt: true,
+                width: true,
+                height: true,
+                aspectRatio: true,
+                blurDataURL: true,
+              },
+              light: {
+                url: true,
+                alt: true,
+                width: true,
+                height: true,
+                aspectRatio: true,
+                blurDataURL: true,
+              },
+            },
+            showUseTemplate: true,
+          },
+          header: headerFragment,
+          footer: footerFragment,
+        },
+      }),
+    ])
+    footer = f;
+    settings = s;
+    header = h;
+  } catch (error) {
+    // Fallback data when basehub is unavailable
+    console.error('Basehub error:', error);
+    settings = {
+      theme: { _id: 'default' },
+      logo: {
+        dark: { url: '/allumi.png', alt: 'Allumi', width: 120, height: 40 },
+        light: { url: '/allumiblack.png', alt: 'Allumi', width: 120, height: 40 },
+      },
+      showUseTemplate: false,
+    };
+    header = {
+      navbar: { items: [] },
+      rightCtas: { items: [{ _id: '1', label: 'Get Started Today', href: '#', type: 'primary' }] },
+    };
+    footer = { links: [], socials: [] };
+  }
 
   let playgroundNotification = null
 
@@ -114,18 +137,23 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   })
 
   if (!isMainV0 && !allValid && process.env.NODE_ENV !== "production") {
-    const playgroundData = await basehub().query({
-      _sys: {
-        playgroundInfo: {
-          expiresAt: true,
-          editUrl: true,
-          claimUrl: true,
+    try {
+      const playgroundData = await basehub().query({
+        _sys: {
+          playgroundInfo: {
+            expiresAt: true,
+            editUrl: true,
+            claimUrl: true,
+          },
         },
-      },
-    })
+      })
 
-    if (playgroundData._sys.playgroundInfo) {
-      playgroundNotification = <PlaygroundSetupModal playgroundInfo={playgroundData._sys.playgroundInfo} envs={envs} />
+      if (playgroundData._sys.playgroundInfo) {
+        playgroundNotification = <PlaygroundSetupModal playgroundInfo={playgroundData._sys.playgroundInfo} envs={envs} />
+      }
+    } catch (error) {
+      console.error('Basehub playground error:', error);
+      // Continue without playground notification
     }
   }
 
