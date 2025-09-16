@@ -40,7 +40,7 @@ type Hero = Partial<fragmentOn.infer<typeof heroFragment>> & {
     type: string
     onClick?: string
   }>
-  title?: string | { line1: string; line2: string }
+  title?: string | { line1: React.ReactNode; line2: React.ReactNode }
   subtitle?: string
   tagline?: string // Added tagline support
   customerSatisfactionBanner?: {
@@ -65,7 +65,7 @@ export function Hero(
   }
 
   return (
-    <section className="relative min-h-[calc(630px-var(--header-height))] overflow-hidden pb-10">
+    <section className="hero-section relative min-h-[calc(630px-var(--header-height))] overflow-hidden pb-10">
       <div className="absolute left-0 top-0 z-0 grid h-full w-full grid-cols-[clamp(28px,10vw,120px)_auto_clamp(28px,10vw,120px)] border-b border-[--border] dark:border-[--dark-border]">
         {/* Decorations */}
         <div className="col-span-1 flex h-full items-center justify-center" />
@@ -101,11 +101,13 @@ export function Hero(
                 </span>
               </div>
             )}
-            <div className="max-w-[800px] mx-auto">
-              <h1 className="text-center text-[clamp(1.5rem,4vw,2.5rem)] font-medium leading-[1.2] tracking-[-1.44px] text-[--text-primary] dark:text-[--dark-text-primary]">
+            <div className="max-w-[900px] mx-auto">
+              <h1 className="text-center text-[clamp(1.3rem,3.5vw,2.2rem)] font-medium leading-[1.2] tracking-[-1.44px] text-[--text-primary] dark:text-[--dark-text-primary]">
                 {typeof hero.title === 'object' && hero.title.line1 && hero.title.line2 ? (
                   <>
-                    <span className="block mb-2">{hero.title.line1}</span>
+                    <span className="block mb-2">
+                      {hero.title.line1}
+                    </span>
                     <span className="block text-[0.9em] font-normal opacity-90">
                       {hero.title.line2}
                     </span>
@@ -128,7 +130,7 @@ export function Hero(
                   key={_id}
                   analyticsKey={hero.eventsKey}
                   className={clsx(
-                    "!h-auto flex-col items-center justify-center rounded-none !text-base py-3",
+                    "cursor-target !h-auto flex-col items-center justify-center rounded-none !text-base py-3",
                     type === "primary"
                       ? "flex w-full"
                       : "max-w-sm:!border-x-0 flex w-full !border-x !border-y-0 border-[--border] !bg-transparent backdrop-blur-xl transition-colors duration-150 hover:!bg-black/5 dark:border-[--dark-border] dark:hover:!bg-white/5",

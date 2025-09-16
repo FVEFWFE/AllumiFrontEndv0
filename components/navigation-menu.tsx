@@ -16,6 +16,7 @@ import { $button, ButtonLink } from "../common/button"
 import type { HeaderFragment, HeaderLiksFragment } from "../lib/basehub/fragments"
 import { useToggleState } from "../hooks/use-toggle-state"
 import { useHasRendered } from "../hooks/use-has-rendered"
+import StarBorder from "./StarBorder"
 
 // #region desktop 💻
 /* -------------------------------------------------------------------------- */
@@ -29,10 +30,21 @@ export function NavigationMenuHeader({
   links: HeaderLiksFragment[]
   className?: string
 }) {
+  // Filter out Blog, Changelog, and Site Setup, and treat Features as a regular link
+  const filteredLinks = links.filter(link => 
+    link._title !== "Blog" && link._title !== "Changelog" && link._title !== "Site Setup"
+  ).map(link => {
+    // Convert Features to a regular scroll link
+    if (link._title === "Features") {
+      return { ...link, href: "#features", sublinks: { items: [] } }
+    }
+    return link
+  })
+  
   return (
     <NavigationMenu className={clsx("z-1 relative flex-col justify-center lg:flex", className)} delayDuration={50}>
       <NavigationMenuList className="flex flex-1 gap-0.5 px-4">
-        {links.map((link) =>
+        {filteredLinks.map((link) =>
           link.sublinks.items.length > 0 ? (
             <NavigationMenuLinkWithMenu key={link._id} {...link} />
           ) : (
@@ -54,30 +66,33 @@ function NavigationMenuLink({
 }: { children: React.ReactNode; href: string } & NavigationMenuLinkProps) {
   const handleClick = (e: React.MouseEvent) => {
     const isHomepage = window.location.pathname === "/"
-
-    if (isHomepage && (children === "Features" || href === "#features")) {
+    
+    // Handle Features link
+    if (children === "Features" || href === "#features") {
       e.preventDefault()
-      const featuresSection = document.querySelector('[data-section="features"]')
-      if (featuresSection) {
-        featuresSection.scrollIntoView({ behavior: "smooth" })
+      if (isHomepage) {
+        // If on homepage, just scroll
+        const featuresSection = document.querySelector('[data-section="features"]')
+        if (featuresSection) {
+          featuresSection.scrollIntoView({ behavior: "smooth" })
+        }
+      } else {
+        // If on another page, navigate to homepage with hash
+        window.location.href = "/#features"
       }
-    } else if (isHomepage && (children === "Pricing" || href === "#pricing")) {
+    } 
+    // Handle Pricing link
+    else if (children === "Pricing" || href === "#pricing") {
       e.preventDefault()
-      const pricingSection = document.getElementById("pricing-section")
-      if (pricingSection) {
-        pricingSection.scrollIntoView({ behavior: "smooth" })
-      }
-    } else if (href === "#features") {
-      e.preventDefault()
-      const featuresSection = document.querySelector('[data-section="features"]')
-      if (featuresSection) {
-        featuresSection.scrollIntoView({ behavior: "smooth" })
-      }
-    } else if (href === "#pricing") {
-      e.preventDefault()
-      const pricingSection = document.getElementById("pricing-section")
-      if (pricingSection) {
-        pricingSection.scrollIntoView({ behavior: "smooth" })
+      if (isHomepage) {
+        // If on homepage, just scroll
+        const pricingSection = document.getElementById("pricing-section")
+        if (pricingSection) {
+          pricingSection.scrollIntoView({ behavior: "smooth" })
+        }
+      } else {
+        // If on another page, navigate to homepage with hash
+        window.location.href = "/#pricing-section"
       }
     }
   }
@@ -166,19 +181,44 @@ function NavigationMenuLinkWithMenu({ _title, href, sublinks }: HeaderLiksFragme
   )
 }
 
+export function DesktopNavigation({ navbar }: Pick<HeaderFragment, 'navbar'>) {
+  return <NavigationMenuHeader className="hidden lg:flex" links={navbar.items} />
+}
+
+export function DesktopCTAs({ rightCtas }: Pick<HeaderFragment, 'rightCtas'>) {
+  return (
+    <div className="hidden lg:flex items-center gap-2">
+      {rightCtas.items.map((cta, index) => {
+        // Apply StarBorder to "Get Started Today" (first item)
+        if (index === 0 && cta.label === "Get Started Today") {
+          return (
+            <StarBorder 
+              key={cta._id} 
+              as="a"
+              href={cta.href}
+              color="cyan"
+              speed="5s"
+              className="no-underline"
+            >
+              {cta.label}
+            </StarBorder>
+          )
+        }
+        return (
+          <ButtonLink key={cta._id} className="!px-3.5" href={cta.href} intent={cta.type}>
+            {cta.label}
+          </ButtonLink>
+        )
+      })}
+    </div>
+  )
+}
+
 export function DesktopMenu({ navbar, rightCtas }: HeaderFragment) {
   return (
     <>
-      <NavigationMenuHeader className="hidden lg:flex" links={navbar.items} />
-      <div className="hidden items-center gap-2 !justify-self-end lg:flex">
-        {rightCtas.items.map((cta) => {
-          return (
-            <ButtonLink key={cta._id} className="!px-3.5" href={cta.href} intent={cta.type}>
-              {cta.label}
-            </ButtonLink>
-          )
-        })}
-      </div>
+      <DesktopNavigation navbar={navbar} />
+      <DesktopCTAs rightCtas={rightCtas} />
     </>
   )
 }
@@ -217,6 +257,16 @@ export function MobileMenu({ navbar, rightCtas }: HeaderFragment) {
     }
     handleOff()
   }
+  
+  // Filter out Blog, Changelog, and Site Setup, and convert Features to simple link
+  const filteredLinks = navbar.items.filter(link => 
+    link._title !== "Blog" && link._title !== "Changelog" && link._title !== "Site Setup"
+  ).map(link => {
+    if (link._title === "Features") {
+      return { ...link, href: "#features", sublinks: { items: [] } }
+    }
+    return link
+  })
 
   return (
     <>
@@ -232,7 +282,7 @@ export function MobileMenu({ navbar, rightCtas }: HeaderFragment) {
           <div className="fixed left-0 top-[calc(var(--header-height)+1px)] z-10 h-auto w-full bg-[--surface-primary] dark:bg-[--dark-surface-primary]">
             <div className="flex flex-col gap-8 px-6 py-8">
               <nav className="flex flex-col gap-4">
-                {navbar.items.map((link) =>
+                {filteredLinks.map((link) =>
                   link.sublinks.items.length > 0 ? (
                     <ItemWithSublinks
                       key={link._id}

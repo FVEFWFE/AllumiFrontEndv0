@@ -1,8 +1,11 @@
+"use client"
+
 import { isExternalLink } from "@/app/_utils/links"
 import { ButtonLink } from "@/common/button"
 import { DarkLightImageAutoscale } from "@/common/dark-light-image"
 import type { DarkLightImageFragment, FooterFragment } from "@/lib/basehub/fragments"
 import Link from "next/link"
+import Image from "next/image"
 import { ThemeSwitcher } from "./theme-switcher"
 
 export const Footer = ({
@@ -13,23 +16,50 @@ export const Footer = ({
   logo: DarkLightImageFragment
 }) => {
   return (
-    <footer className="border-t border-[--border] py-16 dark:border-[--dark-border]">
+    <footer className="border-t border-[--border] py-8 dark:border-[--dark-border]">
       <div className="container mx-auto grid grid-cols-2 grid-rows-[auto_auto] place-items-start items-center gap-y-7 px-6 sm:grid-cols-[1fr_auto_1fr] sm:grid-rows-1 sm:gap-x-3">
         <Link aria-label="Homepage" href="/">
-          <img src="/allumi.png" alt="Allumi" className="h-10 w-auto brightness-0 dark:invert" />
+          <Image 
+            src="/allumiblack.png" 
+            alt="Allumi" 
+            width={120} 
+            height={40} 
+            priority 
+            className="h-8 w-auto dark:hidden" 
+          />
+          <Image 
+            src="/allumi.png" 
+            alt="Allumi" 
+            width={120} 
+            height={40} 
+            priority 
+            className="hidden h-8 w-auto dark:block" 
+          />
         </Link>
         <nav className="col-start-1 row-start-2 flex flex-col gap-x-2 gap-y-3 self-center sm:col-span-1 sm:col-start-2 sm:row-start-1 sm:flex-row sm:items-center sm:place-self-center md:gap-x-4 lg:gap-x-8">
-          <Link
+          <button
+            data-featurebase-feedback
             className="px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"
-            href="/privacy"
           >
-            Privacy Policy
-          </Link>
-          <Link
+            Feature Request
+          </button>
+          <button
+            data-featurebase-feedback
             className="px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"
-            href="/terms"
           >
-            Terms of Service
+            Bug Report
+          </button>
+          <button
+            data-featurebase-feedback
+            className="px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"
+          >
+            Feedback
+          </button>
+          <Link
+            href="/about"
+            className="px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"
+          >
+            About
           </Link>
         </nav>
         <div className="col-start-2 row-start-1 flex items-center gap-3 self-center justify-self-end sm:col-span-1 sm:col-start-3 sm:row-start-1">

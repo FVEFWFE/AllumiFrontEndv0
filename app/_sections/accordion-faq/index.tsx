@@ -16,12 +16,12 @@ export function AccordionFaq(faq: Faq & { eventsKey: GeneralEvents["ingestKey"] 
       <Heading {...faq.heading}>
         <h4>{faq.heading.title}</h4>
       </Heading>
-      <div className="mx-auto w-full max-w-6xl px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12 justify-items-center">
-          <div className="flex flex-col w-full max-w-lg">
+      <div className="mx-auto w-full max-w-5xl pl-[4.5rem] pr-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12">
+          <div className="flex flex-col w-full">
             <Accordion items={leftColumnItems} eventsKey={faq.eventsKey} />
           </div>
-          <div className="flex flex-col w-full max-w-lg">
+          <div className="flex flex-col w-full">
             <Accordion items={rightColumnItems} eventsKey={faq.eventsKey} />
           </div>
         </div>

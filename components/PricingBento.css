@@ -1,0 +1,102 @@
+.pricing-bento {
+  --glow-x: 50%;
+  --glow-y: 50%;
+  --glow-color: 16, 185, 129;
+  transition: all 0.3s ease;
+  transform-style: preserve-3d;
+}
+
+.pricing-bento--glowing {
+  box-shadow: 
+    0 0 40px rgba(var(--glow-color), 0.1),
+    0 0 80px rgba(var(--glow-color), 0.05);
+}
+
+.pricing-bento--glowing::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: radial-gradient(
+    400px circle at var(--glow-x) var(--glow-y),
+    rgba(var(--glow-color), 0.15) 0%,
+    rgba(var(--glow-color), 0.08) 20%,
+    rgba(var(--glow-color), 0.04) 40%,
+    transparent 70%
+  );
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  animation: glow-fade-in 0.3s ease forwards;
+}
+
+@keyframes glow-fade-in {
+  to {
+    opacity: 1;
+  }
+}
+
+.pricing-bento--glowing::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  background: radial-gradient(
+    400px circle at var(--glow-x) var(--glow-y),
+    rgba(var(--glow-color), 0.4) 0%,
+    rgba(var(--glow-color), 0.2) 30%,
+    transparent 60%
+  );
+  border-radius: inherit;
+  mask: 
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: subtract;
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  animation: glow-fade-in 0.3s ease forwards;
+}
+
+.pricing-particle {
+  will-change: transform, opacity;
+}
+
+.pricing-ripple {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(var(--glow-color), 0.3) 0%,
+    rgba(var(--glow-color), 0.15) 40%,
+    transparent 70%
+  );
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 1000;
+}
+
+/* Ensure particles and effects work with dark/light themes */
+.dark .pricing-bento--glowing {
+  box-shadow: 
+    0 0 60px rgba(var(--glow-color), 0.15),
+    0 0 100px rgba(var(--glow-color), 0.08);
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .pricing-bento {
+    transform: none !important;
+  }
+  
+  .pricing-bento--glowing::before,
+  .pricing-bento--glowing::after {
+    display: none;
+  }
+}

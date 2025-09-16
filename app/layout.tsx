@@ -6,14 +6,12 @@ import { basehub } from "basehub"
 import { Toolbar } from "basehub/next-toolbar"
 import { Providers } from "./providers"
 import { footerFragment, headerFragment } from "../lib/basehub/fragments"
-import { NewsletterWrapper } from "@/components/newsletter-wrapper"
+import { NewsletterMailerLite } from "./_sections/newsletter/newsletter-mailerlite"
 import { themeFragment } from "../context/basehub-theme-provider"
 import { PlaygroundSetupModal } from "../components/playground-notification"
-import { AllumiHeader } from "@/components/allumi-header"
+import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import { AttributionProvider } from "@/components/providers/attribution-provider"
-import { PHProvider, PostHogPageView } from "@/components/posthog-provider"
-import { Suspense } from "react"
+import { FeaturebaseWidgets } from "@/components/featurebase-widgets"
 
 const geist = Geist({
   subsets: ["latin"],
@@ -135,35 +133,20 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body
         className={`min-h-svh max-w-[100vw] bg-[--surface-primary] text-[--text-primary] dark:bg-[--dark-surface-primary] dark:text-[--dark-text-primary] ${geistMono.variable} ${geist.variable} font-sans`}
       >
-        <PHProvider>
-          <Suspense>
-            <PostHogPageView />
-          </Suspense>
-          <Providers theme={settings.theme}>
-            <AttributionProvider>
-              {!isMainV0 && <Toolbar />}
-              {playgroundNotification}
-              {/* Header */}
-              <AllumiHeader />
-              <main className="min-h-[calc(100svh-var(--header-height))]">{children}</main>
-              <NewsletterWrapper newsletter={footer.newsletter} />
-              {/* Footer */}
-              <Footer footer={footer} logo={settings.logo} />
-            </AttributionProvider>
-          </Providers>
-        </PHProvider>
+        <Providers theme={settings.theme}>
+          <FeaturebaseWidgets />
+          {/* Header */}
+          <Header logo={settings.logo} header={header} />
+          <main>{children}</main>
+          <NewsletterMailerLite />
+          {/* Footer */}
+          <Footer footer={footer} logo={settings.logo} />
+        </Providers>
       </body>
     </html>
   )
 }
 
 export const metadata = {
-  title: "Allumi: Illuminate Your Empire",
-  description: "The only community platform with full attribution tracking. Know exactly where every member and dollar comes from.",
-  icons: {
-    icon: "/favicon.png",
-    shortcut: "/favicon.png",
-    apple: "/favicon.png",
-  },
   generator: "v0.dev",
 }

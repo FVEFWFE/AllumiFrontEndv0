@@ -20,6 +20,10 @@ export const companiesFragment = fragmentOn("CompaniesComponent", {
 type Companies = fragmentOn.infer<typeof companiesFragment>;
 
 export function Companies(props: Companies) {
+  if (!props.companies || props.companies.length === 0) {
+    return null;
+  }
+  
   return (
     <Section container="full">
       <h2 className="text-center tracking-tight text-[--dark-text-tertiary] opacity-50">
@@ -36,13 +40,15 @@ export function Companies(props: Companies) {
               key={company.image?.url ?? company._title}
               className="flex h-16 items-center px-2 py-3 lg:p-4"
             >
-              <BaseHubImage
-                alt={company._title}
-                className="w-24 lg:w-32"
-                height={20}
-                src={company.image!.url}
-                width={32}
-              />
+              {company.image && (
+                <BaseHubImage
+                  alt={company._title}
+                  className="w-24 lg:w-32"
+                  height={20}
+                  src={company.image.url}
+                  width={32}
+                />
+              )}
             </figure>
           ))}
         </div>

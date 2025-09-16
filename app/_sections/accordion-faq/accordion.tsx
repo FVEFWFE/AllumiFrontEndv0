@@ -24,10 +24,10 @@ export function Accordion({
     >
       {items.map((item) => (
         <AccordionItem
-          key={item._title}
+          key={item._id}
           {...item}
           eventsKey={eventsKey}
-          isActive={activeItems.includes(item._title)}
+          isActive={activeItems.includes(item._id)}
         />
       ))}
     </AccordionPrimitive.Root>
@@ -35,13 +35,14 @@ export function Accordion({
 }
 
 function AccordionItem({
+  _id,
   _title,
   answer,
   isActive,
   eventsKey,
 }: Faq["questions"]["items"][0] & { isActive: boolean; eventsKey: GeneralEvents["ingestKey"] }) {
   return (
-    <AccordionPrimitive.Item key={_title} className="flex flex-col" value={_title}>
+    <AccordionPrimitive.Item key={_id} className="flex flex-col" value={_id}>
       <AccordionPrimitive.Header>
         <AccordionPrimitive.Trigger
           className="outline-hidden focus-visible:ring-3 flex w-full items-start gap-3 rounded-md py-2 text-lg font-medium leading-relaxed tracking-tighter ring-[--accent-500]"

@@ -49,7 +49,8 @@ export function FeaturesGrid({
   featuresGridList,
   actions,
   eventsKey,
-}: FeaturesGrid & { eventsKey: GeneralEvents["ingestKey"] }) {
+  onActionClick,
+}: FeaturesGrid & { eventsKey: GeneralEvents["ingestKey"]; onActionClick?: () => void }) {
   return (
     <Section>
       <Heading {...heading}>
@@ -63,10 +64,11 @@ export function FeaturesGrid({
           return (
             <article
               key={_id}
-              className="flex flex-col gap-4 rounded-lg border border-[--border] p-4 [box-shadow:_70px_-20px_130px_0px_rgba(255,255,255,0.05)_inset] dark:border-[--dark-border] dark:[box-shadow:_70px_-20px_130px_0px_rgba(255,255,255,0.05)_inset]"
+              className="group relative flex flex-col gap-4 rounded-lg border border-[--border] p-4 transition-all duration-300 hover:scale-[1.02] hover:border-primary/50 hover:shadow-xl hover:shadow-primary/10 [box-shadow:_70px_-20px_130px_0px_rgba(255,255,255,0.05)_inset] dark:border-[--dark-border] dark:hover:border-primary/50 dark:hover:shadow-primary/20 dark:[box-shadow:_70px_-20px_130px_0px_rgba(255,255,255,0.05)_inset] cursor-pointer overflow-hidden"
             >
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/0 via-primary/5 to-primary/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               {(IconComponent || hasImageIcon) && (
-                <figure className="flex size-9 items-center justify-center rounded-full border border-[--border] bg-[--surface-secondary] p-2 dark:border-[--dark-border] dark:bg-[--dark-surface-secondary]">
+                <figure className="relative z-10 flex size-9 items-center justify-center rounded-full border border-[--border] bg-[--surface-secondary] p-2 transition-transform duration-300 group-hover:scale-110 dark:border-[--dark-border] dark:bg-[--dark-surface-secondary]">
                   {IconComponent ? (
                     <IconComponent className="size-[18px] text-[--text-primary] dark:text-[--dark-text-primary]" />
                   ) : hasImageIcon ? (
@@ -80,9 +82,9 @@ export function FeaturesGrid({
                   ) : null}
                 </figure>
               )}
-              <div className="flex flex-col items-start gap-1">
-                <h5 className="text-lg font-medium">{_title}</h5>
-                <p className="text-pretty text-[--text-secondary] dark:text-[--dark-text-secondary]">
+              <div className="relative z-10 flex flex-col items-start gap-1">
+                <h5 className="text-lg font-medium transition-colors duration-300 group-hover:text-primary">{_title}</h5>
+                <p className="text-pretty text-[--text-secondary] transition-colors duration-300 group-hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:group-hover:text-[--dark-text-primary]">
                   {description}
                 </p>
               </div>
@@ -92,16 +94,17 @@ export function FeaturesGrid({
       </div>
       <div className="flex items-center justify-center gap-3 md:order-3">
         {actions?.map((action) => (
-          <TrackedButtonLink
+          <button
             key={action._id}
-            analyticsKey={eventsKey}
-            href={action.href}
-            intent={action.type}
-            name="cta_click"
-            size="lg"
+            onClick={onActionClick}
+            className={`px-6 py-3 rounded-lg font-medium transition-colors ${
+              action.type === "primary"
+                ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                : "border border-[--border] dark:border-[--dark-border] bg-background hover:bg-muted"
+            }`}
           >
             {action.label}
-          </TrackedButtonLink>
+          </button>
         ))}
       </div>
     </Section>

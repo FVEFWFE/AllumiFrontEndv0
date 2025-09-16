@@ -2,41 +2,34 @@
 
 import * as React from "react";
 
-import { Button } from "../../../common/button";
 import type { QuoteFragment } from "../../../lib/basehub/fragments";
 import { cx } from "class-variance-authority";
 import { BaseHubImage } from "basehub/next-image";
-
-const ITEMS_PER_COLUMN = 3;
+import GlareHover from "../../../components/GlareHover";
 
 export function TestimonialsGridClient({ quotes }: { quotes: QuoteFragment[] }) {
-  const [showMore, setShowMore] = React.useState(false);
-
-  const filteredItems = React.useMemo(() => {
-    if (showMore) return quotes;
-    // split in three
-    const chunkSize = Math.ceil(quotes.length / 3);
-    const itemsToDisplay: QuoteFragment[] = [];
-
-    for (let i = 0; i < 3; i++) {
-      // Push the first 3 items for each column
-      itemsToDisplay.push(
-        ...quotes.slice(i * chunkSize, (i + 1) * chunkSize).slice(0, ITEMS_PER_COLUMN),
-      );
-    }
-
-    return itemsToDisplay;
-  }, [quotes, showMore]);
-
   return (
-    <>
-      <div className="relative overflow-hidden md:columns-3">
-        {filteredItems.map(({ quote, author, _id }, i) => (
+    <div className="relative overflow-hidden md:columns-3">
+      {quotes.map(({ quote, author, _id }) => (
+        <GlareHover
+          key={_id}
+          width="100%"
+          height="auto"
+          background="transparent"
+          borderRadius="12px"
+          borderColor="transparent"
+          glareColor="#ffffff"
+          glareOpacity={0.3}
+          glareAngle={-30}
+          glareSize={300}
+          transitionDuration={800}
+          playOnce={false}
+          className="mb-8 break-inside-avoid"
+          style={{ width: '100%', height: 'auto' }}
+        >
           <article
-            key={_id}
             className={cx(
-              "mb-8 break-inside-avoid overflow-hidden rounded-xl border border-[--border] last:mb-0 dark:border-[--dark-border]",
-              { "hidden md:block": i > 2 && !showMore },
+              "overflow-hidden rounded-xl border border-[--border] dark:border-[--dark-border] bg-background dark:bg-background w-full"
             )}
           >
             <div className="flex items-start border-b border-[--border] p-5 dark:border-[--dark-border]">
@@ -53,34 +46,23 @@ export function TestimonialsGridClient({ quotes }: { quotes: QuoteFragment[] }) 
                   {author.role}, {author.company._title}
                 </p>
               </div>
-              <div className="pl-4">
-                <figure className="aspect-square size-8 rounded-full">
-                  <BaseHubImage
-                    alt={author.image.alt ?? author._title}
-                    className="size-8 rounded-full"
-                    src={author.image.url}
-                    width={32}
-                    height={32}
-                  />
-                </figure>
-              </div>
+              {author.image && (
+                <div className="pl-4">
+                  <figure className="aspect-square size-8 rounded-full">
+                    <BaseHubImage
+                      alt={author.image.alt ?? author._title}
+                      className="size-8 rounded-full"
+                      src={author.image.url}
+                      width={32}
+                      height={32}
+                    />
+                  </figure>
+                </div>
+              )}
             </div>
           </article>
-        ))}
-      </div>
-
-      {!showMore && (
-        <div
-          className={cx(
-            "justify-center",
-            quotes.length > filteredItems.length ? "flex" : quotes.length > 3 && "flex md:hidden",
-          )}
-        >
-          <Button intent="secondary" onClick={() => setShowMore(!showMore)}>
-            Show more
-          </Button>
-        </div>
-      )}
-    </>
+        </GlareHover>
+      ))}
+    </div>
   );
 }

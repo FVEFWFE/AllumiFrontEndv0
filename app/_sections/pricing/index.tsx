@@ -1,15 +1,15 @@
 "use client";
 
 import { CheckIcon } from "@radix-ui/react-icons";
-import { type SVGProps, useState } from "react";
+import { type SVGProps } from "react";
 import clsx from "clsx";
 
 import { Heading } from "../../../common/heading";
 import { Section } from "../../../common/section-wrapper";
-import { Button } from "../../../common/button";
+import { ButtonLink } from "../../../common/button";
+import { PricingBento } from "../../../components/PricingBento";
 import { fragmentOn } from "basehub";
 import { headingFragment } from "../../../lib/basehub/fragments";
-import { EmailCaptureModal } from "@/components/email-capture-modal";
 
 import s from "./pricing.module.css";
 
@@ -38,45 +38,38 @@ export const pricingFragment = fragmentOn("PricingComponent", {
 
 type Pricing = fragmentOn.infer<typeof pricingFragment>;
 
-export function Pricing(pricing: Pricing) {
-  const [emailCaptureOpen, setEmailCaptureOpen] = useState(false);
-
+export function Pricing(pricing: Pricing & { onCtaClick?: () => void }) {
   return (
-    <>
-      <Section className="xl:max-w-screen-xl" id="pricing">
-        <Heading {...pricing.heading}>
-          <h4>{pricing.heading.title}</h4>
-        </Heading>
-        <div className="flex flex-col gap-5 self-stretch lg:flex-row">
-          {pricing.plans.items.map(({ plan }) => (
-            <PricingCard key={plan._title} {...plan} onGetStarted={() => setEmailCaptureOpen(true)} />
-          ))}
-        </div>
-      </Section>
-      <EmailCaptureModal
-        open={emailCaptureOpen}
-        onOpenChange={setEmailCaptureOpen}
-        title="Get Early Access to Open Beta"
-        description="Open beta is about to start. Be first to get access!"
-      />
-    </>
+    <Section className="xl:max-w-screen-xl" id="pricing">
+      <Heading {...pricing.heading}>
+        <h4>{pricing.heading.title}</h4>
+      </Heading>
+      <div className="flex flex-col gap-5 self-stretch lg:flex-row">
+        {pricing.plans.items.map(({ plan }) => (
+          <PricingCard key={plan._title} {...plan} onCtaClick={pricing.onCtaClick} />
+        ))}
+      </div>
+    </Section>
   );
 }
 
 type PricingPlanItem = fragmentOn.infer<typeof pricingPlanItemFragment>;
 
-type PricingCardProps = PricingPlanItem["plan"] & {
-  onGetStarted: () => void;
-}
-
-function PricingCard({ onGetStarted, ...item }: PricingCardProps) {
+function PricingCard(item: PricingPlanItem["plan"] & { onCtaClick?: () => void }) {
+  const isPopular = item.isMostPopular || false;
+  
   return (
-    <article
-      key={item._title}
+    <PricingBento
       className={clsx(
-        "relative flex flex-1 flex-col overflow-hidden rounded-2xl border border-[--border] dark:border-[--dark-border]",
+        "flex flex-1 flex-col overflow-hidden rounded-2xl border border-[--border] dark:border-[--dark-border]",
         s.pricingCard,
       )}
+      enableGlow={true}
+      glowColor={isPopular ? "16, 185, 129" : "107, 114, 128"}
+      enableTilt={true}
+      enableMagnetism={true}
+      clickEffect={true}
+      particleCount={isPopular ? 12 : 6}
     >
       <header className="flex flex-col gap-4 px-8 pb-0 pt-10">
         {item.isMostPopular ? (
@@ -109,16 +102,18 @@ function PricingCard({ onGetStarted, ...item }: PricingCardProps) {
         {item.isMostPopular ? (
           <Shadow className="pointer-events-none absolute left-0 top-0 h-full w-full origin-bottom scale-[2.0] text-[--accent-500]" />
         ) : null}
-        <Button
-          className="z-10 w-full"
-          onClick={onGetStarted}
-          intent={item.isMostPopular ? "primary" : "secondary"}
-          size="lg"
+        <button
+          className={`z-10 w-full px-6 py-3 rounded-lg font-medium transition-colors ${
+            item.isMostPopular 
+              ? "bg-primary text-primary-foreground hover:bg-primary/90" 
+              : "border border-[--border] dark:border-[--dark-border] bg-background hover:bg-muted"
+          }`}
+          onClick={item.onCtaClick}
         >
           Get started
-        </Button>
+        </button>
       </footer>
-    </article>
+    </PricingBento>
   );
 }
 

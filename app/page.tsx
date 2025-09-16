@@ -1,13 +1,39 @@
 "use client"
 
+import { useState } from "react"
 import { Hero } from "./_sections/hero"
 import { Companies } from "./_sections/companies"
 import { FeaturesGrid } from "./_sections/features/features-grid"
 import { TestimonialsGrid } from "./_sections/testimonials-grid"
 import { Pricing } from "./_sections/pricing"
 import { AccordionFaq } from "./_sections/accordion-faq"
-import { DemoModal } from "../components/demo-modal"
+import { EmailPopup } from "../components/email-popup"
+import { AutoScroll } from "../components/auto-scroll"
+import TrueFocusPairs from "../components/TrueFocusPairs"
+import SpotlightCard from "../components/SpotlightCard"
+import TextType from "../components/TextType"
+import HeroTargetCursor from "../components/HeroTargetCursor"
 import Image from "next/image"
+
+// Reusable Skool logo component
+const SkoolLogo = () => (
+  <a 
+    href="https://www.skool.com/signup?ref=12a546aba01846d987f5ccee20d61c76"
+    target="_blank"
+    rel="noopener noreferrer"
+    style={{ display: "inline-block", margin: "0 1px" }}
+    className="hover:opacity-80 transition-opacity"
+  >
+    <Image 
+      src="/skool.png" 
+      alt="Skool" 
+      width={70} 
+      height={24} 
+      className="inline h-[1em] w-auto"
+      style={{ display: "inline", verticalAlign: "baseline", position: "relative", top: "0.5px" }}
+    />
+  </a>
+)
 
 const scrollToPricing = () => {
   const pricingSection = document.getElementById("pricing-section")
@@ -18,7 +44,11 @@ const scrollToPricing = () => {
 
 const heroData = {
   _analyticsKey: "allumi-hero",
-  tagline: "Attribution for Skool Communities",
+  tagline: (
+    <>
+      Attribution for <SkoolLogo /> Communities
+    </>
+  ),
   customerSatisfactionBanner: {
     text: "Join 50 beta users tracking what drives revenue",
     avatars: {
@@ -26,7 +56,20 @@ const heroData = {
     },
   },
   title: {
-    line1: "Get Skool Members Who Pay and Stay - FASTER...",
+    line1: (
+      <>
+        Get{" "}
+        <Image 
+          src="/skool.png" 
+          alt="Skool" 
+          width={70} 
+          height={24} 
+          className="inline h-[1.2em] w-auto"
+          style={{ display: "inline", verticalAlign: "baseline", position: "relative", top: "0.5px" }}
+        />{" "}
+        Members Who Pay and Stay - FASTER...
+      </>
+    ),
     line2: "Without Burning Time/Cash on Dead Channels"
   },
   subtitle:
@@ -52,24 +95,38 @@ const heroData = {
 }
 
 const companiesData = {
-  subtitle: "Trusted by Skool community owners who track what works",
+  subtitle: (
+    <>
+      Trusted by <SkoolLogo /> community owners who track what works
+    </>
+  ),
   companies: [],
 }
 
 const featuresData = {
   _analyticsKey: "allumi-features",
   heading: {
-    title: "Stop Guessing. Start Growing.",
+    title: (
+      <TrueFocusPairs 
+        firstPair="Stop Guessing"
+        secondPair="Start Growing"
+        blurAmount={8}
+        borderColor="#10b981"
+        glowColor="rgba(16, 185, 129, 0.6)"
+        animationDuration={0.5}
+        pauseBetweenAnimations={1.5}
+      />
+    ),
     subtitle: (
       <>
         See exactly what drives revenue in your{" "}
         <Image 
           src="/skool.png" 
           alt="Skool" 
-          width={60} 
-          height={20} 
-          className="inline h-[1.2em] w-auto align-text-bottom"
-          style={{ display: "inline", verticalAlign: "text-bottom" }}
+          width={70} 
+          height={24} 
+          className="inline h-[1em] w-auto"
+          style={{ display: "inline", verticalAlign: "baseline", position: "relative", top: "0.5px" }}
         />{" "}
         community with simple setup and powerful insights.
       </>
@@ -95,7 +152,11 @@ const featuresData = {
         _id: "quick-setup",
         _title: "5 Minutes to Attribution (Not 5 Days)",
         description:
-          "Connect Zapier, paste template, see data flowing. No developers, no complexity, no excuses. Easier than creating a Skool course.",
+          (
+            <>
+              Connect Zapier, paste template, see data flowing. No developers, no complexity, no excuses. Easier than creating a <SkoolLogo /> course.
+            </>
+          ),
         icon: "clock",
       },
       {
@@ -137,7 +198,11 @@ const featuresData = {
 const testimonialsData = {
   heading: {
     title: "What Community Builders Say About Attribution Tracking",
-    subtitle: "Real feedback from Skool community owners who discovered what drives revenue",
+    subtitle: (
+      <>
+        Real feedback from <SkoolLogo /> community owners who discovered what drives revenue
+      </>
+    ),
     align: "center" as const,
   },
   quotes: [
@@ -252,8 +317,12 @@ const pricingData = {
 
 const calloutData = {
   _analyticsKey: "allumi-callout",
-  title: "You can't optimize what you can't measure.",
-  subtitle: "Track what drives revenue in your Skool community. See which content brings members who pay and stay.",
+  title: "Illuminate Your Empire.",
+  subtitle: (
+    <>
+      Track what drives revenue in your <SkoolLogo /> community. See which content brings members who pay and stay.
+    </>
+  ),
   actions: [
     {
       _id: "final-cta",
@@ -274,32 +343,52 @@ const faqData = {
   layout: "accordion" as const,
   heading: {
     title: "Attribution Tracking Questions",
-    subtitle: "Get answers about tracking what drives revenue in your Skool community.",
+    subtitle: (
+      <>
+        Get answers about tracking what drives revenue in your <SkoolLogo /> community.
+      </>
+    ),
     align: "center" as const,
   },
   questions: {
     items: [
       {
         _id: "faq-1",
-        _title: "How does attribution tracking work with Skool?",
+        _title: (
+          <>
+            How does attribution tracking work with <SkoolLogo />?
+          </>
+        ),
         answer:
-          "We connect via Zapier to track member signups and revenue. When someone joins your Skool community, we match them to their original source (YouTube video, Instagram post, podcast episode, etc.) and track their lifetime value.",
+          (
+            <>
+              We track member signups and revenue to match them to their original source (YouTube video, Instagram post, podcast episode, etc.) and track their lifetime value. We also support Zapier for easy integration.
+            </>
+          ),
       },
       {
         _id: "faq-2",
         _title: "How accurate is the attribution matching?",
         answer:
-          "Our attribution accuracy is 85-95% depending on your setup. We use first-party cookies, UTM parameters, and referrer data to match members to sources. Much more accurate than Google Analytics for revenue tracking.",
+          "Our attribution accuracy is 90-99.99% depending on your setup. We use first-party cookies, UTM parameters, and referrer data to match members to sources. Much more accurate than Google Analytics for revenue tracking.",
       },
       {
         _id: "faq-3",
         _title: "What if I'm already using Hyros?",
         answer:
-          "Hyros is great but costs $379+/month and requires complex setup. We're built specifically for Skool communities at $79/month with 5-minute Zapier setup. Many users switch to save $3,600/year.",
+          (
+            <>
+              Hyros is great but costs $379+/month and requires complex setup. We're built specifically for <SkoolLogo /> communities at $79/month with 2-minute setup. Many users switch to save $3,600/year while getting more valuable insights into what traffic sources get you the highest-quality lowest-churning <SkoolLogo /> members... down to the exact ad ID or piece of content they found you through.
+            </>
+          ),
       },
       {
         _id: "faq-4",
-        _title: "Does this work with free Skool communities?",
+        _title: (
+          <>
+            Does this work with free <SkoolLogo /> communities?
+          </>
+        ),
         answer:
           "Yes! We track free-to-paid conversions, so you can see which content drives members who eventually upgrade to paid tiers or purchase your products.",
       },
@@ -319,7 +408,11 @@ const faqData = {
         _id: "faq-7",
         _title: "What sources can you track?",
         answer:
-          "Everything - YouTube videos, Instagram posts, podcast episodes, blog articles, email campaigns, paid ads, referrals, and more. If it drives traffic to your Skool community, we can track it.",
+          (
+            <>
+              Everything - YouTube videos, Instagram posts, podcast episodes, blog articles, email campaigns, paid ads, referrals, and more. If it drives traffic to your <SkoolLogo /> community, we can track it.
+            </>
+          ),
       },
       {
         _id: "faq-8",
@@ -331,7 +424,20 @@ const faqData = {
         _id: "faq-9",
         _title: "What's the setup process?",
         answer:
-          "5-minute Zapier connection. We provide step-by-step instructions and handle the technical setup. No coding or complex integrations required.",
+          "2-minute connection. We provide step-by-step instructions and will do it for you if you need help. No coding or complex integrations required.",
+      },
+      {
+        _id: "faq-10",
+        _title: (
+          <>
+            Is Allumi an official <SkoolLogo /> plugin or third-party?
+          </>
+        ),
+        answer: (
+          <>
+            We're a third-party attribution tracking tool built specifically for <SkoolLogo /> communities. Skool is a registered trademark of Skool Inc. We simply provide better tracking and analytics for <SkoolLogo /> community owners who want to understand what drives revenue.
+          </>
+        ),
       },
     ],
   },
@@ -368,7 +474,11 @@ const whyIBuiltThisData = {
   _analyticsKey: "why-i-built-this",
   heading: {
     title: "Why I Built This",
-    subtitle: "The story behind attribution for Skool communities",
+    subtitle: (
+      <>
+        The story behind attribution for <SkoolLogo /> communities
+      </>
+    ),
     align: "center" as const,
   },
   story: {
@@ -377,33 +487,40 @@ const whyIBuiltThisData = {
     author: {
       name: "Jan Jegen",
       role: "Founder, Allumi",
-      image: null,
+      image: "/founder-jan-jegen2.jpg",
     },
   },
 }
 
 export default function HomePage() {
+  const [isEmailPopupOpen, setIsEmailPopupOpen] = useState(false)
+
   return (
     <>
-      <DemoModal>
-        <div>
-          <Hero
-            {...heroData}
-            eventsKey="allumi-events"
-            onActionClick={(action) => {
-              if (action.onClick === "demo") {
-                // Modal will handle opening
-                return
-              } else if (action.onClick === "scroll") {
-                scrollToPricing()
-              }
-            }}
-          />
-        </div>
-      </DemoModal>
+      <HeroTargetCursor 
+        targetSelector=".cursor-target"
+        spinDuration={2}
+      />
+      <AutoScroll />
+      <EmailPopup 
+        isOpen={isEmailPopupOpen} 
+        onClose={() => setIsEmailPopupOpen(false)} 
+      />
+      <Hero
+        {...heroData}
+        eventsKey="allumi-events"
+        onActionClick={(action) => {
+          if (action.onClick === "demo") {
+            setIsEmailPopupOpen(true)
+            return
+          } else if (action.onClick === "scroll") {
+            setIsEmailPopupOpen(true)
+          }
+        }}
+      />
       <Companies {...companiesData} />
       <div data-section="features">
-        <FeaturesGrid {...featuresData} eventsKey="allumi-events" />
+        <FeaturesGrid {...featuresData} eventsKey="allumi-events" onActionClick={() => setIsEmailPopupOpen(true)} />
       </div>
 
       <section className="py-24 bg-background">
@@ -415,7 +532,10 @@ export default function HomePage() {
 
           <div className="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
             {/* Problem Side */}
-            <div className="bg-red-50 dark:bg-red-950/20 p-8 rounded-lg border border-red-200 dark:border-red-800">
+            <SpotlightCard 
+              className="bg-red-50 dark:bg-red-950/20 p-8 rounded-lg border border-red-200 dark:border-red-800"
+              spotlightColor="rgba(239, 68, 68, 0.15)"
+            >
               <h3 className="text-2xl font-bold mb-2 text-red-700 dark:text-red-400">{contextSection.problem.title}</h3>
               <p className="text-red-600 dark:text-red-300 mb-6">{contextSection.problem.subtitle}</p>
               <ul className="space-y-3">
@@ -426,10 +546,13 @@ export default function HomePage() {
                   </li>
                 ))}
               </ul>
-            </div>
+            </SpotlightCard>
 
             {/* Solution Side */}
-            <div className="bg-emerald-50 dark:bg-emerald-950/20 p-8 rounded-lg border border-emerald-200 dark:border-emerald-800">
+            <SpotlightCard 
+              className="bg-emerald-50 dark:bg-emerald-950/20 p-8 rounded-lg border border-emerald-200 dark:border-emerald-800"
+              spotlightColor="rgba(16, 185, 129, 0.15)"
+            >
               <h3 className="text-2xl font-bold mb-6 text-emerald-700 dark:text-emerald-400">
                 {contextSection.solution.title}
               </h3>
@@ -441,7 +564,7 @@ export default function HomePage() {
                   </li>
                 ))}
               </ul>
-            </div>
+            </SpotlightCard>
           </div>
         </div>
       </section>
@@ -449,28 +572,68 @@ export default function HomePage() {
       <TestimonialsGrid {...testimonialsData} />
 
       {/* Why I Built This Section */}
-      <section className="py-24 bg-background">
-        <div className="container mx-auto px-4">
+      <section className="py-32 md:py-40 bg-background relative overflow-hidden">
+        {/* Background Image with Opacity */}
+        <div 
+          className="absolute inset-0 z-0"
+          style={{
+            backgroundImage: `url('/founder-jan-jegen2.jpg')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center top',
+            opacity: 0.08
+          }}
+        />
+        
+        {/* Content */}
+        <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-4xl mx-auto text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-balance">{whyIBuiltThisData.heading.title}</h2>
             <p className="text-lg text-muted-foreground">{whyIBuiltThisData.heading.subtitle}</p>
           </div>
 
           <div className="max-w-3xl mx-auto">
-            <div className="bg-muted/30 p-8 rounded-lg border">
+            <div className="bg-background/95 backdrop-blur-sm p-8 rounded-lg border">
               <blockquote className="text-xl font-medium mb-6 text-center">
                 "{whyIBuiltThisData.story.quote}"
               </blockquote>
               <div className="flex items-center justify-center gap-4">
-                {whyIBuiltThisData.story.image && (
-                  <img
-                    src={whyIBuiltThisData.story.image}
+                {whyIBuiltThisData.story.author.image && (
+                  <Image
+                    src={whyIBuiltThisData.story.author.image}
                     alt={whyIBuiltThisData.story.author.name}
-                    className="w-12 h-12 rounded-full"
+                    width={48}
+                    height={48}
+                    className="w-12 h-12 rounded-full object-cover"
+                    key={Date.now()} // Force refresh
                   />
                 )}
                 <div className="text-left">
-                  <div className="font-semibold">{whyIBuiltThisData.story.author.name}</div>
+                  <div className="font-semibold flex items-center gap-2">
+                    {whyIBuiltThisData.story.author.name}
+                    <a 
+                      href="https://instagram.com/JanJegen" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-muted-foreground hover:text-primary transition-colors"
+                      aria-label="Jan Jegen on Instagram"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                      </svg>
+                    </a>
+                  </div>
                   <div className="text-sm text-muted-foreground">{whyIBuiltThisData.story.author.role}</div>
                 </div>
               </div>
@@ -480,10 +643,10 @@ export default function HomePage() {
       </section>
 
       <div id="pricing-section">
-        <Pricing {...pricingData} />
+        <Pricing {...pricingData} onCtaClick={() => setIsEmailPopupOpen(true)} />
       </div>
 
-      <section className="py-24 bg-muted/30">
+      <section className="callout-section py-24 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-balance">{calloutData.title}</h2>
@@ -491,17 +654,20 @@ export default function HomePage() {
             <p className="text-sm text-muted-foreground mb-8">🔥 First 20 beta users: Lock in $49/month forever</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               {calloutData.actions.map((action) => (
-                <a
+                <button
                   key={action._id}
-                  href={action.href}
-                  className={`px-8 py-4 rounded-lg font-semibold transition-colors ${
+                  onClick={(e) => {
+                    e.preventDefault()
+                    setIsEmailPopupOpen(true)
+                  }}
+                  className={`cursor-target px-8 py-4 rounded-lg font-semibold transition-colors ${
                     action.type === "primary"
                       ? "bg-primary text-primary-foreground hover:bg-primary/90"
                       : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
                   }`}
                 >
                   {action.label}
-                </a>
+                </button>
               ))}
             </div>
           </div>
