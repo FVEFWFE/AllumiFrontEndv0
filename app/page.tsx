@@ -7,6 +7,7 @@ import { TestimonialsGrid } from "./_sections/testimonials-grid"
 import { Pricing } from "./_sections/pricing"
 import { AccordionFaq } from "./_sections/accordion-faq"
 import { DemoModal } from "../components/demo-modal"
+import Image from "next/image"
 
 const scrollToPricing = () => {
   const pricingSection = document.getElementById("pricing-section")
@@ -59,7 +60,19 @@ const featuresData = {
   _analyticsKey: "allumi-features",
   heading: {
     title: "Stop Guessing. Start Growing.",
-    subtitle: "See exactly what drives revenue in your Skool community with simple setup and powerful insights.",
+    subtitle: (
+      <span className="inline-flex items-center gap-1.5">
+        See exactly what drives revenue in your 
+        <Image 
+          src="/skool.png" 
+          alt="Skool" 
+          width={60} 
+          height={20} 
+          className="inline-block h-[1.2em] w-auto align-text-bottom"
+        />
+        community with simple setup and powerful insights.
+      </span>
+    ),
     align: "center" as const,
   },
   featuresGridList: {

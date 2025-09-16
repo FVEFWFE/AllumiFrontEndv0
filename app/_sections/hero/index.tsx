@@ -101,15 +101,20 @@ export function Hero(
                 </span>
               </div>
             )}
-            <h1 className="!max-w-screen-lg text-pretty text-center text-[clamp(32px,7vw,64px)] font-medium leading-none tracking-[-1.44px] text-[--text-primary] dark:text-[--dark-text-primary] md:tracking-[-2.16px]">
+            <h1 className="!max-w-screen-lg text-center text-[clamp(32px,7vw,64px)] font-medium leading-tight tracking-[-1.44px] text-[--text-primary] dark:text-[--dark-text-primary] md:tracking-[-2.16px]">
               {typeof hero.title === 'object' && hero.title.line1 && hero.title.line2 ? (
                 <>
-                  <span className="block">{hero.title.line1}</span>
-                  <span className="block mt-2 text-[85%] font-normal opacity-90">{hero.title.line2}</span>
+                  <span className="inline-block whitespace-nowrap">{hero.title.line1}</span>
+                  <span className="block md:inline md:ml-2">
+                    <span className="md:hidden block h-2"></span>
+                    <span className="inline-block text-[85%] font-normal opacity-90 whitespace-normal md:whitespace-nowrap">
+                      {hero.title.line2}
+                    </span>
+                  </span>
                 </>
-              ) : (
+              ) : typeof hero.title === 'string' ? (
                 hero.title
-              )}
+              ) : null}
             </h1>
             <h2 className="text-md max-w-2xl text-pretty text-center text-[--text-tertiary] dark:text-[--dark-text-tertiary] md:text-lg">
               {hero.subtitle}
