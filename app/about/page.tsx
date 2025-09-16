@@ -7,8 +7,25 @@ import "./about.css"
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <div className="container mx-auto px-4 max-w-4xl flex-1 flex flex-col py-16">
+    <div className="min-h-screen bg-background relative overflow-hidden">
+      {/* LaserFlow on the right side */}
+      <div className="absolute right-0 top-0 w-[50%] h-full pointer-events-none opacity-60">
+        <LaserFlow 
+          horizontalSizing={0.77}
+          verticalSizing={2}
+          wispDensity={1}
+          wispSpeed={15}
+          wispIntensity={5}
+          flowSpeed={0.35}
+          flowStrength={0.25}
+          fogIntensity={0.45}
+          fogScale={0.3}
+          fogFallSpeed={0.6}
+          decay={1.1}
+          falloffStart={1.2}
+        />
+      </div>
+      <div className="container mx-auto px-4 max-w-4xl relative z-10 py-16">
         {/* Header */}
         <div className="mb-12 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">The Long Road to Attribution</h1>
@@ -17,17 +34,8 @@ export default function AboutPage() {
           </p>
         </div>
 
-        {/* Main Content - Scrollable */}
-        <div className="relative flex-1 overflow-hidden">
-          {/* LaserFlow positioned to the right - larger and more visible */}
-          <div className="absolute right-0 lg:right-[-10%] top-0 w-[150%] lg:w-[120%] h-full pointer-events-none opacity-40">
-            <LaserFlow />
-          </div>
-          {/* Fade overlay at top */}
-          <div className="absolute top-0 left-0 right-0 h-12 bg-gradient-to-b from-background to-transparent z-10 pointer-events-none" />
-          
-          {/* Scrollable content - responsive height */}
-          <div className="prose prose-lg dark:prose-invert mx-auto h-[50vh] md:h-[60vh] lg:max-h-[600px] overflow-y-auto pr-4 custom-scrollbar relative z-20">
+        {/* Main Content - Full page */}
+        <div className="prose prose-lg dark:prose-invert mx-auto">
             <div className="space-y-6 pt-4">
               <p className="text-lg leading-relaxed">
                 I've been obsessed with one question since 2009: "What actually makes people buy?"
@@ -92,10 +100,6 @@ export default function AboutPage() {
                 <br />
               </div>
             </div>
-          </div>
-          
-          {/* Fade overlay at bottom */}
-          <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-background to-transparent z-10 pointer-events-none" />
         </div>
 
         {/* Signature */}
