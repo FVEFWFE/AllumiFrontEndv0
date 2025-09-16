@@ -8,20 +8,20 @@ import "./about.css"
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-background relative">
-      {/* LaserFlow on the right side - fixed positioning to ensure full height */}
-      <div className="fixed right-0 top-0 w-[50%] h-screen pointer-events-none opacity-60 z-0">
+      {/* LaserFlow fixed to viewport - doesn't scroll */}
+      <div className="fixed right-0 bottom-0 w-[50%] h-screen pointer-events-none opacity-60 z-0">
         <LaserFlow 
-          horizontalSizing={0.77}
-          verticalSizing={2}
-          wispDensity={1}
+          horizontalSizing={1.83}
+          verticalSizing={3.6}
+          wispDensity={1.8}
           wispSpeed={15}
-          wispIntensity={5}
-          flowSpeed={0.35}
+          wispIntensity={5.3}
+          flowSpeed={0.47}
           flowStrength={0.25}
           fogIntensity={0.45}
           fogScale={0.3}
           fogFallSpeed={0.6}
-          decay={1.1}
+          decay={1.23}
           falloffStart={1.2}
         />
       </div>
