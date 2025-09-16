@@ -12,6 +12,7 @@ import { PlaygroundSetupModal } from "../components/playground-notification"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { FeaturebaseWidgets } from "@/components/featurebase-widgets"
+import { PHProvider, PostHogPageview } from "@/components/posthog-provider"
 
 const geist = Geist({
   subsets: ["latin"],
@@ -133,15 +134,18 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body
         className={`min-h-svh max-w-[100vw] bg-[--surface-primary] text-[--text-primary] dark:bg-[--dark-surface-primary] dark:text-[--dark-text-primary] ${geistMono.variable} ${geist.variable} font-sans`}
       >
-        <Providers theme={settings.theme}>
-          <FeaturebaseWidgets />
-          {/* Header */}
-          <Header logo={settings.logo} header={header} />
-          <main>{children}</main>
+        <PHProvider>
+          <Providers theme={settings.theme}>
+            <PostHogPageview />
+            <FeaturebaseWidgets />
+            {/* Header */}
+            <Header logo={settings.logo} header={header} />
+            <main>{children}</main>
           <NewsletterMailerLite />
           {/* Footer */}
           <Footer footer={footer} logo={settings.logo} />
-        </Providers>
+          </Providers>
+        </PHProvider>
       </body>
     </html>
   )
