@@ -7,8 +7,8 @@ import "./about.css"
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-background py-16">
-      <div className="container mx-auto px-4 max-w-4xl">
+    <div className="min-h-screen bg-background flex flex-col">
+      <div className="container mx-auto px-4 max-w-4xl flex-1 flex flex-col py-16">
         {/* Header */}
         <div className="mb-12 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">The Long Road to Attribution</h1>
@@ -18,16 +18,16 @@ export default function AboutPage() {
         </div>
 
         {/* Main Content - Scrollable */}
-        <div className="relative">
-          {/* LaserFlow positioned to the right */}
-          <div className="absolute -right-20 top-0 w-96 h-full pointer-events-none opacity-40">
+        <div className="relative flex-1 overflow-hidden">
+          {/* LaserFlow positioned to the right - larger and more visible */}
+          <div className="absolute right-0 lg:right-[-10%] top-0 w-[150%] lg:w-[120%] h-full pointer-events-none opacity-40">
             <LaserFlow />
           </div>
           {/* Fade overlay at top */}
           <div className="absolute top-0 left-0 right-0 h-12 bg-gradient-to-b from-background to-transparent z-10 pointer-events-none" />
           
-          {/* Scrollable content */}
-          <div className="prose prose-lg dark:prose-invert mx-auto max-h-[600px] overflow-y-auto pr-4 custom-scrollbar">
+          {/* Scrollable content - responsive height */}
+          <div className="prose prose-lg dark:prose-invert mx-auto h-[50vh] md:h-[60vh] lg:max-h-[600px] overflow-y-auto pr-4 custom-scrollbar relative z-20">
             <div className="space-y-6 pt-4">
               <p className="text-lg leading-relaxed">
                 I've been obsessed with one question since 2009: "What actually makes people buy?"
@@ -99,7 +99,7 @@ export default function AboutPage() {
         </div>
 
         {/* Signature */}
-        <div className="mt-12 flex items-center justify-center gap-4">
+        <div className="mt-8 lg:mt-12 flex items-center justify-center gap-4">
           <Image
             src="/founder-jan-jegen2.jpg"
             alt="Jan Jegen"
@@ -139,7 +139,7 @@ export default function AboutPage() {
         </div>
 
         {/* CTA Button */}
-        <div className="mt-8 mb-2 text-center">
+        <div className="mt-6 lg:mt-8 text-center">
           <Link
             href="/#pricing-section"
             className="inline-block px-8 py-4 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors"
