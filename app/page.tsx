@@ -61,17 +61,18 @@ const featuresData = {
   heading: {
     title: "Stop Guessing. Start Growing.",
     subtitle: (
-      <span className="inline-flex items-center gap-1.5">
-        See exactly what drives revenue in your 
+      <>
+        See exactly what drives revenue in your{" "}
         <Image 
           src="/skool.png" 
           alt="Skool" 
           width={60} 
           height={20} 
-          className="inline-block h-[1.2em] w-auto align-text-bottom"
-        />
+          className="inline h-[1.2em] w-auto align-text-bottom"
+          style={{ display: "inline", verticalAlign: "text-bottom" }}
+        />{" "}
         community with simple setup and powerful insights.
-      </span>
+      </>
     ),
     align: "center" as const,
   },
@@ -112,7 +113,7 @@ const featuresData = {
       {
         _id: "real-time-alerts",
         _title: "Know the Moment Something Works (Real-Time Alerts)",
-        description: "Get notified instantly when a new source starts converting at 30%+. Never miss a scaling opportunity or let a winning campaign run out of budget. Set custom alerts for CAC thresholds, conversion spikes, or quality drops.",
+        description: "Get notified instantly when a new source starts converting at 30%+. Never miss a scaling opportunity or let a winning campaign run out of budget.",
         icon: "bell",
       },
     ],
