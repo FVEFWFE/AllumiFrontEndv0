@@ -1,11 +1,10 @@
 "use client"
 
 import clsx from "clsx"
-import React from "react"
 
 import { fragmentOn } from "basehub"
 import { AvatarsGroup } from "../../../common/avatars-group"
-import { Avatar } from "../../../common/avatar-custom"
+import { Avatar } from "../../../common/avatar"
 import { avatarFragment } from "../../../lib/basehub/fragments"
 import { TrackedButtonLink } from "../../../components/tracked-button"
 import type { GeneralEvents } from "../../../lib/basehub/fragments"
@@ -41,7 +40,7 @@ type Hero = Partial<fragmentOn.infer<typeof heroFragment>> & {
     type: string
     onClick?: string
   }>
-  title?: string
+  title?: string | { line1: string; line2: string }
   subtitle?: string
   tagline?: string // Added tagline support
   customerSatisfactionBanner?: {
@@ -59,8 +58,6 @@ export function Hero(
   hero: Hero & {
     eventsKey: GeneralEvents["ingestKey"]
     onActionClick?: (action: any) => void
-    children?: React.ReactNode
-    customContent?: boolean
   },
 ) {
   if (!hero.title || !hero.subtitle) {
@@ -105,68 +102,69 @@ export function Hero(
               </div>
             )}
             <h1 className="!max-w-screen-lg text-pretty text-center text-[clamp(32px,7vw,64px)] font-medium leading-none tracking-[-1.44px] text-[--text-primary] dark:text-[--dark-text-primary] md:tracking-[-2.16px]">
-              {hero.title}
+              {typeof hero.title === 'object' && hero.title.line1 && hero.title.line2 ? (
+                <>
+                  <span className="block">{hero.title.line1}</span>
+                  <span className="block mt-2 text-[85%] font-normal opacity-90">{hero.title.line2}</span>
+                </>
+              ) : (
+                hero.title
+              )}
             </h1>
             <h2 className="text-md max-w-2xl text-pretty text-center text-[--text-tertiary] dark:text-[--dark-text-tertiary] md:text-lg">
               {hero.subtitle}
             </h2>
           </div>
         </div>
-        {hero.customContent && hero.children ? (
-          <div className="flex items-start justify-center px-8 sm:px-24 py-8">
-            {hero.children}
-          </div>
-        ) : (
-          hero.actions && hero.actions.length > 0 && (
-            <div className="flex items-start justify-center px-8 sm:px-24">
-              <div className="flex w-full max-w-[80vw] flex-col items-center justify-start md:!max-w-[392px]">
-                {hero.actions.map(({ href, label, sublabel, type, _id, onClick }) => (
-                  <TrackedButtonLink
-                    key={_id}
-                    analyticsKey={hero.eventsKey}
-                    className={clsx(
-                      "!h-auto flex-col items-center justify-center rounded-none !text-base py-3",
-                      type === "primary"
-                        ? "flex w-full"
-                        : "max-w-sm:!border-x-0 flex w-full !border-x !border-y-0 border-[--border] !bg-transparent backdrop-blur-xl transition-colors duration-150 hover:!bg-black/5 dark:border-[--dark-border] dark:hover:!bg-white/5",
-                    )}
-                    href={onClick === "demo" ? "#" : href}
-                    intent={type}
-                    name="cta_click"
-                    onClick={(e) => {
-                      if (onClick && hero.onActionClick) {
-                        if (onClick === "demo") {
-                          e.preventDefault()
-                        }
-                        hero.onActionClick({ onClick, href, label, type, _id })
+        {hero.actions && hero.actions.length > 0 && (
+          <div className="flex items-start justify-center px-8 sm:px-24">
+            <div className="flex w-full max-w-[80vw] flex-col items-center justify-start md:!max-w-[392px]">
+              {hero.actions.map(({ href, label, sublabel, type, _id, onClick }) => (
+                <TrackedButtonLink
+                  key={_id}
+                  analyticsKey={hero.eventsKey}
+                  className={clsx(
+                    "!h-auto flex-col items-center justify-center rounded-none !text-base py-3",
+                    type === "primary"
+                      ? "flex w-full"
+                      : "max-w-sm:!border-x-0 flex w-full !border-x !border-y-0 border-[--border] !bg-transparent backdrop-blur-xl transition-colors duration-150 hover:!bg-black/5 dark:border-[--dark-border] dark:hover:!bg-white/5",
+                  )}
+                  href={onClick === "demo" ? "#" : href}
+                  intent={type}
+                  name="cta_click"
+                  onClick={(e) => {
+                    if (onClick && hero.onActionClick) {
+                      if (onClick === "demo") {
+                        e.preventDefault()
                       }
-                    }}
+                      hero.onActionClick({ onClick, href, label, type, _id })
+                    }
+                  }}
+                >
+                  <span
+                    className={clsx(
+                      "font-medium",
+                      type === "primary" ? "text-white" : "text-[--text-primary] dark:text-[--dark-text-primary]",
+                    )}
                   >
+                    {label}
+                  </span>
+                  {sublabel && (
                     <span
                       className={clsx(
-                        "font-medium",
-                        type === "primary" ? "text-white" : "text-[--text-primary] dark:text-[--dark-text-primary]",
+                        "text-sm mt-0.5",
+                        type === "primary"
+                          ? "text-white/80"
+                          : "text-[--text-secondary] dark:text-[--dark-text-secondary]",
                       )}
                     >
-                      {label}
+                      {sublabel}
                     </span>
-                    {sublabel && (
-                      <span
-                        className={clsx(
-                          "text-sm mt-0.5",
-                          type === "primary"
-                            ? "text-white/80"
-                            : "text-[--text-secondary] dark:text-[--dark-text-secondary]",
-                        )}
-                      >
-                        {sublabel}
-                      </span>
-                    )}
-                  </TrackedButtonLink>
-                ))}
-              </div>
+                  )}
+                </TrackedButtonLink>
+              ))}
             </div>
-          )
+          </div>
         )}
       </div>
     </section>

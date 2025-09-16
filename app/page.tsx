@@ -24,7 +24,10 @@ const heroData = {
       items: [],
     },
   },
-  title: "Get Skool Members Who Pay and Stay - FASTER... Without Burning Time & Cash on Dead Channels",
+  title: {
+    line1: "Get Skool Members Who Pay and Stay - FASTER...",
+    line2: "Without Burning Time & Cash on Dead Channels"
+  },
   subtitle:
     "Half your marketing is working. Too bad you don't know which half. Track what drives members who pay and stay.",
   actions: [
