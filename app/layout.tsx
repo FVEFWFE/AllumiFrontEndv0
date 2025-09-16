@@ -114,10 +114,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     // Fallback data when basehub is unavailable
     console.error('Basehub error:', error);
     settings = {
-      theme: { _id: 'default' },
+      theme: { 
+        _id: 'default',
+        accent: 'blue' as const,
+        grayScale: 'gray' as const
+      },
       logo: {
-        dark: { url: '/allumi.png', alt: 'Allumi', width: 120, height: 40 },
-        light: { url: '/allumiblack.png', alt: 'Allumi', width: 120, height: 40 },
+        dark: { url: '/allumi.png', alt: 'Allumi', width: 120, height: 40, aspectRatio: 3, blurDataURL: '' },
+        light: { url: '/allumiblack.png', alt: 'Allumi', width: 120, height: 40, aspectRatio: 3, blurDataURL: '' },
       },
       showUseTemplate: false,
     };
