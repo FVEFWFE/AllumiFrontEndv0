@@ -15,21 +15,26 @@ export function FeaturebaseWidget() {
     const initializeWidget = () => {
       if (typeof window !== 'undefined' && window.Featurebase) {
         const isDark = document.documentElement.classList.contains('dark');
+        const isMobile = window.innerWidth < 768; // Check if mobile (tailwind md: breakpoint)
         
-        // Initialize Feedback Widget
-        try {
-          const feedbackConfig = {
-            organization: "allumi",
-            theme: isDark ? "dark" : "light",
-            placement: "right", // Shows floating feedback button on the right
-            defaultBoard: "feedback",
-            locale: "en",
-          };
-          
-          window.Featurebase("initialize_feedback_widget", feedbackConfig);
-          console.log("✅ Featurebase feedback widget initialized");
-        } catch (error) {
-          console.error("❌ Error initializing feedback widget:", error);
+        // Initialize Feedback Widget (desktop only)
+        if (!isMobile) {
+          try {
+            const feedbackConfig = {
+              organization: "allumi",
+              theme: isDark ? "dark" : "light",
+              placement: "right", // Shows floating feedback button on the right
+              defaultBoard: "feedback",
+              locale: "en",
+            };
+            
+            window.Featurebase("initialize_feedback_widget", feedbackConfig);
+            console.log("✅ Featurebase feedback widget initialized (desktop only)");
+          } catch (error) {
+            console.error("❌ Error initializing feedback widget:", error);
+          }
+        } else {
+          console.log("📱 Skipping feedback widget on mobile");
         }
         
         // Initialize Messenger Widget with correct appId
@@ -53,15 +58,18 @@ export function FeaturebaseWidget() {
     const handleThemeChange = () => {
       if (typeof window !== 'undefined' && window.Featurebase) {
         const isDark = document.documentElement.classList.contains('dark');
+        const isMobile = window.innerWidth < 768;
         
-        // Update Feedback Widget theme
-        window.Featurebase("initialize_feedback_widget", {
-          organization: "allumi",
-          theme: isDark ? "dark" : "light",
-          placement: "right",
-          defaultBoard: "feedback",
-          locale: "en",
-        });
+        // Update Feedback Widget theme (desktop only)
+        if (!isMobile) {
+          window.Featurebase("initialize_feedback_widget", {
+            organization: "allumi",
+            theme: isDark ? "dark" : "light",
+            placement: "right",
+            defaultBoard: "feedback",
+            locale: "en",
+          });
+        }
         
         // Update Messenger theme
         window.Featurebase('setTheme', isDark ? 'dark' : 'light');
@@ -101,6 +109,25 @@ export function FeaturebaseWidget() {
       attributes: true,
       attributeFilter: ['class']
     });
+    
+    // Handle window resize to show/hide widget based on screen size
+    const handleResize = () => {
+      const isMobile = window.innerWidth < 768;
+      if (isMobile && window.Featurebase) {
+        // Hide feedback widget on mobile
+        window.postMessage({
+          target: 'FeaturebaseWidget',
+          data: { 
+            action: 'closeFeedbackWidget'
+          }
+        }, '*');
+      } else if (!isMobile) {
+        // Reinitialize on desktop
+        initializeWidget();
+      }
+    };
+    
+    window.addEventListener('resize', handleResize);
     
     // Add click outside functionality
     const handleClickOutside = (event: MouseEvent) => {
@@ -171,6 +198,7 @@ export function FeaturebaseWidget() {
     return () => {
       observer.disconnect();
       document.removeEventListener('click', handleClickOutside, true);
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
