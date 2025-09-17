@@ -37,6 +37,18 @@ export const Footer = ({
           />
         </Link>
         <nav className="col-start-1 row-start-2 flex flex-row flex-wrap gap-x-2 gap-y-3 self-center sm:col-span-1 sm:col-start-2 sm:row-start-1 sm:items-center sm:place-self-center md:gap-x-4 lg:gap-x-8">
+          <Link
+            href="/help"
+            className="px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"
+          >
+            Help
+          </Link>
+          <Link
+            href="/affiliate"
+            className="px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"
+          >
+            Affiliate Program
+          </Link>
           <button
             data-featurebase-feedback
             className="px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"
