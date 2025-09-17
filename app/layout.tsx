@@ -44,6 +44,9 @@ const geistMono = Geist_Mono({
 export const dynamic = "force-static"
 export const revalidate = 30
 
+// Disable Basehub in development if no valid token
+const BASEHUB_ENABLED = process.env.BASEHUB_TOKEN && !process.env.BASEHUB_TOKEN.startsWith('bshb_pk_')
+
 const envs: Record<string, { isValid: boolean; name: string; label: string }> = {}
 const _vercel_url_env_name = "VERCEL_URL"
 const isMainV0 = process.env[_vercel_url_env_name]?.startsWith("preview-marketing-website-kzmm0bsl7yb9no8k62xm")
@@ -73,6 +76,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   let footer, settings, header;
   
   try {
+    // Skip Basehub query if using public/demo token to avoid auth errors
+    if (!BASEHUB_ENABLED) {
+      throw new Error('Using fallback data - Basehub disabled for public token');
+    }
+    
     const [
       {
         site: { footer: f, settings: s, header: h },
@@ -111,8 +119,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     settings = s;
     header = h;
   } catch (error) {
-    // Fallback data when basehub is unavailable
-    console.error('Basehub error:', error);
+    // Fallback data when basehub is unavailable - this is expected with public token
+    // Only log if not the expected fallback
+    if (BASEHUB_ENABLED) {
+      console.warn('Basehub unavailable, using fallback data');
+    }
     settings = {
       theme: { 
         _id: 'default',

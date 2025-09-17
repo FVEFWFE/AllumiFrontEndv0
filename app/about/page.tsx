@@ -3,34 +3,106 @@
 import Image from "next/image"
 import Link from "next/link"
 import LaserFlow from "../../components/LaserFlow"
+import { useRef, useState, useEffect } from "react"
+import dynamic from "next/dynamic"
 import "./about.css"
 
+const SimpleGlassOrb = dynamic(() => import("../../components/SimpleGlassOrb"), {
+  ssr: false,
+  loading: () => null
+})
+
 export default function AboutPage() {
+  const revealImgRef = useRef<HTMLImageElement>(null)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
   return (
     <div className="min-h-screen bg-background pb-16">
-      <div className="container mx-auto px-4 max-w-6xl pt-16">
-        {/* LaserFlow effect above the story box */}
-        <div className="relative h-96 -mb-48 -mt-16 overflow-hidden">
-          <div className="absolute left-1/2 -translate-x-1/2 w-[120%]">
-            <LaserFlow 
-              horizontalSizing={3.0}
-              verticalSizing={5.0}
-              wispDensity={1.8}
-              wispSpeed={15}
-              wispIntensity={5.3}
-              flowSpeed={0.47}
-              flowStrength={0.25}
-              fogIntensity={0.45}
-              fogScale={0.3}
-              fogFallSpeed={0.6}
-              decay={1.23}
-              falloffStart={1.2}
-            />
+      <div 
+        className="container mx-auto px-4 max-w-6xl pt-16 relative"
+        onMouseMove={(e) => {
+          const el = revealImgRef.current
+          if (el) {
+            // Get the element's bounding rect
+            const rect = el.getBoundingClientRect()
+            // Calculate position relative to the image element itself
+            const x = e.clientX - rect.left
+            const y = e.clientY - rect.top
+            el.style.setProperty('--mx', `${x}px`)
+            el.style.setProperty('--my', `${y}px`)
+          }
+        }}
+        onMouseLeave={() => {
+          const el = revealImgRef.current
+          if (el) {
+            el.style.setProperty('--mx', '-9999px')
+            el.style.setProperty('--my', '-9999px')
+          }
+        }}
+      >
+        {/* LaserFlow effect above the story box - centered */}
+        <div className="relative h-[500px] -mb-64 -mt-16 overflow-hidden">
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="w-full h-full">
+              <LaserFlow 
+                horizontalSizing={0.5}
+                verticalSizing={2}
+                wispDensity={1}
+                wispSpeed={15}
+                wispIntensity={5}
+                flowSpeed={0.35}
+                flowStrength={0.25}
+                fogIntensity={0.45}
+                fogScale={0.3}
+                fogFallSpeed={0.6}
+                decay={1.1}
+                falloffStart={1.2}
+                color="#CF9EFF"
+                horizontalBeamOffset={0}
+                verticalBeamOffset={0}
+              />
+            </div>
           </div>
         </div>
+
+        {/* Hover reveal effect image - Only render on client */}
+        {mounted && (
+          <img
+            ref={revealImgRef}
+            src="/allumialpha.png"
+            alt="Background effect"
+            className="fixed inset-0 w-full h-full z-[1] mix-blend-lighten opacity-30 pointer-events-none object-cover"
+            style={{
+              '--mx': '-9999px',
+              '--my': '-9999px',
+              maskImage: 'radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,1) 0px, rgba(255,255,255,0.95) 60px, rgba(255,255,255,0.6) 120px, rgba(255,255,255,0.25) 180px, rgba(255,255,255,0) 240px)',
+              WebkitMaskImage: 'radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,1) 0px, rgba(255,255,255,0.95) 60px, rgba(255,255,255,0.6) 120px, rgba(255,255,255,0.25) 180px, rgba(255,255,255,0) 240px)',
+              maskRepeat: 'no-repeat',
+              WebkitMaskRepeat: 'no-repeat'
+            } as React.CSSProperties}
+          />
+        )}
         
-        {/* Story content in a box */}
-        <div className="bg-card/50 backdrop-blur-sm border border-border rounded-xl shadow-xl p-8 lg:p-12">
+        {/* Story content in a box with matching laser flow stroke */}
+        <div className="story-box relative z-10 bg-black border-2 rounded-xl overflow-hidden" style={{ borderColor: '#CF9EFF' }}>
+          {/* Demo container dots effect inside the box */}
+          <div className="demo-container-dots" />
+          
+          {/* Fade overlay to smoothly fade dots away */}
+          <div className="absolute inset-0 z-[1]" style={{
+            background: 'linear-gradient(to bottom, transparent 0%, transparent 20%, rgba(0,0,0,0.5) 25%, rgba(0,0,0,0.8) 30%, black 35%, black 100%)'
+          }} />
+          
+          {/* Glass Orb Effect - Only render on client */}
+          {mounted && (
+            <SimpleGlassOrb />
+          )}
+          
+          <div className="relative z-10 p-8 lg:p-12">
           {/* Header */}
           <div className="mb-12 text-center">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">The Long Road to Attribution</h1>
@@ -50,15 +122,17 @@ export default function AboutPage() {
                 <Image 
                   src="/jan computer pic old.JPEG" 
                   alt="Young Jan at computer"
-                  width={320}
-                  height={240}
+                  width={800}
+                  height={600}
+                  quality={100}
+                  priority
                   className="rounded shadow-xl object-cover float-right ml-6 mb-4 w-72"
                 />
                 <p className="text-lg leading-relaxed">
                   Back then, I was a teenager running affiliate campaigns, manually tracking every click in spreadsheets that crashed weekly. I thought I was sophisticated because I could see which ads generated clicks. I had no idea I was still flying blind.
                 </p>
                 <p className="text-lg leading-relaxed">
-                  Fast forward to 2017. I'm in my parents' attic in the Netherlands, pitching social media services to dentists door-to-door. Built an agency from zero to six figures using what I called the "Meetup Pro hack" - a simple system that generated $100k in client revenue. But even then, my clients kept asking the same question: "Which posts actually drive patients?"
+                  Fast forward to 2017. I'm operating from my parents' attic in the Netherlands, heading out each day to pitch social media services to dentists door-to-door. Built an agency from zero to six figures using what I called the "Meetup Pro hack" - a simple system that generated $100k in client revenue. But even then, my clients kept asking the same question: "Which posts actually drive patients?"
                 </p>
               </div>
 
@@ -86,8 +160,10 @@ export default function AboutPage() {
             <Image 
               src="/jan newer.JPEG" 
               alt="Jan Jegen"
-              width={320}
-              height={240}
+              width={800}
+              height={600}
+              quality={100}
+              priority
               className="rounded shadow-xl object-cover float-left mr-6 mb-4 w-72"
             />
             <p className="text-lg leading-relaxed">
@@ -128,7 +204,7 @@ export default function AboutPage() {
               height={64}
               quality={100}
               priority
-              className="rounded-full object-cover"
+              className="rounded-full object-cover w-16 h-16"
             />
             <div>
             <div className="font-semibold text-lg flex items-center gap-2">
@@ -169,6 +245,7 @@ export default function AboutPage() {
             >
               Start Your 14-Day Free Trial
             </Link>
+          </div>
           </div>
         </div>
       </div>
