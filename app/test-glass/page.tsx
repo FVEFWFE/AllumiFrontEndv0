@@ -3,9 +3,9 @@
 import { useState, useEffect } from "react"
 import dynamic from "next/dynamic"
 
-const FluidGlassProper = dynamic(() => import("../../components/FluidGlassProper"), {
+const SimpleGlassOrb = dynamic(() => import("../../components/SimpleGlassOrb"), {
   ssr: false,
-  loading: () => <div className="text-white">Loading 3D Glass...</div>
+  loading: () => <div className="text-white">Loading Glass Effect...</div>
 })
 
 export default function TestGlassPage() {
@@ -19,7 +19,7 @@ export default function TestGlassPage() {
   return (
     <div className="min-h-screen bg-black p-8">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold text-white mb-4">Fluid Glass Test Page</h1>
+        <h1 className="text-4xl font-bold text-white mb-4">Glass Orb Effect Test Page</h1>
         
         <div className="mb-4 space-x-4">
           <button 
@@ -32,9 +32,9 @@ export default function TestGlassPage() {
 
         <div className="relative bg-gray-900 rounded-lg p-8 h-[600px] overflow-hidden">
           <div className="text-white space-y-4">
-            <p>This is a test page for the fluid glass effect.</p>
-            <p>The glass lens should follow your mouse cursor.</p>
-            <p>It should be visible as a purple glowing lens.</p>
+            <p>This is a test page for the CSS glass orb effect.</p>
+            <p>The glass orb should follow your mouse cursor.</p>
+            <p>It appears as a glowing purple orb with glass-like effects.</p>
             
             <div className="grid grid-cols-2 gap-4 mt-8">
               <div className="bg-purple-600/20 p-4 rounded">
@@ -52,20 +52,9 @@ export default function TestGlassPage() {
             </div>
           </div>
 
-          {/* Fluid Glass Effect */}
+          {/* Glass Orb Effect */}
           {mounted && showGlass && (
-            <div style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
-              <FluidGlassProper 
-                mode="lens"
-                lensProps={{
-                  scale: 0.25,
-                  ior: 1.15,
-                  thickness: 5,
-                  chromaticAberration: 0.1,
-                  anisotropy: 0.01
-                }}
-              />
-            </div>
+            <SimpleGlassOrb />
           )}
         </div>
 
