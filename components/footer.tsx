@@ -8,6 +8,12 @@ import Link from "next/link"
 import Image from "next/image"
 import { ThemeSwitcher } from "./theme-switcher"
 
+declare global {
+  interface Window {
+    Featurebase: any
+  }
+}
+
 export const Footer = ({
   footer,
   logo,
@@ -37,24 +43,6 @@ export const Footer = ({
           />
         </Link>
         <nav className="col-start-1 row-start-2 flex flex-row flex-wrap gap-x-2 gap-y-3 self-center sm:col-span-1 sm:col-start-2 sm:row-start-1 sm:items-center sm:place-self-center md:gap-x-4 lg:gap-x-8">
-          <button
-            data-featurebase-feedback
-            className="px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"
-          >
-            Feature Request
-          </button>
-          <button
-            data-featurebase-feedback
-            className="px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"
-          >
-            Bug Report
-          </button>
-          <button
-            data-featurebase-feedback
-            className="px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"
-          >
-            Feedback
-          </button>
           <Link
             href="/about"
             className="px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"
@@ -67,6 +55,36 @@ export const Footer = ({
           >
             Help
           </Link>
+          <button
+            onClick={() => {
+              if (typeof window !== 'undefined' && window.Featurebase) {
+                window.Featurebase('open')
+              }
+            }}
+            className="px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"
+          >
+            Feedback
+          </button>
+          <button
+            onClick={() => {
+              if (typeof window !== 'undefined' && window.Featurebase) {
+                window.Featurebase('open', { board: 'bug-reports' })
+              }
+            }}
+            className="px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"
+          >
+            Bug Report
+          </button>
+          <button
+            onClick={() => {
+              if (typeof window !== 'undefined' && window.Featurebase) {
+                window.Featurebase('open', { board: 'feature-requests' })
+              }
+            }}
+            className="px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"
+          >
+            Feature Request
+          </button>
           <Link
             href="/affiliate"
             className="px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"

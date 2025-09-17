@@ -213,7 +213,7 @@ const testimonialsData = {
       quote:
         "Spent 18 months grinding organic. Attribution showed one Reddit style converted at 40%. Put $2K/month ads behind it. Went from $5K → $25K MRR in 60 days.",
       author: {
-        _title: "Marcus R.",
+        _title: "Marcus Thompson",
         role: "Community Owner",
         company: { _title: "Growth Accelerated" },
         image: null,
@@ -224,7 +224,7 @@ const testimonialsData = {
       quote:
         "Posted motivational content for 2 YEARS. Attribution revealed technical tutorials converted 8x better. Complete game-changer.",
       author: {
-        _title: "Sarah C.",
+        _title: "Emily Rodriguez",
         role: "Community Owner",
         company: { _title: "Content Pivot Success" },
         image: null,
@@ -235,7 +235,7 @@ const testimonialsData = {
       quote:
         "I was spending $4K/month on Instagram ads with terrible ROI. Attribution showed YouTube drove 90% of my revenue. Saved $48K/year by focusing on what actually works.",
       author: {
-        _title: "David M.",
+        _title: "Michael Anderson",
         role: "Community Owner",
         company: { _title: "Scale Smart" },
         image: null,
@@ -497,14 +497,18 @@ const whyIBuiltThisData = {
 
 export default function HomePage() {
   const [isEmailPopupOpen, setIsEmailPopupOpen] = useState(false)
-  const { openDemoModal } = useDemoModal()
+  const { openDemoModal, isAnyPopupOpen } = useDemoModal()
 
   return (
     <>
-      <HeroTargetCursor 
-        targetSelector=".cursor-target"
-        spinDuration={2}
-      />
+      {!isAnyPopupOpen && !isEmailPopupOpen && (
+        <div className="hidden sm:block">
+          <HeroTargetCursor 
+            targetSelector=".cursor-target"
+            spinDuration={2}
+          />
+        </div>
+      )}
       <AutoScroll />
       <EmailPopup 
         isOpen={isEmailPopupOpen} 
@@ -618,7 +622,7 @@ export default function HomePage() {
                   />
                 )}
                 <div className="text-left">
-                  <div className="font-semibold flex items-center gap-2">
+                  <div className="font-semibold flex items-center gap-1.5">
                     {whyIBuiltThisData.story.author.name}
                     <a 
                       href="https://instagram.com/JanJegen" 
@@ -643,6 +647,23 @@ export default function HomePage() {
                         <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
                       </svg>
                     </a>
+                    <a 
+                      href="https://x.com/jan_jegen" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-muted-foreground hover:text-primary transition-colors"
+                      aria-label="Jan Jegen on X (Twitter)"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                      >
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                      </svg>
+                    </a>
                   </div>
                   <div className="text-sm text-muted-foreground">{whyIBuiltThisData.story.author.role}</div>
                 </div>
@@ -656,7 +677,15 @@ export default function HomePage() {
         <Pricing {...pricingData} onCtaClick={() => setIsEmailPopupOpen(true)} />
       </div>
 
-      <section className="callout-section py-24 bg-muted/30">
+      <section className="callout-section py-24 bg-muted/30 relative">
+        {!isAnyPopupOpen && !isEmailPopupOpen && (
+          <div className="hidden sm:block">
+            <HeroTargetCursor 
+              targetSelector=".callout-cursor-target"
+              spinDuration={2}
+            />
+          </div>
+        )}
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-balance">{calloutData.title}</h2>
@@ -674,7 +703,7 @@ export default function HomePage() {
                       setIsEmailPopupOpen(true)
                     }
                   }}
-                  className={`cursor-target px-8 py-4 rounded-lg font-semibold transition-colors ${
+                  className={`sm:callout-cursor-target px-8 py-4 rounded-lg font-semibold transition-colors ${
                     action.type === "primary"
                       ? "bg-primary text-primary-foreground hover:bg-primary/90"
                       : "bg-secondary text-secondary-foreground hover:bg-secondary/80"

@@ -24,9 +24,8 @@ export function FeaturebaseWidgets() {
     win.Featurebase("initialize_feedback_widget", {
       organization: "allumi", // Using your Featurebase organization subdomain
       theme: "light",
-      placement: null, // No floating button, we'll use custom buttons
+      placement: "bottom-right", // Show the button for testing
       locale: "en",
-      defaultBoard: null, // We'll set this dynamically per button
     })
 
     // Boot messenger for support chat (bottom right)

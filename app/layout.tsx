@@ -179,7 +179,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   }
 
   return (
-    <html suppressHydrationWarning lang="en" className="dark">
+    <html suppressHydrationWarning lang="en" className="dark" style={{ colorScheme: 'dark' }}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
       </head>

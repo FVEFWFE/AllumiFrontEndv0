@@ -6,11 +6,13 @@ import { EmailPopup } from "./email-popup"
 import { DemoEmailModal } from "./demo-email-modal"
 import type { DarkLightImageFragment, HeaderFragment } from "@/lib/basehub/fragments"
 
-// Create context for demo modal
+// Create context for demo modal and popup states
 export const DemoModalContext = createContext<{
   openDemoModal: () => void
+  isAnyPopupOpen?: boolean
 }>({
-  openDemoModal: () => {}
+  openDemoModal: () => {},
+  isAnyPopupOpen: false
 })
 
 export const useDemoModal = () => useContext(DemoModalContext)
@@ -28,9 +30,10 @@ export function ClientLayout({
   const [isDemoPopupOpen, setIsDemoPopupOpen] = useState(false)
 
   const openDemoModal = () => setIsDemoPopupOpen(true)
+  const isAnyPopupOpen = isEmailPopupOpen || isDemoPopupOpen
 
   return (
-    <DemoModalContext.Provider value={{ openDemoModal }}>
+    <DemoModalContext.Provider value={{ openDemoModal, isAnyPopupOpen }}>
       <EmailPopup 
         isOpen={isEmailPopupOpen} 
         onClose={() => setIsEmailPopupOpen(false)} 

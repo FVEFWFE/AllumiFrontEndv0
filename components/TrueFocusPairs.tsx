@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'motion/react';
 import './TrueFocusPairs.css';
 
@@ -69,26 +69,32 @@ const TrueFocusPairs = ({
   }, [activeGroup, words1.length, allWords.length]);
 
   return (
-    <div className="focus-pairs-container" ref={containerRef}>
+    <div className="focus-pairs-container inline-flex flex-wrap" ref={containerRef}>
       {allWords.map((word, index) => {
         const isInFirstGroup = index < words1.length;
         const isActive = (activeGroup === 0 && isInFirstGroup) || (activeGroup === 1 && !isInFirstGroup);
+        const isLastOfFirstGroup = index === words1.length - 1;
         
         return (
-          <span
-            key={index}
-            ref={el => (wordRefs.current[index] = el)}
-            className={`focus-pair-word ${isActive ? 'active' : ''}`}
-            style={{
-              filter: isActive ? `blur(0px)` : `blur(${blurAmount}px)`,
-              ['--border-color' as any]: borderColor,
-              ['--glow-color' as any]: glowColor,
-              transition: `filter ${animationDuration}s ease`,
-              marginRight: index === words1.length - 1 ? '0.5em' : '0.3em'
-            }}
-          >
-            {word}
-          </span>
+          <React.Fragment key={index}>
+            <span
+              ref={el => (wordRefs.current[index] = el)}
+              className={`focus-pair-word ${isActive ? 'active' : ''} ${isLastOfFirstGroup ? 'sm:mr-2' : ''}`}
+              style={{
+                filter: isActive ? `blur(0px)` : `blur(${blurAmount}px)`,
+                ['--border-color' as any]: borderColor,
+                ['--glow-color' as any]: glowColor,
+                transition: `filter ${animationDuration}s ease`,
+                marginRight: index === words1.length - 1 ? '0.5em' : '0.3em',
+                display: 'inline-block'
+              }}
+            >
+              {word}
+            </span>
+            {isLastOfFirstGroup && (
+              <br className="sm:hidden" />
+            )}
+          </React.Fragment>
         );
       })}
 

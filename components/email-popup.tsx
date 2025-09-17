@@ -74,7 +74,7 @@ export function EmailPopup({ isOpen, onClose, groupId = DEFAULT_GROUP_ID }: Emai
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4">
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
@@ -82,7 +82,7 @@ export function EmailPopup({ isOpen, onClose, groupId = DEFAULT_GROUP_ID }: Emai
       />
 
       {/* Modal */}
-      <div className="relative w-full max-w-md bg-background border border-[--border] dark:border-[--dark-border] rounded-xl shadow-2xl">
+      <div className="relative w-full max-w-[95vw] sm:max-w-md bg-background border border-[--border] dark:border-[--dark-border] rounded-xl shadow-2xl">
         {/* Close button */}
         <button
           onClick={onClose}
@@ -92,7 +92,7 @@ export function EmailPopup({ isOpen, onClose, groupId = DEFAULT_GROUP_ID }: Emai
           <X className="h-5 w-5" />
         </button>
 
-        <div className="p-8">
+        <div className="p-6 sm:p-8">
           {/* Logo */}
           <div className="flex justify-center mb-6">
             <Image 
@@ -115,10 +115,10 @@ export function EmailPopup({ isOpen, onClose, groupId = DEFAULT_GROUP_ID }: Emai
 
           {/* Content */}
           <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold mb-2">
+            <h2 className="text-xl sm:text-2xl font-bold mb-2">
               Start Your 14-Day Free Trial
             </h2>
-            <p className="text-muted-foreground">
+            <p className="text-sm sm:text-base text-muted-foreground">
               See exactly what drives paying members to your Skool community
             </p>
           </div>
@@ -132,7 +132,7 @@ export function EmailPopup({ isOpen, onClose, groupId = DEFAULT_GROUP_ID }: Emai
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
                 required
-                className="w-full px-4 py-3 border border-[--border] dark:border-[--dark-border] rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-background"
+                className="w-full px-3 py-2.5 sm:px-4 sm:py-3 border border-[--border] dark:border-[--dark-border] rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-sm sm:text-base"
               />
             </div>
 
@@ -149,15 +149,15 @@ export function EmailPopup({ isOpen, onClose, groupId = DEFAULT_GROUP_ID }: Emai
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3 px-4 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="w-full py-2.5 sm:py-3 px-4 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm sm:text-base"
             >
               {isLoading ? "Processing..." : "Get Instant Access"}
             </button>
           </form>
 
           {/* Features */}
-          <div className="mt-6 pt-6 border-t border-[--border] dark:border-[--dark-border]">
-            <div className="space-y-2 text-sm text-muted-foreground">
+          <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-[--border] dark:border-[--dark-border]">
+            <div className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 <svg className="h-4 w-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />

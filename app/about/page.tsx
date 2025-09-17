@@ -4,16 +4,11 @@ import Image from "next/image"
 import Link from "next/link"
 import LaserFlow from "../../components/LaserFlow"
 import { useRef, useState, useEffect } from "react"
-import dynamic from "next/dynamic"
 import "./about.css"
-
-const SimpleGlassOrb = dynamic(() => import("../../components/SimpleGlassOrb"), {
-  ssr: false,
-  loading: () => null
-})
 
 export default function AboutPage() {
   const revealImgRef = useRef<HTMLImageElement>(null)
+  const revealImgLightRef = useRef<HTMLImageElement>(null)
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
@@ -25,22 +20,39 @@ export default function AboutPage() {
       <div 
         className="container mx-auto px-4 max-w-6xl pt-16 relative"
         onMouseMove={(e) => {
-          const el = revealImgRef.current
-          if (el) {
-            // Get the element's bounding rect
-            const rect = el.getBoundingClientRect()
-            // Calculate position relative to the image element itself
+          const darkEl = revealImgRef.current
+          const lightEl = revealImgLightRef.current
+          
+          // Update dark mode image
+          if (darkEl) {
+            const rect = darkEl.getBoundingClientRect()
             const x = e.clientX - rect.left
             const y = e.clientY - rect.top
-            el.style.setProperty('--mx', `${x}px`)
-            el.style.setProperty('--my', `${y}px`)
+            darkEl.style.setProperty('--mx', `${x}px`)
+            darkEl.style.setProperty('--my', `${y}px`)
+          }
+          
+          // Update light mode image
+          if (lightEl) {
+            const rect = lightEl.getBoundingClientRect()
+            const x = e.clientX - rect.left
+            const y = e.clientY - rect.top
+            lightEl.style.setProperty('--mx', `${x}px`)
+            lightEl.style.setProperty('--my', `${y}px`)
           }
         }}
         onMouseLeave={() => {
-          const el = revealImgRef.current
-          if (el) {
-            el.style.setProperty('--mx', '-9999px')
-            el.style.setProperty('--my', '-9999px')
+          const darkEl = revealImgRef.current
+          const lightEl = revealImgLightRef.current
+          
+          if (darkEl) {
+            darkEl.style.setProperty('--mx', '-9999px')
+            darkEl.style.setProperty('--my', '-9999px')
+          }
+          
+          if (lightEl) {
+            lightEl.style.setProperty('--mx', '-9999px')
+            lightEl.style.setProperty('--my', '-9999px')
           }
         }}
       >
@@ -49,7 +61,7 @@ export default function AboutPage() {
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="w-full h-full">
               <LaserFlow 
-                horizontalSizing={0.5}
+                horizontalSizing={1.26}
                 verticalSizing={2}
                 wispDensity={1}
                 wispSpeed={15}
@@ -71,49 +83,63 @@ export default function AboutPage() {
 
         {/* Hover reveal effect image - Only render on client */}
         {mounted && (
-          <img
-            ref={revealImgRef}
-            src="/allumialpha.png"
-            alt="Background effect"
-            className="fixed inset-0 w-full h-full z-[1] mix-blend-lighten opacity-30 pointer-events-none object-cover"
-            style={{
-              '--mx': '-9999px',
-              '--my': '-9999px',
-              maskImage: 'radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,1) 0px, rgba(255,255,255,0.95) 60px, rgba(255,255,255,0.6) 120px, rgba(255,255,255,0.25) 180px, rgba(255,255,255,0) 240px)',
-              WebkitMaskImage: 'radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,1) 0px, rgba(255,255,255,0.95) 60px, rgba(255,255,255,0.6) 120px, rgba(255,255,255,0.25) 180px, rgba(255,255,255,0) 240px)',
-              maskRepeat: 'no-repeat',
-              WebkitMaskRepeat: 'no-repeat'
-            } as React.CSSProperties}
-          />
+          <>
+            <img
+              ref={revealImgRef}
+              src="/allumialpha.png"
+              alt="Background effect"
+              className="fixed inset-0 w-full h-full z-[1] mix-blend-lighten opacity-30 pointer-events-none object-cover dark:block hidden"
+              style={{
+                '--mx': '-9999px',
+                '--my': '-9999px',
+                maskImage: 'radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,1) 0px, rgba(255,255,255,0.95) 60px, rgba(255,255,255,0.6) 120px, rgba(255,255,255,0.25) 180px, rgba(255,255,255,0) 240px)',
+                WebkitMaskImage: 'radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,1) 0px, rgba(255,255,255,0.95) 60px, rgba(255,255,255,0.6) 120px, rgba(255,255,255,0.25) 180px, rgba(255,255,255,0) 240px)',
+                maskRepeat: 'no-repeat',
+                WebkitMaskRepeat: 'no-repeat'
+              } as React.CSSProperties}
+            />
+            <img
+              ref={revealImgLightRef}
+              src="/lightbackgroundaboutus.png"
+              alt="Background effect light"
+              className="fixed inset-0 w-full h-full z-[1] mix-blend-multiply opacity-60 pointer-events-none object-cover dark:hidden block"
+              style={{
+                '--mx': '-9999px',
+                '--my': '-9999px',
+                maskImage: 'radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,1) 0px, rgba(255,255,255,0.95) 60px, rgba(255,255,255,0.6) 120px, rgba(255,255,255,0.25) 180px, rgba(255,255,255,0) 240px)',
+                WebkitMaskImage: 'radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,1) 0px, rgba(255,255,255,0.95) 60px, rgba(255,255,255,0.6) 120px, rgba(255,255,255,0.25) 180px, rgba(255,255,255,0) 240px)',
+                maskRepeat: 'no-repeat',
+                WebkitMaskRepeat: 'no-repeat'
+              } as React.CSSProperties}
+            />
+          </>
         )}
         
         {/* Story content in a box with matching laser flow stroke */}
-        <div className="story-box relative z-10 bg-black border-2 rounded-xl overflow-hidden" style={{ borderColor: '#CF9EFF' }}>
+        <div className="story-box relative z-10 dark:bg-black bg-white border-2 rounded-xl overflow-hidden" style={{ borderColor: '#CF9EFF' }}>
           {/* Demo container dots effect inside the box */}
           <div className="demo-container-dots" />
           
           {/* Fade overlay to smoothly fade dots away */}
           <div className="absolute inset-0 z-[1]" style={{
-            background: 'linear-gradient(to bottom, transparent 0%, transparent 20%, rgba(0,0,0,0.5) 25%, rgba(0,0,0,0.8) 30%, black 35%, black 100%)'
-          }} />
+            background: 'linear-gradient(to bottom, transparent 0%, transparent 20%, var(--tw-gradient-stops))'
+          }} >
+            <div className="absolute inset-0 dark:bg-gradient-to-b dark:from-transparent dark:via-black/50 dark:to-black bg-gradient-to-b from-transparent via-white/50 to-white" />
+          </div>
           
-          {/* Glass Orb Effect - Only render on client */}
-          {mounted && (
-            <SimpleGlassOrb />
-          )}
           
           <div className="relative z-10 p-8 lg:p-12">
           {/* Header */}
-          <div className="mb-12 text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">The Long Road to Attribution</h1>
+          <div className="mb-6 text-center">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 dark:text-white text-gray-900">The Long Road to Attribution</h1>
             <p className="text-xl text-muted-foreground">
               Started tracking what converts at 14. Spent 15 years learning what actually drives revenue. Built Allumi to solve the problem that cost me $36,000.
             </p>
           </div>
 
           {/* Main Content - Full page */}
-          <div className="prose prose-lg dark:prose-invert mx-auto">
-            <div className="space-y-6 pt-4">
+          <div className="prose prose-lg dark:prose-invert mx-auto dark:text-white text-gray-900">
+            <div className="space-y-6 pt-2">
               <p className="text-lg leading-relaxed">
                 I've been obsessed with one question since 2009: "What actually makes people buy?"
               </p>
@@ -164,7 +190,7 @@ export default function AboutPage() {
               height={600}
               quality={100}
               priority
-              className="rounded shadow-xl object-cover float-left mr-6 mb-4 w-72"
+              className="rounded shadow-xl object-cover float-left mr-6 mb-4 w-96"
             />
             <p className="text-lg leading-relaxed">
               But the patterns were undeniable. Every single client was wasting 70-90% of their marketing spend on channels that drove traffic but zero revenue. One was celebrating 10,000 Instagram followers while their email list of 200 people drove 95% of sales. Another spent two years creating daily YouTube videos when their highest-converting content was forum posts.
@@ -207,7 +233,7 @@ export default function AboutPage() {
               className="rounded-full object-cover w-16 h-16"
             />
             <div>
-            <div className="font-semibold text-lg flex items-center gap-2">
+            <div className="font-semibold text-lg flex items-center gap-1.5">
               Jan Jegen
               <a 
                 href="https://instagram.com/JanJegen" 
@@ -218,8 +244,8 @@ export default function AboutPage() {
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
+                  width="14"
+                  height="14"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -230,6 +256,23 @@ export default function AboutPage() {
                   <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
                   <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
                   <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                </svg>
+              </a>
+              <a 
+                href="https://x.com/jan_jegen" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-primary transition-colors"
+                aria-label="Jan Jegen on X (Twitter)"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                 </svg>
               </a>
             </div>
