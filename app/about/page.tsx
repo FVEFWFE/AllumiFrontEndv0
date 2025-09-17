@@ -124,8 +124,10 @@ export default function AboutPage() {
             <Image
               src="/founder-jan-jegen2.jpg"
               alt="Jan Jegen"
-              width={64}
-              height={64}
+              width={256}
+              height={256}
+              quality={100}
+              priority
               className="w-16 h-16 rounded-full object-cover"
             />
             <div>
