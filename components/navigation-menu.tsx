@@ -16,7 +16,6 @@ import { $button, ButtonLink } from "../common/button"
 import type { HeaderFragment, HeaderLiksFragment } from "../lib/basehub/fragments"
 import { useToggleState } from "../hooks/use-toggle-state"
 import { useHasRendered } from "../hooks/use-has-rendered"
-import StarBorder from "./StarBorder"
 
 // #region desktop 💻
 /* -------------------------------------------------------------------------- */
@@ -188,32 +187,22 @@ export function DesktopNavigation({ navbar }: Pick<HeaderFragment, 'navbar'>) {
 export function DesktopCTAs({ rightCtas, onCtaClick }: Pick<HeaderFragment, 'rightCtas'> & { onCtaClick?: () => void }) {
   return (
     <div className="hidden lg:flex items-center gap-2">
-      {rightCtas.items.map((cta, index) => {
-        // Apply StarBorder to "Get Started Today" (first item)
-        if (index === 0 && cta.label === "Get Started Today") {
-          return (
-            <StarBorder 
-              key={cta._id} 
-              as="button"
-              type="button"
-              onClick={() => {
-                console.log('Header CTA clicked');
-                onCtaClick?.();
-              }}
-              color="cyan"
-              speed="5s"
-              className="no-underline cursor-pointer"
-            >
-              {cta.label}
-            </StarBorder>
-          )
-        }
-        return (
-          <ButtonLink key={cta._id} className="!px-3.5" href={cta.href} intent={cta.type}>
-            {cta.label}
-          </ButtonLink>
-        )
-      })}
+      <ButtonLink 
+        className="!px-3.5" 
+        href="/sign-in" 
+        intent="secondary"
+      >
+        Log In
+      </ButtonLink>
+      <button
+        onClick={() => {
+          console.log('Header Get Started clicked');
+          onCtaClick?.();
+        }}
+        className="gap-1 font-normal shrink-0 rounded-full ring-[--control] focus-visible:ring-2 outline-hidden outline-0 bg-[--accent-500] hover:bg-[--accent-600] text-[--text-on-accent-primary] border-[--accent-600] inline-flex items-center justify-center px-3.5 text-sm h-8 md:px-5 !px-3.5"
+      >
+        Get Started Today
+      </button>
     </div>
   )
 }
@@ -314,28 +303,18 @@ export function MobileMenu({ navbar, rightCtas, onCtaClick }: HeaderFragment & {
                 </Link>
               </nav>
               <div className="flex items-center justify-start gap-2">
-                {rightCtas.items.map((cta, index) => {
-                  // Make "Get Started Today" button open popup
-                  if (index === 0 && cta.label === "Get Started Today") {
-                    return (
-                      <button
-                        key={cta._id}
-                        onClick={() => {
-                          onCtaClick?.()
-                          handleOff()
-                        }}
-                        className={$button({ intent: cta.type, size: "lg", className: "w-full" })}
-                      >
-                        {cta.label}
-                      </button>
-                    )
-                  }
-                  return (
-                    <ButtonLink key={cta._id} href={cta.href} intent={cta.type} size="lg">
-                      {cta.label}
-                    </ButtonLink>
-                  )
-                })}
+                <ButtonLink href="/sign-in" intent="secondary" size="lg">
+                  Log In
+                </ButtonLink>
+                <button
+                  onClick={() => {
+                    onCtaClick?.()
+                    handleOff()
+                  }}
+                  className={$button({ intent: "primary", size: "lg", className: "w-full" })}
+                >
+                  Get Started Today
+                </button>
               </div>
             </div>
           </div>
