@@ -20,19 +20,13 @@ export function FeaturebaseWidgets() {
       }
     }
 
-    // Initialize feedback widget (for bug reports and feature requests)
+    // Initialize feedback widget with correct placement
     win.Featurebase("initialize_feedback_widget", {
-      organization: "allumi", // Using your Featurebase organization subdomain
-      theme: "light",
-      placement: "bottom-right", // Show the button for testing
-      locale: "en",
-    })
-
-    // Boot messenger for support chat (bottom right)
-    win.Featurebase("boot", {
-      appId: "68c9a9ad20458b998ba07744",
-      theme: "light",
-      language: "en",
+      organization: "allumi",
+      placement: "bottom-right",
+      fullScreen: false,
+      defaultBoard: "feedback",
+      theme: "light"
     })
 
     // Listen for theme changes to update widget themes
@@ -43,13 +37,11 @@ export function FeaturebaseWidgets() {
       // Update feedback widget theme
       win.Featurebase("initialize_feedback_widget", {
         organization: "allumi",
-        theme: theme,
-        placement: null,
-        locale: "en",
+        placement: "bottom-right",
+        fullScreen: false,
+        defaultBoard: "feedback",
+        theme: theme
       })
-      
-      // Update messenger theme
-      win.Featurebase('setTheme', theme)
     }
 
     // Initial theme check

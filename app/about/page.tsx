@@ -18,7 +18,7 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen bg-background pb-16">
       <div 
-        className="container mx-auto px-4 max-w-6xl pt-16 relative"
+        className="relative pt-16"
         onMouseMove={(e) => {
           const darkEl = revealImgRef.current
           const lightEl = revealImgLightRef.current
@@ -92,8 +92,8 @@ export default function AboutPage() {
               style={{
                 '--mx': '-9999px',
                 '--my': '-9999px',
-                maskImage: 'radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,1) 0px, rgba(255,255,255,0.95) 60px, rgba(255,255,255,0.6) 120px, rgba(255,255,255,0.25) 180px, rgba(255,255,255,0) 240px)',
-                WebkitMaskImage: 'radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,1) 0px, rgba(255,255,255,0.95) 60px, rgba(255,255,255,0.6) 120px, rgba(255,255,255,0.25) 180px, rgba(255,255,255,0) 240px)',
+                maskImage: 'radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,1) 0px, rgba(255,255,255,0.95) 100px, rgba(255,255,255,0.7) 200px, rgba(255,255,255,0.4) 350px, rgba(255,255,255,0.15) 500px, rgba(255,255,255,0) 700px)',
+                WebkitMaskImage: 'radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,1) 0px, rgba(255,255,255,0.95) 100px, rgba(255,255,255,0.7) 200px, rgba(255,255,255,0.4) 350px, rgba(255,255,255,0.15) 500px, rgba(255,255,255,0) 700px)',
                 maskRepeat: 'no-repeat',
                 WebkitMaskRepeat: 'no-repeat'
               } as React.CSSProperties}
@@ -106,8 +106,8 @@ export default function AboutPage() {
               style={{
                 '--mx': '-9999px',
                 '--my': '-9999px',
-                maskImage: 'radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,1) 0px, rgba(255,255,255,0.95) 60px, rgba(255,255,255,0.6) 120px, rgba(255,255,255,0.25) 180px, rgba(255,255,255,0) 240px)',
-                WebkitMaskImage: 'radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,1) 0px, rgba(255,255,255,0.95) 60px, rgba(255,255,255,0.6) 120px, rgba(255,255,255,0.25) 180px, rgba(255,255,255,0) 240px)',
+                maskImage: 'radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,1) 0px, rgba(255,255,255,0.95) 100px, rgba(255,255,255,0.7) 200px, rgba(255,255,255,0.4) 350px, rgba(255,255,255,0.15) 500px, rgba(255,255,255,0) 700px)',
+                WebkitMaskImage: 'radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,1) 0px, rgba(255,255,255,0.95) 100px, rgba(255,255,255,0.7) 200px, rgba(255,255,255,0.4) 350px, rgba(255,255,255,0.15) 500px, rgba(255,255,255,0) 700px)',
                 maskRepeat: 'no-repeat',
                 WebkitMaskRepeat: 'no-repeat'
               } as React.CSSProperties}
@@ -116,6 +116,7 @@ export default function AboutPage() {
         )}
         
         {/* Story content in a box with matching laser flow stroke */}
+        <div className="container mx-auto px-4 max-w-6xl">
         <div className="story-box relative z-10 dark:bg-black bg-white border-2 rounded-xl overflow-hidden" style={{ borderColor: '#CF9EFF' }}>
           {/* Demo container dots effect inside the box */}
           <div className="demo-container-dots" />
@@ -186,11 +187,11 @@ export default function AboutPage() {
             <Image 
               src="/jan newer.JPEG" 
               alt="Jan Jegen"
-              width={800}
-              height={600}
+              width={400}
+              height={300}
               quality={100}
               priority
-              className="rounded shadow-xl object-cover float-left mr-6 mb-4 w-96"
+              className="rounded shadow-xl object-cover float-left mr-6 mb-4 w-80 h-60"
             />
             <p className="text-lg leading-relaxed">
               But the patterns were undeniable. Every single client was wasting 70-90% of their marketing spend on channels that drove traffic but zero revenue. One was celebrating 10,000 Instagram followers while their email list of 200 people drove 95% of sales. Another spent two years creating daily YouTube videos when their highest-converting content was forum posts.
@@ -290,6 +291,7 @@ export default function AboutPage() {
             </Link>
           </div>
           </div>
+        </div>
         </div>
       </div>
     </div>

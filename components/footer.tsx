@@ -58,7 +58,7 @@ export const Footer = ({
           <button
             onClick={() => {
               if (typeof window !== 'undefined' && window.Featurebase) {
-                window.Featurebase('open')
+                window.Featurebase('open_feedback_widget', { board: 'feedback' })
               }
             }}
             className="px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"
@@ -68,7 +68,7 @@ export const Footer = ({
           <button
             onClick={() => {
               if (typeof window !== 'undefined' && window.Featurebase) {
-                window.Featurebase('open', { board: 'bug-reports' })
+                window.Featurebase('open_feedback_widget', { board: 'bug-reports' })
               }
             }}
             className="px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"
@@ -78,7 +78,7 @@ export const Footer = ({
           <button
             onClick={() => {
               if (typeof window !== 'undefined' && window.Featurebase) {
-                window.Featurebase('open', { board: 'feature-requests' })
+                window.Featurebase('open_feedback_widget', { board: 'feature-requests' })
               }
             }}
             className="px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"
