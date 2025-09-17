@@ -72,6 +72,20 @@ const HeroTargetCursor = ({ targetSelector = '.cursor-target', spinDuration = 2 
     createSpinTimeline();
 
     const moveHandler = e => {
+      // Check if mouse is in header
+      const header = document.querySelector('header');
+      if (header) {
+        const headerRect = header.getBoundingClientRect();
+        if (e.clientY >= headerRect.top && e.clientY <= headerRect.bottom) {
+          // Mouse is in header, hide cursor
+          if (isInHeroRef.current) {
+            isInHeroRef.current = false;
+            gsap.to(cursor, { opacity: 0, duration: 0.3 });
+          }
+          return;
+        }
+      }
+      
       // Check if mouse is in hero or callout section
       const heroSection = document.querySelector('section.hero-section');
       const calloutSection = document.querySelector('section.callout-section');

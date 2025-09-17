@@ -82,20 +82,16 @@ export function EmailPopup({
   if (!isOpen) return null
 
   return (
-    <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4"
-      onClick={(e) => {
-        // Only close if clicking the backdrop (not the modal content)
-        if (e.target === e.currentTarget) {
-          onClose()
-        }
-      }}
-    >
+    <>
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
-
+      <div 
+        className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm"
+        onClick={onClose}
+      />
+      
       {/* Modal */}
-      <div className="relative w-full max-w-[95vw] sm:max-w-md bg-background border border-[--border] dark:border-[--dark-border] rounded-xl shadow-2xl">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 pointer-events-none">
+        <div className="relative w-full max-w-[95vw] sm:max-w-md bg-background border border-[--border] dark:border-[--dark-border] rounded-xl shadow-2xl pointer-events-auto">
         {/* Close button */}
         <button
           onClick={onClose}
@@ -193,6 +189,6 @@ export function EmailPopup({
           </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
