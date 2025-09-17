@@ -67,8 +67,14 @@ export const Footer = ({
           </button>
           <button
             onClick={() => {
-              if (typeof window !== 'undefined' && window.Featurebase) {
-                window.Featurebase('showNewMessage', 'I found a bug in Allumi');
+              if (typeof window !== 'undefined') {
+                window.postMessage({
+                  target: 'FeaturebaseWidget',
+                  data: { 
+                    action: 'openFeedbackWidget',
+                    setBoard: 'bugs',
+                  }
+                }, '*');
               }
             }}
             className="px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"

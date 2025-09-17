@@ -92,16 +92,16 @@ export function EmailPopup({
       {/* Modal */}
       <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 pointer-events-none">
         <div className="relative w-full max-w-[95vw] sm:max-w-md bg-background border border-[--border] dark:border-[--dark-border] rounded-xl shadow-2xl pointer-events-auto">
-        {/* Close button */}
-        <button
-          onClick={onClose}
-          className="absolute right-4 top-4 p-1 rounded-lg hover:bg-muted transition-colors"
-          aria-label="Close"
-        >
-          <X className="h-5 w-5" />
-        </button>
+          {/* Close button */}
+          <button
+            onClick={onClose}
+            className="absolute right-4 top-4 p-1 rounded-lg hover:bg-muted transition-colors"
+            aria-label="Close"
+          >
+            <X className="h-5 w-5" />
+          </button>
 
-        <div className="p-6 sm:p-8">
+          <div className="p-6 sm:p-8">
           {/* Logo */}
           <div className="flex justify-center mb-6">
             <Image 
