@@ -170,7 +170,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html suppressHydrationWarning lang="en">
       <body
-        className={`min-h-svh max-w-[100vw] bg-[--surface-primary] text-[--text-primary] dark:bg-[--dark-surface-primary] dark:text-[--dark-text-primary] ${geistMono.variable} ${geist.variable} font-sans`}
+        className={`min-h-svh max-w-[100vw] bg-background text-foreground ${geistMono.variable} ${geist.variable} font-sans`}
       >
         <PHProvider>
           <Providers theme={settings.theme}>
