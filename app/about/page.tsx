@@ -10,10 +10,10 @@ export default function AboutPage() {
     <div className="min-h-screen bg-background pb-16">
       <div className="container mx-auto px-4 max-w-6xl pt-16">
         {/* LaserFlow effect above the story box */}
-        <div className="relative h-96 -mb-48 flex justify-center -mt-16">
-          <div className="w-full max-w-4xl overflow-hidden">
+        <div className="relative h-96 -mb-48 -mt-16 overflow-hidden">
+          <div className="absolute left-1/2 -translate-x-1/2 w-[120%]">
             <LaserFlow 
-              horizontalSizing={2.5}
+              horizontalSizing={3.0}
               verticalSizing={5.0}
               wispDensity={1.8}
               wispSpeed={15}
@@ -113,12 +113,9 @@ export default function AboutPage() {
                 That client who was wasting $3K/month on Instagram? They're now at $25K MRR, spending 80% less on ads, working half the hours. All because they can finally see what converts.
               </p>
 
-              <div className="mt-12">
-                <p className="text-2xl font-bold text-center">
-                  Your attribution clarity is five minutes away.
-                </p>
-                <br />
-              </div>
+              <p className="text-2xl font-bold text-center mt-8">
+                Your attribution clarity is five minutes away.
+              </p>
             </div>
           </div>
 
