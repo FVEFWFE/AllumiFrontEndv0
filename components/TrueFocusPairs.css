@@ -4,7 +4,14 @@
   gap: 0.3em;
   justify-content: center;
   align-items: center;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
+  max-width: 100%;
+}
+
+@media (max-width: 640px) {
+  .focus-pairs-container {
+    font-size: 0.85em;
+  }
 }
 
 .focus-pair-word {

@@ -117,7 +117,7 @@ export function Hero(
                 ) : null}
               </h1>
             </div>
-            <h2 className="text-md max-w-2xl text-pretty text-center text-[--text-tertiary] dark:text-[--dark-text-tertiary] md:text-lg">
+            <h2 className="text-sm sm:text-md max-w-2xl text-pretty text-center text-[--text-tertiary] dark:text-[--dark-text-tertiary] md:text-lg px-4">
               {hero.subtitle}
             </h2>
           </div>
