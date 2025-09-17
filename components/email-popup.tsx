@@ -82,7 +82,7 @@ export function EmailPopup({
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-50">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4">
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
@@ -90,8 +90,7 @@ export function EmailPopup({
       />
       
       {/* Modal */}
-      <div className="absolute inset-0 flex items-center justify-center p-2 sm:p-4 pointer-events-none">
-        <div className="relative w-full max-w-[95vw] sm:max-w-md bg-background border border-[--border] dark:border-[--dark-border] rounded-xl shadow-2xl pointer-events-auto">
+      <div className="relative w-full max-w-[95vw] sm:max-w-md bg-background border border-[--border] dark:border-[--dark-border] rounded-xl shadow-2xl">
           {/* Close button */}
           <button
             onClick={onClose}
@@ -190,6 +189,5 @@ export function EmailPopup({
           </div>
         </div>
       </div>
-    </div>
   )
 }
