@@ -46,16 +46,16 @@ export default function AboutPage() {
                 I've been obsessed with one question since 2009: "What actually makes people buy?"
               </p>
 
-          <div className="flex items-start gap-6">
-            <p className="text-lg leading-relaxed flex-1">
+          <div className="flex flex-col md:flex-row items-start gap-6">
+            <p className="text-lg leading-relaxed md:flex-1">
               Back then, I was a teenager running affiliate campaigns, manually tracking every click in spreadsheets that crashed weekly. I thought I was sophisticated because I could see which ads generated clicks. I had no idea I was still flying blind.
             </p>
             <Image 
               src="/jan computer pic old.JPEG" 
               alt="Young Jan at computer"
-              width={200}
-              height={150}
-              className="rounded-lg shadow-lg object-cover"
+              width={320}
+              height={240}
+              className="rounded shadow-xl object-cover w-full md:w-80 h-auto"
             />
           </div>
 
@@ -87,15 +87,15 @@ export default function AboutPage() {
             But the patterns were undeniable. Every single client was wasting 70-90% of their marketing spend on channels that drove traffic but zero revenue. One was celebrating 10,000 Instagram followers while their email list of 200 people drove 95% of sales. Another spent two years creating daily YouTube videos when their highest-converting content was forum posts.
           </p>
 
-          <div className="flex items-center gap-6">
+          <div className="flex flex-col md:flex-row items-center gap-6">
             <Image 
               src="/jan newer.JPEG" 
               alt="Jan Jegen"
-              width={200}
-              height={150}
-              className="rounded-lg shadow-lg object-cover"
+              width={320}
+              height={240}
+              className="rounded shadow-xl object-cover w-full md:w-80 h-auto"
             />
-            <p className="text-lg leading-relaxed font-semibold flex-1">
+            <p className="text-lg leading-relaxed font-semibold md:flex-1">
               The problem was blindness to what actually converts.
             </p>
           </div>
