@@ -70,43 +70,54 @@ const TrueFocusPairs = ({
 
   return (
     <div className="focus-pairs-container inline-flex flex-wrap" ref={containerRef}>
-      {allWords.map((word, index) => {
-        const isInFirstGroup = index < words1.length;
-        const isActive = (activeGroup === 0 && isInFirstGroup) || (activeGroup === 1 && !isInFirstGroup);
-        const isLastOfFirstGroup = index === words1.length - 1;
-        const isFirstOfSecondGroup = index === words1.length;
-        
-        return (
-          <React.Fragment key={index}>
-            {/* Add wrapper to keep "Start Growing" together */}
-            {isFirstOfSecondGroup && (
-              <span className="inline-block whitespace-nowrap">
-            )}
+      {/* First group */}
+      <span className="inline-block">
+        {words1.map((word, index) => (
+          <span
+            key={index}
+            ref={el => (wordRefs.current[index] = el)}
+            className={`focus-pair-word ${activeGroup === 0 ? 'active' : ''}`}
+            style={{
+              filter: activeGroup === 0 ? `blur(0px)` : `blur(${blurAmount}px)`,
+              ['--border-color' as any]: borderColor,
+              ['--glow-color' as any]: glowColor,
+              transition: `filter ${animationDuration}s ease`,
+              marginRight: index === words1.length - 1 ? '0' : '0.3em',
+              display: 'inline-block'
+            }}
+          >
+            {word}
+          </span>
+        ))}
+      </span>
+      
+      {/* Break on mobile */}
+      <br className="sm:hidden" />
+      <span className="hidden sm:inline-block sm:mr-2" />
+      
+      {/* Second group - keep together */}
+      <span className="inline-block whitespace-nowrap">
+        {words2.map((word, index) => {
+          const actualIndex = words1.length + index;
+          return (
             <span
-              ref={el => (wordRefs.current[index] = el)}
-              className={`focus-pair-word ${isActive ? 'active' : ''} ${isLastOfFirstGroup ? 'sm:mr-2' : ''}`}
+              key={actualIndex}
+              ref={el => (wordRefs.current[actualIndex] = el)}
+              className={`focus-pair-word ${activeGroup === 1 ? 'active' : ''}`}
               style={{
-                filter: isActive ? `blur(0px)` : `blur(${blurAmount}px)`,
+                filter: activeGroup === 1 ? `blur(0px)` : `blur(${blurAmount}px)`,
                 ['--border-color' as any]: borderColor,
                 ['--glow-color' as any]: glowColor,
                 transition: `filter ${animationDuration}s ease`,
-                marginRight: index === allWords.length - 1 ? '0' : index === words1.length - 1 ? '0.5em' : '0.3em',
+                marginRight: index === words2.length - 1 ? '0' : '0.3em',
                 display: 'inline-block'
               }}
             >
               {word}
             </span>
-            {/* Close wrapper after last word of second group */}
-            {index === allWords.length - 1 && (
-              </span>
-            )}
-            {/* Break after first group on mobile */}
-            {isLastOfFirstGroup && (
-              <br className="sm:hidden" />
-            )}
-          </React.Fragment>
-        );
-      })}
+          );
+        })}
+      </span>
 
       <motion.div
         className="focus-pair-frame"

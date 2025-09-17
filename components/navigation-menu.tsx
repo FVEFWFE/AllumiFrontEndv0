@@ -272,9 +272,9 @@ export function MobileMenu({ navbar, rightCtas, onCtaClick }: HeaderFragment & {
       </button>
       <div className="block lg:hidden">
         {isOn ? (
-          <div className="fixed left-0 top-[calc(var(--header-height)+1px)] z-10 h-auto w-full bg-[--surface-primary] dark:bg-[--dark-surface-primary]">
-            <div className="flex flex-col gap-8 px-6 py-8">
-              <nav className="flex flex-col gap-4">
+          <div className="fixed left-0 top-[calc(var(--header-height)+1px)] z-10 h-auto w-full bg-[--surface-primary] dark:bg-[--dark-surface-primary] shadow-lg border-b border-[--border] dark:border-[--dark-border]">
+            <div className="flex flex-col gap-6 px-4 py-6">
+              <nav className="flex flex-col gap-2">
                 {filteredLinks.map((link) =>
                   link.sublinks.items.length > 0 ? (
                     <ItemWithSublinks
@@ -287,7 +287,7 @@ export function MobileMenu({ navbar, rightCtas, onCtaClick }: HeaderFragment & {
                   ) : (
                     <button
                       key={link._id}
-                      className="flex items-center gap-2 rounded-sm px-3 py-1.5 text-left"
+                      className="flex items-center gap-2 rounded-lg px-4 py-2.5 text-left hover:bg-[--surface-secondary] dark:hover:bg-[--dark-surface-secondary] transition-colors"
                       onClick={() => handleMobileClick(link.href ?? "#", link._title)}
                     >
                       {link._title}
@@ -296,14 +296,19 @@ export function MobileMenu({ navbar, rightCtas, onCtaClick }: HeaderFragment & {
                 )}
                 <Link
                   href="/community"
-                  className="flex items-center gap-2 rounded-sm px-3 py-1.5 text-left"
+                  className="flex items-center gap-2 rounded-lg px-4 py-2.5 text-left hover:bg-[--surface-secondary] dark:hover:bg-[--dark-surface-secondary] transition-colors"
                   onClick={handleOff}
                 >
                   Community
                 </Link>
               </nav>
-              <div className="flex items-center justify-start gap-2">
-                <ButtonLink href="/sign-in" intent="secondary" size="lg">
+              <div className="flex flex-col gap-3 border-t border-[--border] dark:border-[--dark-border] pt-4">
+                <ButtonLink 
+                  href="/sign-in" 
+                  intent="secondary" 
+                  size="lg"
+                  className="w-full justify-center"
+                >
                   Log In
                 </ButtonLink>
                 <button
@@ -311,7 +316,7 @@ export function MobileMenu({ navbar, rightCtas, onCtaClick }: HeaderFragment & {
                     onCtaClick?.()
                     handleOff()
                   }}
-                  className={$button({ intent: "primary", size: "lg", className: "w-full" })}
+                  className={$button({ intent: "primary", size: "lg", className: "w-full justify-center" })}
                 >
                   Get Started Today
                 </button>
@@ -367,18 +372,18 @@ function ItemWithSublinks({
 
   return (
     <div key={_id}>
-      <button className="flex items-center gap-2 px-3 py-1.5" onClick={handleToggle}>
+      <button className="flex items-center gap-2 rounded-lg px-4 py-2.5 w-full text-left hover:bg-[--surface-secondary] dark:hover:bg-[--dark-surface-secondary] transition-colors" onClick={handleToggle}>
         {_title}
         <ChevronDownIcon
           className={clsx(
-            "h-min transform text-[--text-tertiary] transition-transform dark:text-[--dark-text-tertiary]",
+            "ml-auto h-4 w-4 transform text-[--text-tertiary] transition-transform dark:text-[--dark-text-tertiary]",
             isOn ? "rotate-180" : "rotate-0",
           )}
         />
       </button>
       <ul
         ref={listRef}
-        className={clsx("flex h-0 origin-top transform-gpu flex-col gap-2 overflow-hidden pl-4 transition-transform")}
+        className={clsx("flex h-0 origin-top transform-gpu flex-col gap-1 overflow-hidden pl-8 transition-transform")}
       >
         {sublinks.map((sublink) => {
           const { href, _title } =
@@ -395,7 +400,7 @@ function ItemWithSublinks({
           return (
             <li key={sublink._id}>
               <Link
-                className="flex items-center gap-2 rounded-md px-3 py-1.5 text-[--text-tertiary] dark:text-[--dark-text-tertiary]"
+                className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm text-[--text-tertiary] hover:text-[--text-primary] hover:bg-[--surface-secondary] dark:text-[--dark-text-tertiary] dark:hover:text-[--dark-text-primary] dark:hover:bg-[--dark-surface-secondary] transition-colors"
                 href={href}
                 onClick={onClick}
               >

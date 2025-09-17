@@ -57,6 +57,8 @@ export default function AboutPage() {
               className="hover-reveal-bg dark:block hidden"
               style={{
                 backgroundImage: 'url(/allumialpha.png)',
+                backgroundSize: '100% auto',
+                backgroundPosition: 'center top',
                 opacity: 0.3,
                 mixBlendMode: 'lighten',
                 maskImage: `radial-gradient(circle at ${mousePos.x}px ${mousePos.y}px, rgba(255,255,255,1) 0px, rgba(255,255,255,0.95) 100px, rgba(255,255,255,0.7) 200px, rgba(255,255,255,0.4) 350px, rgba(255,255,255,0.15) 500px, rgba(255,255,255,0) 700px)`,
@@ -70,6 +72,8 @@ export default function AboutPage() {
               className="hover-reveal-bg dark:hidden block"
               style={{
                 backgroundImage: 'url(/lightbackgroundaboutus.png)',
+                backgroundSize: '100% auto',
+                backgroundPosition: 'center top',
                 opacity: 0.6,
                 mixBlendMode: 'multiply',
                 maskImage: `radial-gradient(circle at ${mousePos.x}px ${mousePos.y}px, rgba(255,255,255,1) 0px, rgba(255,255,255,0.95) 100px, rgba(255,255,255,0.7) 200px, rgba(255,255,255,0.4) 350px, rgba(255,255,255,0.15) 500px, rgba(255,255,255,0) 700px)`,
