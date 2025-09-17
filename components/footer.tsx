@@ -50,25 +50,29 @@ export const Footer = ({
             About
           </Link>
           <Link
-            href="/help"
+            href="https://help.allumi.com/"
+            target="_blank"
+            rel="noopener noreferrer"
             className="px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"
           >
             Help
           </Link>
           <button
-            onClick={() => {
-              if (typeof window !== 'undefined' && window.Featurebase) {
-                window.Featurebase('open_feedback_widget', { board: 'feedback' })
-              }
-            }}
+            data-featurebase-feedback
             className="px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"
           >
             Feedback
           </button>
           <button
             onClick={() => {
-              if (typeof window !== 'undefined' && window.Featurebase) {
-                window.Featurebase('open_feedback_widget', { board: 'bug-reports' })
+              if (typeof window !== 'undefined') {
+                window.postMessage({
+                  target: 'FeaturebaseWidget',
+                  data: { 
+                    action: 'openFeedbackWidget',
+                    setBoard: 'bugs',
+                  }
+                }, '*');
               }
             }}
             className="px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"
@@ -77,8 +81,14 @@ export const Footer = ({
           </button>
           <button
             onClick={() => {
-              if (typeof window !== 'undefined' && window.Featurebase) {
-                window.Featurebase('open_feedback_widget', { board: 'feature-requests' })
+              if (typeof window !== 'undefined') {
+                window.postMessage({
+                  target: 'FeaturebaseWidget',
+                  data: { 
+                    action: 'openFeedbackWidget',
+                    setBoard: 'features',
+                  }
+                }, '*');
               }
             }}
             className="px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"

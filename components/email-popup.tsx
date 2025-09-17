@@ -8,12 +8,20 @@ interface EmailPopupProps {
   isOpen: boolean
   onClose: () => void
   groupId?: string
+  customTitle?: string
+  customDescription?: string
 }
 
 const MAILERLITE_API_KEY = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI0IiwianRpIjoiMzAyNzNhZTg1MzI2MGU3ZjM2YmE5MGIzZDcxZWEwOTVhODUxN2RjMmJkYmQ0ZDIxNzA2NWJjOGZjZDg5M2UxNDg3ZTUyZDg0M2NiNTZmZGIiLCJpYXQiOjE3NTgwNDYxMTUuMDE5MTU4LCJuYmYiOjE3NTgwNDYxMTUuMDE5MTYyLCJleHAiOjQ5MTM3MTk3MTUuMDExNTc4LCJzdWIiOiIxNzUxMDI4Iiwic2NvcGVzIjpbXX0.is0ny9DWls5mcOz2DCoS7r43R5HZcDQfqOwYLKiPgcqCK9zOmuKI0k8v8cMXmop3zRcOxYlFkRtPLLGk3V-lxUWKJlEUn54rjECBAZ5228DmK6MNnyI61izBbnMHrIFk08S1UHM1FQVHTu4Br3XdzUGVikvLeJMfl7YNgSluQQyfzQZB_ziljC6tMy2fT6GueRISFKr7vf0qMl3Ddy2dN5LgglfaqAV0NRbMV3djLncEZ6IOvS98DTLW8ZNfpp74PJw4nd2fNpnF1aQ2G6wMJ_xzh0bmVqi43QNovIVM1pdyJwohOLpObW2d7xiz7FveYLkF75oAWkmpjVdb3hjX4VMCNbhvlOmCzJQFU96ksaiYmvV3NDfqpEPBo354CgT1kwXVGcEqNktG1BmrjLxa790mS6Eg3P7oPbsDOdoZ8jr-oK2oahpc4AVvi9BRBgT0DoSOB3STPzc6egqIrCQpayB5WUPyqO8H3hxYWrLc-5SqrdrT22HVdFyMTru1UoMl4xz6G2ZPiyO771ZJqBc3sQWqjXw-WDNbF1ioMs6Uo7PfPY7vQ8S8jMy3zXdIcbSxgTeftoqUnV1sKt5X1MXFB_VXMplEqjpdF81tsTXWsgiXd3-WakIZuqwqyQapp3FMB4erpy3RjKRUcdiOgBbCn9KwEWedXXylFZpaxhmBbmg"
 const DEFAULT_GROUP_ID = "165723410007065963"
 
-export function EmailPopup({ isOpen, onClose, groupId = DEFAULT_GROUP_ID }: EmailPopupProps) {
+export function EmailPopup({ 
+  isOpen, 
+  onClose, 
+  groupId = DEFAULT_GROUP_ID,
+  customTitle,
+  customDescription
+}: EmailPopupProps) {
   const [email, setEmail] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [message, setMessage] = useState<{ type: "success" | "error", text: string } | null>(null)
@@ -116,10 +124,10 @@ export function EmailPopup({ isOpen, onClose, groupId = DEFAULT_GROUP_ID }: Emai
           {/* Content */}
           <div className="text-center mb-6">
             <h2 className="text-xl sm:text-2xl font-bold mb-2">
-              Start Your 14-Day Free Trial
+              {customTitle || "Start Your 14-Day Free Trial"}
             </h2>
             <p className="text-sm sm:text-base text-muted-foreground">
-              See exactly what drives paying members to your Skool community
+              {customDescription || "See exactly what drives paying members to your Skool community"}
             </p>
           </div>
 

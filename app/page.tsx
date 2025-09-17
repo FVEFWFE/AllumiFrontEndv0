@@ -504,7 +504,7 @@ export default function HomePage() {
       {!isAnyPopupOpen && !isEmailPopupOpen && (
         <div className="hidden sm:block">
           <HeroTargetCursor 
-            targetSelector=".cursor-target"
+            targetSelector=".cursor-target, .callout-cursor-target"
             spinDuration={2}
           />
         </div>
@@ -678,14 +678,6 @@ export default function HomePage() {
       </div>
 
       <section className="callout-section py-24 bg-muted/30 relative">
-        {!isAnyPopupOpen && !isEmailPopupOpen && (
-          <div className="hidden sm:block">
-            <HeroTargetCursor 
-              targetSelector=".callout-cursor-target"
-              spinDuration={2}
-            />
-          </div>
-        )}
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-balance">{calloutData.title}</h2>
@@ -703,7 +695,7 @@ export default function HomePage() {
                       setIsEmailPopupOpen(true)
                     }
                   }}
-                  className={`sm:callout-cursor-target px-8 py-4 rounded-lg font-semibold transition-colors ${
+                  className={`callout-cursor-target px-8 py-4 rounded-lg font-semibold transition-colors ${
                     action.type === "primary"
                       ? "bg-primary text-primary-foreground hover:bg-primary/90"
                       : "bg-secondary text-secondary-foreground hover:bg-secondary/80"

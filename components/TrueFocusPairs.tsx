@@ -74,9 +74,14 @@ const TrueFocusPairs = ({
         const isInFirstGroup = index < words1.length;
         const isActive = (activeGroup === 0 && isInFirstGroup) || (activeGroup === 1 && !isInFirstGroup);
         const isLastOfFirstGroup = index === words1.length - 1;
+        const isFirstOfSecondGroup = index === words1.length;
         
         return (
           <React.Fragment key={index}>
+            {/* Add wrapper to keep "Start Growing" together */}
+            {isFirstOfSecondGroup && (
+              <span className="inline-block whitespace-nowrap">
+            )}
             <span
               ref={el => (wordRefs.current[index] = el)}
               className={`focus-pair-word ${isActive ? 'active' : ''} ${isLastOfFirstGroup ? 'sm:mr-2' : ''}`}
@@ -85,12 +90,17 @@ const TrueFocusPairs = ({
                 ['--border-color' as any]: borderColor,
                 ['--glow-color' as any]: glowColor,
                 transition: `filter ${animationDuration}s ease`,
-                marginRight: index === words1.length - 1 ? '0.5em' : '0.3em',
+                marginRight: index === allWords.length - 1 ? '0' : index === words1.length - 1 ? '0.5em' : '0.3em',
                 display: 'inline-block'
               }}
             >
               {word}
             </span>
+            {/* Close wrapper after last word of second group */}
+            {index === allWords.length - 1 && (
+              </span>
+            )}
+            {/* Break after first group on mobile */}
             {isLastOfFirstGroup && (
               <br className="sm:hidden" />
             )}

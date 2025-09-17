@@ -4,119 +4,110 @@ import Image from "next/image"
 import Link from "next/link"
 import LaserFlow from "../../components/LaserFlow"
 import { useRef, useState, useEffect } from "react"
+import { EmailPopup } from "@/components/email-popup"
 import "./about.css"
 
 export default function AboutPage() {
-  const revealImgRef = useRef<HTMLImageElement>(null)
-  const revealImgLightRef = useRef<HTMLImageElement>(null)
   const [mounted, setMounted] = useState(false)
+  const [isEmailPopupOpen, setIsEmailPopupOpen] = useState(false)
+  const [mousePos, setMousePos] = useState({ x: -9999, y: -9999 })
+  const [scrollOffset, setScrollOffset] = useState(0)
 
   useEffect(() => {
     setMounted(true)
+    
+    // Add global mouse move handler for the reveal effect
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePos({ x: e.clientX, y: e.clientY + window.scrollY })
+    }
+    
+    const handleScroll = () => {
+      setScrollOffset(window.scrollY)
+    }
+    
+    const handleMouseLeave = () => {
+      setMousePos({ x: -9999, y: -9999 })
+    }
+    
+    // Add event listeners to window for global effect
+    window.addEventListener('mousemove', handleMouseMove)
+    window.addEventListener('mouseleave', handleMouseLeave)
+    window.addEventListener('scroll', handleScroll)
+    
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove)
+      window.removeEventListener('mouseleave', handleMouseLeave)
+      window.removeEventListener('scroll', handleScroll)
+    }
   }, [])
 
   return (
-    <div className="min-h-screen bg-background pb-16">
-      <div 
-        className="relative pt-16"
-        onMouseMove={(e) => {
-          const darkEl = revealImgRef.current
-          const lightEl = revealImgLightRef.current
-          
-          // Update dark mode image
-          if (darkEl) {
-            const rect = darkEl.getBoundingClientRect()
-            const x = e.clientX - rect.left
-            const y = e.clientY - rect.top
-            darkEl.style.setProperty('--mx', `${x}px`)
-            darkEl.style.setProperty('--my', `${y}px`)
-          }
-          
-          // Update light mode image
-          if (lightEl) {
-            const rect = lightEl.getBoundingClientRect()
-            const x = e.clientX - rect.left
-            const y = e.clientY - rect.top
-            lightEl.style.setProperty('--mx', `${x}px`)
-            lightEl.style.setProperty('--my', `${y}px`)
-          }
-        }}
-        onMouseLeave={() => {
-          const darkEl = revealImgRef.current
-          const lightEl = revealImgLightRef.current
-          
-          if (darkEl) {
-            darkEl.style.setProperty('--mx', '-9999px')
-            darkEl.style.setProperty('--my', '-9999px')
-          }
-          
-          if (lightEl) {
-            lightEl.style.setProperty('--mx', '-9999px')
-            lightEl.style.setProperty('--my', '-9999px')
-          }
-        }}
-      >
-        {/* LaserFlow effect above the story box - centered */}
-        <div className="relative h-[500px] -mb-64 -mt-16 overflow-hidden">
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-full h-full">
-              <LaserFlow 
-                horizontalSizing={1.26}
-                verticalSizing={2}
-                wispDensity={1}
-                wispSpeed={15}
-                wispIntensity={5}
-                flowSpeed={0.35}
-                flowStrength={0.25}
-                fogIntensity={0.45}
-                fogScale={0.3}
-                fogFallSpeed={0.6}
-                decay={1.1}
-                falloffStart={1.2}
-                color="#CF9EFF"
-                horizontalBeamOffset={0}
-                verticalBeamOffset={0}
-              />
+    <>
+      <EmailPopup 
+        isOpen={isEmailPopupOpen} 
+        onClose={() => setIsEmailPopupOpen(false)}
+      />
+      
+      <div className="min-h-screen bg-background pb-16 relative">
+        {/* Scrolling background with hover reveal effect */}
+        {mounted && (
+          <div className="hover-reveal-container">
+            {/* Dark mode background */}
+            <div
+              className="hover-reveal-bg dark:block hidden"
+              style={{
+                backgroundImage: 'url(/allumialpha.png)',
+                opacity: 0.3,
+                mixBlendMode: 'lighten',
+                maskImage: `radial-gradient(circle at ${mousePos.x}px ${mousePos.y}px, rgba(255,255,255,1) 0px, rgba(255,255,255,0.95) 100px, rgba(255,255,255,0.7) 200px, rgba(255,255,255,0.4) 350px, rgba(255,255,255,0.15) 500px, rgba(255,255,255,0) 700px)`,
+                WebkitMaskImage: `radial-gradient(circle at ${mousePos.x}px ${mousePos.y}px, rgba(255,255,255,1) 0px, rgba(255,255,255,0.95) 100px, rgba(255,255,255,0.7) 200px, rgba(255,255,255,0.4) 350px, rgba(255,255,255,0.15) 500px, rgba(255,255,255,0) 700px)`,
+                maskRepeat: 'no-repeat',
+                WebkitMaskRepeat: 'no-repeat'
+              } as React.CSSProperties}
+            />
+            {/* Light mode background */}
+            <div
+              className="hover-reveal-bg dark:hidden block"
+              style={{
+                backgroundImage: 'url(/lightbackgroundaboutus.png)',
+                opacity: 0.6,
+                mixBlendMode: 'multiply',
+                maskImage: `radial-gradient(circle at ${mousePos.x}px ${mousePos.y}px, rgba(255,255,255,1) 0px, rgba(255,255,255,0.95) 100px, rgba(255,255,255,0.7) 200px, rgba(255,255,255,0.4) 350px, rgba(255,255,255,0.15) 500px, rgba(255,255,255,0) 700px)`,
+                WebkitMaskImage: `radial-gradient(circle at ${mousePos.x}px ${mousePos.y}px, rgba(255,255,255,1) 0px, rgba(255,255,255,0.95) 100px, rgba(255,255,255,0.7) 200px, rgba(255,255,255,0.4) 350px, rgba(255,255,255,0.15) 500px, rgba(255,255,255,0) 700px)`,
+                maskRepeat: 'no-repeat',
+                WebkitMaskRepeat: 'no-repeat'
+              } as React.CSSProperties}
+            />
+          </div>
+        )}
+        <div className="relative pt-16">
+          {/* LaserFlow effect above the story box - centered */}
+          <div className="relative h-[500px] -mb-64 -mt-16 overflow-hidden">
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-full h-full">
+                <LaserFlow 
+                  horizontalSizing={0.85}
+                  verticalSizing={2.3}
+                  wispDensity={1.1}
+                  wispSpeed={15}
+                  wispIntensity={5}
+                  flowSpeed={0.28}
+                  flowStrength={0.25}
+                  fogIntensity={0.45}
+                  fogScale={0.3}
+                  fogFallSpeed={0.6}
+                  decay={1.1}
+                  falloffStart={1.2}
+                  color="#CF9EFF"
+                  horizontalBeamOffset={0}
+                  verticalBeamOffset={0}
+                />
+              </div>
             </div>
           </div>
-        </div>
-
-        {/* Hover reveal effect image - Only render on client */}
-        {mounted && (
-          <>
-            <img
-              ref={revealImgRef}
-              src="/allumialpha.png"
-              alt="Background effect"
-              className="fixed inset-0 w-full h-full z-[1] mix-blend-lighten opacity-30 pointer-events-none object-cover dark:block hidden"
-              style={{
-                '--mx': '-9999px',
-                '--my': '-9999px',
-                maskImage: 'radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,1) 0px, rgba(255,255,255,0.95) 100px, rgba(255,255,255,0.7) 200px, rgba(255,255,255,0.4) 350px, rgba(255,255,255,0.15) 500px, rgba(255,255,255,0) 700px)',
-                WebkitMaskImage: 'radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,1) 0px, rgba(255,255,255,0.95) 100px, rgba(255,255,255,0.7) 200px, rgba(255,255,255,0.4) 350px, rgba(255,255,255,0.15) 500px, rgba(255,255,255,0) 700px)',
-                maskRepeat: 'no-repeat',
-                WebkitMaskRepeat: 'no-repeat'
-              } as React.CSSProperties}
-            />
-            <img
-              ref={revealImgLightRef}
-              src="/lightbackgroundaboutus.png"
-              alt="Background effect light"
-              className="fixed inset-0 w-full h-full z-[1] mix-blend-multiply opacity-60 pointer-events-none object-cover dark:hidden block"
-              style={{
-                '--mx': '-9999px',
-                '--my': '-9999px',
-                maskImage: 'radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,1) 0px, rgba(255,255,255,0.95) 100px, rgba(255,255,255,0.7) 200px, rgba(255,255,255,0.4) 350px, rgba(255,255,255,0.15) 500px, rgba(255,255,255,0) 700px)',
-                WebkitMaskImage: 'radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,1) 0px, rgba(255,255,255,0.95) 100px, rgba(255,255,255,0.7) 200px, rgba(255,255,255,0.4) 350px, rgba(255,255,255,0.15) 500px, rgba(255,255,255,0) 700px)',
-                maskRepeat: 'no-repeat',
-                WebkitMaskRepeat: 'no-repeat'
-              } as React.CSSProperties}
-            />
-          </>
-        )}
-        
-        {/* Story content in a box with matching laser flow stroke */}
-        <div className="container mx-auto px-4 max-w-6xl">
+          
+          {/* Story content in a box with matching laser flow stroke */}
+          <div className="container mx-auto px-4 max-w-6xl">
         <div className="story-box relative z-10 dark:bg-black bg-white border-2 rounded-xl overflow-hidden" style={{ borderColor: '#CF9EFF' }}>
           {/* Demo container dots effect inside the box */}
           <div className="demo-container-dots" />
@@ -283,17 +274,18 @@ export default function AboutPage() {
 
           {/* CTA Button */}
           <div className="mt-6 lg:mt-8 text-center">
-            <Link
-              href="/#pricing-section"
+            <button
+              onClick={() => setIsEmailPopupOpen(true)}
               className="inline-block px-8 py-4 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors"
             >
               Start Your 14-Day Free Trial
-            </Link>
+            </button>
           </div>
           </div>
         </div>
         </div>
       </div>
     </div>
+    </>
   )
 }

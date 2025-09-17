@@ -5,7 +5,7 @@ import { BaseHubTheme } from "../context/basehub-theme-provider";
 
 export function Providers({ children, theme }: { children: React.ReactNode; theme: BaseHubTheme }) {
   return (
-    <ThemeProvider enableSystem attribute="class" defaultTheme="system">
+    <ThemeProvider enableSystem={false} attribute="class" defaultTheme="dark" forcedTheme="dark">
       <BaseHubThemeProvider theme={theme} />
       <TooltipProvider>{children}</TooltipProvider>
     </ThemeProvider>
