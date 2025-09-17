@@ -90,7 +90,10 @@ export function EmailPopup({
       />
 
       {/* Modal */}
-      <div className="relative w-full max-w-[95vw] sm:max-w-md bg-background border border-[--border] dark:border-[--dark-border] rounded-xl shadow-2xl">
+      <div 
+        className="relative w-full max-w-[95vw] sm:max-w-md bg-background border border-[--border] dark:border-[--dark-border] rounded-xl shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Close button */}
         <button
           onClick={onClose}
