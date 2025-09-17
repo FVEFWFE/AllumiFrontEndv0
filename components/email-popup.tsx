@@ -82,15 +82,15 @@ export function EmailPopup({
   if (!isOpen) return null
 
   return (
-    <>
+    <div className="fixed inset-0 z-50">
       {/* Backdrop */}
       <div 
-        className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
         onClick={onClose}
       />
       
       {/* Modal */}
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 pointer-events-none">
+      <div className="absolute inset-0 flex items-center justify-center p-2 sm:p-4 pointer-events-none">
         <div className="relative w-full max-w-[95vw] sm:max-w-md bg-background border border-[--border] dark:border-[--dark-border] rounded-xl shadow-2xl pointer-events-auto">
           {/* Close button */}
           <button
@@ -102,93 +102,94 @@ export function EmailPopup({
           </button>
 
           <div className="p-6 sm:p-8">
-          {/* Logo */}
-          <div className="flex justify-center mb-6">
-            <Image 
-              src="/allumiblack.png" 
-              alt="Allumi" 
-              width={120} 
-              height={40} 
-              priority 
-              className="h-8 w-auto dark:hidden" 
-            />
-            <Image 
-              src="/allumi.png" 
-              alt="Allumi" 
-              width={120} 
-              height={40} 
-              priority 
-              className="hidden h-8 w-auto dark:block" 
-            />
-          </div>
+            {/* Logo */}
+            <div className="flex justify-center mb-6">
+              <Image 
+                src="/allumiblack.png" 
+                alt="Allumi" 
+                width={120} 
+                height={40} 
+                priority 
+                className="h-8 w-auto dark:hidden" 
+              />
+              <Image 
+                src="/allumi.png" 
+                alt="Allumi" 
+                width={120} 
+                height={40} 
+                priority 
+                className="hidden h-8 w-auto dark:block" 
+              />
+            </div>
 
-          {/* Content */}
-          <div className="text-center mb-6">
-            <h2 className="text-xl sm:text-2xl font-bold mb-2">
-              {customTitle || "Start Your 14-Day Free Trial"}
-            </h2>
-            <p className="text-sm sm:text-base text-muted-foreground">
-              {customDescription || "See exactly what drives paying members to your Skool community"}
-            </p>
-          </div>
+            {/* Content */}
+            <div className="text-center mb-6">
+              <h2 className="text-xl sm:text-2xl font-bold mb-2">
+                {customTitle || "Start Your 14-Day Free Trial"}
+              </h2>
+              <p className="text-sm sm:text-base text-muted-foreground">
+                {customDescription || "See exactly what drives paying members to your Skool community"}
+              </p>
+            </div>
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <input
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
                 required
-                className="w-full px-3 py-2.5 sm:px-4 sm:py-3 border border-[--border] dark:border-[--dark-border] rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-sm sm:text-base"
-              />
-            </div>
-
-            {message && (
-              <div className={`p-3 rounded-lg text-sm ${
-                message.type === "success" 
-                  ? "bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400"
-                  : "bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400"
-              }`}>
-                {message.text}
+                  className="w-full px-3 py-2.5 sm:px-4 sm:py-3 border border-[--border] dark:border-[--dark-border] rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-sm sm:text-base"
+                />
               </div>
-            )}
 
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full py-2.5 sm:py-3 px-4 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm sm:text-base"
-            >
-              {isLoading ? "Processing..." : "Get Instant Access"}
-            </button>
-          </form>
+              {message && (
+                <div className={`p-3 rounded-lg text-sm ${
+                  message.type === "success" 
+                    ? "bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400"
+                    : "bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400"
+                }`}>
+                  {message.text}
+                </div>
+              )}
 
-          {/* Features */}
-          <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-[--border] dark:border-[--dark-border]">
-            <div className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <svg className="h-4 w-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                <span>No credit card required</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <svg className="h-4 w-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                <span>Instant automatic installation</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <svg className="h-4 w-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                <span>Track unlimited traffic sources</span>
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full py-2.5 sm:py-3 px-4 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm sm:text-base"
+              >
+                {isLoading ? "Processing..." : "Get Instant Access"}
+              </button>
+            </form>
+
+            {/* Features */}
+            <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-[--border] dark:border-[--dark-border]">
+              <div className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm text-muted-foreground">
+                <div className="flex items-center gap-2">
+                  <svg className="h-4 w-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>No credit card required</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <svg className="h-4 w-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>Instant automatic installation</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <svg className="h-4 w-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>Track unlimited traffic sources</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </>
+    </div>
   )
 }
