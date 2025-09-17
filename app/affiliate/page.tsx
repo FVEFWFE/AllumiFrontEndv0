@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
+import { trackEvent } from "@/components/posthog-provider"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import {
@@ -51,6 +52,7 @@ export default function AffiliatePage() {
               <Button 
                 size="lg" 
                 onClick={() => {
+                  trackEvent('affiliate_application', { source: 'hero_cta', page_section: 'hero' });
                   if (typeof window !== 'undefined' && window.Featurebase) {
                     window.Featurebase('showNewMessage', 'Hi! I would like to join the Allumi beta affiliate program.');
                   }

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { X } from "lucide-react"
 import Image from "next/image"
+import { trackEvent, identifyUser } from "./posthog-provider"
 
 interface EmailPopupProps {
   isOpen: boolean
@@ -58,6 +59,21 @@ export function EmailPopup({
       })
 
       if (response.ok) {
+        // Track successful email capture
+        trackEvent('email_captured', {
+          source: 'popup',
+          page: window.location.pathname,
+          custom_title: customTitle,
+          group_id: groupId
+        });
+        
+        // Identify user and track trial start
+        identifyUser(email, { email });
+        trackEvent('trial_started', {
+          trial_type: '14_day',
+          source: 'popup'
+        });
+        
         setMessage({ type: "success", text: "Welcome to Allumi! Check your email for next steps." })
         setEmail("")
         setTimeout(() => {

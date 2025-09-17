@@ -7,6 +7,7 @@ import type { DarkLightImageFragment, FooterFragment } from "@/lib/basehub/fragm
 import Link from "next/link"
 import Image from "next/image"
 import { ThemeSwitcher } from "./theme-switcher"
+import { trackEvent } from "./posthog-provider"
 
 declare global {
   interface Window {
@@ -45,12 +46,14 @@ export const Footer = ({
         <nav className="col-start-1 row-start-2 flex flex-row flex-wrap gap-x-2 gap-y-3 self-center sm:col-span-1 sm:col-start-2 sm:row-start-1 sm:items-center sm:place-self-center md:gap-x-4 lg:gap-x-8">
           <Link
             href="/about"
+            onClick={() => trackEvent('footer_navigation_clicked', { link: 'about' })}
             className="px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"
           >
             About
           </Link>
           <button
             onClick={() => {
+              trackEvent('footer_navigation_clicked', { link: 'help' });
               if (typeof window !== 'undefined' && window.Featurebase) {
                 window.Featurebase('showNewMessage', 'Hi! I need help with Allumi.');
               }
@@ -61,6 +64,7 @@ export const Footer = ({
           </button>
           <button
             data-featurebase-feedback
+            onClick={() => trackEvent('footer_navigation_clicked', { link: 'feedback' })}
             className="px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"
           >
             Feedback
@@ -93,6 +97,7 @@ export const Footer = ({
           </button>
           <Link
             href="/affiliate"
+            onClick={() => trackEvent('footer_navigation_clicked', { link: 'affiliate' })}
             className="px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"
           >
             Affiliate Program

@@ -1,7 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Hero } from "./_sections/hero"
+import { trackEvent } from "../components/posthog-provider"
 import { Companies } from "./_sections/companies"
 import { FeaturesGrid } from "./_sections/features/features-grid"
 import { TestimonialsGrid } from "./_sections/testimonials-grid"
@@ -499,6 +500,23 @@ export default function HomePage() {
   const [isEmailPopupOpen, setIsEmailPopupOpen] = useState(false)
   const { openDemoModal, isAnyPopupOpen } = useDemoModal()
 
+  // Track scroll depth
+  useEffect(() => {
+    let maxScroll = 0;
+    const handleScroll = () => {
+      const scrollPercent = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+      if (scrollPercent > maxScroll) {
+        maxScroll = scrollPercent;
+        if (maxScroll > 25 && maxScroll < 30) trackEvent('scroll_25_percent');
+        if (maxScroll > 50 && maxScroll < 55) trackEvent('scroll_50_percent');
+        if (maxScroll > 75 && maxScroll < 80) trackEvent('scroll_75_percent');
+        if (maxScroll > 90) trackEvent('scroll_90_percent');
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <>
       {!isAnyPopupOpen && !isEmailPopupOpen && (
@@ -519,9 +537,11 @@ export default function HomePage() {
         eventsKey="allumi-events"
         onActionClick={(action) => {
           if (action.onClick === "demo") {
+            trackEvent('demo_requested', { source: 'hero_cta' });
             openDemoModal()
             return
           } else if (action.onClick === "signup") {
+            trackEvent('hero_cta_clicked', { cta_type: 'trial_start', source: 'hero' });
             setIsEmailPopupOpen(true)
           }
         }}
@@ -530,8 +550,10 @@ export default function HomePage() {
       <div data-section="features">
         <FeaturesGrid {...featuresData} eventsKey="allumi-events" onActionClick={(action) => {
           if (action?.onClick === "demo") {
+            trackEvent('demo_requested', { source: 'features_cta' });
             openDemoModal()
           } else {
+            trackEvent('hero_cta_clicked', { cta_type: 'trial_start', source: 'features' });
             setIsEmailPopupOpen(true)
           }
         }} />

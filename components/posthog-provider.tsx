@@ -32,6 +32,34 @@ export function PostHogPageview(): JSX.Element {
   return <></>
 }
 
+export function identifyUser(userId: string, properties?: Record<string, any>) {
+  if (typeof window !== 'undefined') {
+    posthog.identify(userId, {
+      email: properties?.email,
+      name: properties?.name,
+      signup_date: new Date().toISOString(),
+      plan: 'trial',
+      ...properties
+    });
+  }
+}
+
+export function trackEvent(eventName: string, properties?: Record<string, any>) {
+  if (typeof window !== 'undefined') {
+    posthog.capture(eventName, properties);
+  }
+}
+
+export function trackRevenue(amount: number, properties?: Record<string, any>) {
+  if (typeof window !== 'undefined') {
+    posthog.capture('$revenue', {
+      revenue: amount,
+      currency: 'USD',
+      ...properties
+    });
+  }
+}
+
 export function PHProvider({ children }: { children: React.ReactNode }) {
   return <PostHogProvider client={posthog}>{children}</PostHogProvider>
 }

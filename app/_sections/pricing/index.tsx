@@ -3,6 +3,7 @@
 import { CheckIcon } from "@radix-ui/react-icons";
 import { type SVGProps } from "react";
 import clsx from "clsx";
+import { trackEvent } from "../../../components/posthog-provider";
 
 import { Heading } from "../../../common/heading";
 import { Section } from "../../../common/section-wrapper";
@@ -108,7 +109,14 @@ function PricingCard(item: PricingPlanItem["plan"] & { onCtaClick?: () => void }
               ? "bg-primary text-primary-foreground hover:bg-primary/90" 
               : "border border-[--border] dark:border-[--dark-border] bg-background hover:bg-muted"
           }`}
-          onClick={item.onCtaClick}
+          onClick={() => {
+            trackEvent('pricing_cta_clicked', { 
+              plan: item._title, 
+              price: item.price,
+              is_popular: item.isMostPopular 
+            });
+            if (item.onCtaClick) item.onCtaClick();
+          }}
         >
           Get started
         </button>
