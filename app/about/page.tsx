@@ -10,8 +10,8 @@ export default function AboutPage() {
     <div className="min-h-screen bg-background pb-16">
       <div className="container mx-auto px-4 max-w-6xl pt-16">
         {/* LaserFlow effect above the story box */}
-        <div className="relative h-96 -mb-48 flex justify-center -mt-16 overflow-visible">
-          <div className="w-full max-w-3xl -ml-24">
+        <div className="relative h-96 -mb-48 flex justify-center -mt-16">
+          <div className="w-full max-w-4xl overflow-hidden">
             <LaserFlow 
               horizontalSizing={2.5}
               verticalSizing={5.0}
@@ -46,22 +46,21 @@ export default function AboutPage() {
                 I've been obsessed with one question since 2009: "What actually makes people buy?"
               </p>
 
-          <div className="flex flex-col md:flex-row items-start gap-6">
-            <p className="text-lg leading-relaxed md:flex-1">
-              Back then, I was a teenager running affiliate campaigns, manually tracking every click in spreadsheets that crashed weekly. I thought I was sophisticated because I could see which ads generated clicks. I had no idea I was still flying blind.
-            </p>
-            <Image 
-              src="/jan computer pic old.JPEG" 
-              alt="Young Jan at computer"
-              width={320}
-              height={240}
-              className="rounded shadow-xl object-cover w-full md:w-80 h-auto"
-            />
-          </div>
-
-          <p className="text-lg leading-relaxed">
-            Fast forward to 2017. I'm in my parents' attic in the Netherlands, pitching social media services to dentists door-to-door. Built an agency from zero to six figures using what I called the "Meetup Pro hack" - a simple system that generated $100k in client revenue. But even then, my clients kept asking the same question: "Which posts actually drive patients?"
-          </p>
+              <div className="relative">
+                <Image 
+                  src="/jan computer pic old.JPEG" 
+                  alt="Young Jan at computer"
+                  width={320}
+                  height={240}
+                  className="rounded shadow-xl object-cover float-right ml-6 mb-4 w-72"
+                />
+                <p className="text-lg leading-relaxed">
+                  Back then, I was a teenager running affiliate campaigns, manually tracking every click in spreadsheets that crashed weekly. I thought I was sophisticated because I could see which ads generated clicks. I had no idea I was still flying blind.
+                </p>
+                <p className="text-lg leading-relaxed">
+                  Fast forward to 2017. I'm in my parents' attic in the Netherlands, pitching social media services to dentists door-to-door. Built an agency from zero to six figures using what I called the "Meetup Pro hack" - a simple system that generated $100k in client revenue. But even then, my clients kept asking the same question: "Which posts actually drive patients?"
+                </p>
+              </div>
 
           <p className="text-lg leading-relaxed font-semibold">
             I couldn't answer. Really couldn't.
@@ -83,26 +82,24 @@ export default function AboutPage() {
             I started manually tracking attribution for every client. Built elaborate spreadsheets. Spent 10+ hours per month per client just maintaining the data. One corrupted file lost three months of insights at 2am. Another client's sheet became so complex it took 5 minutes just to load.
           </p>
 
-          <p className="text-lg leading-relaxed">
-            But the patterns were undeniable. Every single client was wasting 70-90% of their marketing spend on channels that drove traffic but zero revenue. One was celebrating 10,000 Instagram followers while their email list of 200 people drove 95% of sales. Another spent two years creating daily YouTube videos when their highest-converting content was forum posts.
-          </p>
-
-          <div className="flex flex-col md:flex-row items-center gap-6">
+          <div className="relative">
             <Image 
               src="/jan newer.JPEG" 
               alt="Jan Jegen"
               width={320}
               height={240}
-              className="rounded shadow-xl object-cover w-full md:w-80 h-auto"
+              className="rounded shadow-xl object-cover float-left mr-6 mb-4 w-72"
             />
-            <p className="text-lg leading-relaxed font-semibold md:flex-1">
+            <p className="text-lg leading-relaxed">
+              But the patterns were undeniable. Every single client was wasting 70-90% of their marketing spend on channels that drove traffic but zero revenue. One was celebrating 10,000 Instagram followers while their email list of 200 people drove 95% of sales. Another spent two years creating daily YouTube videos when their highest-converting content was forum posts.
+            </p>
+            <p className="text-lg leading-relaxed font-semibold">
               The problem was blindness to what actually converts.
             </p>
+            <p className="text-lg leading-relaxed">
+              When Skool launched and I saw communities struggling with the same attribution blindness, I knew exactly what needed to exist. Simple, clear attribution tracking that shows what drives paying members. Something you could set up in five minutes and understand instantly.
+            </p>
           </div>
-
-          <p className="text-lg leading-relaxed">
-            When Skool launched and I saw communities struggling with the same attribution blindness, I knew exactly what needed to exist. Simple, clear attribution tracking that shows what drives paying members. Something you could set up in five minutes and understand instantly.
-          </p>
 
           <p className="text-lg leading-relaxed">
             I built Allumi because I've lived this problem for 15 years. From tracking affiliate campaigns in my childhood bedroom to managing multiple six-figure client accounts from Thailand. Every step taught me the same lesson: You can only scale what you can see.
