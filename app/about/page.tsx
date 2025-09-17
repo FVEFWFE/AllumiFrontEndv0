@@ -7,14 +7,14 @@ import "./about.css"
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-background py-16">
-      <div className="container mx-auto px-4 max-w-6xl">
+    <div className="min-h-screen bg-background pb-16">
+      <div className="container mx-auto px-4 max-w-6xl pt-16">
         {/* LaserFlow effect above the story box */}
-        <div className="relative h-64 -mb-32 flex justify-center">
-          <div className="w-96">
+        <div className="relative h-96 -mb-48 flex justify-center -mt-16">
+          <div className="w-full max-w-2xl">
             <LaserFlow 
-              horizontalSizing={1.83}
-              verticalSizing={4.5}
+              horizontalSizing={2.5}
+              verticalSizing={5.0}
               wispDensity={1.8}
               wispSpeed={15}
               wispIntensity={5.3}

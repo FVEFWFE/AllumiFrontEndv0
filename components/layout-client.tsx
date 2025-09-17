@@ -3,7 +3,6 @@
 import { useState } from "react"
 import { Header } from "./header"
 import { EmailPopup } from "./email-popup"
-import TargetCursor from "./TargetCursor"
 import type { DarkLightImageFragment, HeaderFragment } from "@/lib/basehub/fragments"
 
 export function ClientLayout({ 
@@ -19,7 +18,6 @@ export function ClientLayout({
 
   return (
     <>
-      <TargetCursor targetSelector=".cursor-target" spinDuration={2} hideDefaultCursor={true} />
       <EmailPopup 
         isOpen={isEmailPopupOpen} 
         onClose={() => setIsEmailPopupOpen(false)} 

@@ -116,7 +116,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     settings = {
       theme: { 
         _id: 'default',
-        accent: 'blue' as const,
+        accent: 'purple' as const,
         grayScale: 'gray' as const
       },
       logo: {
@@ -126,7 +126,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       showUseTemplate: false,
     };
     header = {
-      navbar: { items: [] },
+      navbar: { 
+        items: [
+          { _id: 'features', _title: 'Features', href: '#features', sublinks: { items: [] } },
+          { _id: 'pricing', _title: 'Pricing', href: '#pricing-section', sublinks: { items: [] } },
+          { _id: 'about', _title: 'About', href: '/about', sublinks: { items: [] } }
+        ] 
+      },
       rightCtas: { items: [{ _id: '1', label: 'Get Started Today', href: '#', type: 'primary' }] },
     };
     footer = { links: [], socials: [] };
