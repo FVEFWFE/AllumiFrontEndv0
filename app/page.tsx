@@ -14,6 +14,7 @@ import SpotlightCard from "../components/SpotlightCard"
 import TextType from "../components/TextType"
 import HeroTargetCursor from "../components/HeroTargetCursor"
 import Image from "next/image"
+import { useDemoModal } from "../components/layout-client"
 
 // Reusable Skool logo component
 const SkoolLogo = () => (
@@ -191,6 +192,7 @@ const featuresData = {
       href: "#",
       label: "Watch Demo",
       type: "secondary" as const,
+      onClick: "demo",
     },
   ],
 }
@@ -332,9 +334,10 @@ const calloutData = {
     },
     {
       _id: "demo-cta",
-      href: "/watch-demo",
+      href: "#",
       label: "Watch Demo",
       type: "secondary" as const,
+      onClick: "demo",
     },
   ],
 }
@@ -494,6 +497,7 @@ const whyIBuiltThisData = {
 
 export default function HomePage() {
   const [isEmailPopupOpen, setIsEmailPopupOpen] = useState(false)
+  const { openDemoModal } = useDemoModal()
 
   return (
     <>
@@ -511,7 +515,7 @@ export default function HomePage() {
         eventsKey="allumi-events"
         onActionClick={(action) => {
           if (action.onClick === "demo") {
-            setIsEmailPopupOpen(true)
+            openDemoModal()
             return
           } else if (action.onClick === "scroll") {
             setIsEmailPopupOpen(true)
@@ -520,7 +524,13 @@ export default function HomePage() {
       />
       <Companies {...companiesData} />
       <div data-section="features">
-        <FeaturesGrid {...featuresData} eventsKey="allumi-events" onActionClick={() => setIsEmailPopupOpen(true)} />
+        <FeaturesGrid {...featuresData} eventsKey="allumi-events" onActionClick={(action) => {
+          if (action?.onClick === "demo") {
+            openDemoModal()
+          } else {
+            setIsEmailPopupOpen(true)
+          }
+        }} />
       </div>
 
       <section className="py-24 bg-background">
@@ -658,7 +668,11 @@ export default function HomePage() {
                   key={action._id}
                   onClick={(e) => {
                     e.preventDefault()
-                    setIsEmailPopupOpen(true)
+                    if (action.onClick === "demo") {
+                      openDemoModal()
+                    } else {
+                      setIsEmailPopupOpen(true)
+                    }
                   }}
                   className={`cursor-target px-8 py-4 rounded-lg font-semibold transition-colors ${
                     action.type === "primary"

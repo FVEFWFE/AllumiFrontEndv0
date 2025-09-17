@@ -50,7 +50,7 @@ export function FeaturesGrid({
   actions,
   eventsKey,
   onActionClick,
-}: FeaturesGrid & { eventsKey: GeneralEvents["ingestKey"]; onActionClick?: () => void }) {
+}: FeaturesGrid & { eventsKey: GeneralEvents["ingestKey"]; onActionClick?: (action?: any) => void }) {
   return (
     <Section>
       <Heading {...heading}>
@@ -96,7 +96,7 @@ export function FeaturesGrid({
         {actions?.map((action) => (
           <button
             key={action._id}
-            onClick={onActionClick}
+            onClick={() => onActionClick?.(action)}
             className={`px-6 py-3 rounded-lg font-medium transition-colors ${
               action.type === "primary"
                 ? "bg-primary text-primary-foreground hover:bg-primary/90"
