@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import dynamic from "next/dynamic"
 
-const FluidGlassSimple = dynamic(() => import("../../components/FluidGlassSimple"), {
+const FluidGlassProper = dynamic(() => import("../../components/FluidGlassProper"), {
   ssr: false,
   loading: () => <div className="text-white">Loading 3D Glass...</div>
 })
@@ -54,7 +54,18 @@ export default function TestGlassPage() {
 
           {/* Fluid Glass Effect */}
           {mounted && showGlass && (
-            <FluidGlassSimple scale={1.2} />
+            <div style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
+              <FluidGlassProper 
+                mode="lens"
+                lensProps={{
+                  scale: 0.25,
+                  ior: 1.15,
+                  thickness: 5,
+                  chromaticAberration: 0.1,
+                  anisotropy: 0.01
+                }}
+              />
+            </div>
           )}
         </div>
 
