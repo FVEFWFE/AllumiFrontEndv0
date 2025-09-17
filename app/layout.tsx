@@ -184,6 +184,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
       </head>
       <body
+        suppressHydrationWarning
         className={`min-h-svh overflow-x-hidden bg-background text-foreground ${geistMono.variable} ${geist.variable} font-sans`}
       >
         <PHProvider>
