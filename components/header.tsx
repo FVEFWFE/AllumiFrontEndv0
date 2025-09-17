@@ -36,9 +36,7 @@ export const Header = ({
               className="hidden h-8 w-auto dark:block" 
             />
           </Link>
-          <div className="hidden lg:flex items-center gap-8">
-            <DesktopNavigation navbar={header.navbar} />
-          </div>
+          <DesktopNavigation navbar={header.navbar} />
           <DesktopCTAs rightCtas={header.rightCtas} onCtaClick={onCtaClick} />
           <MobileMenu {...header} onCtaClick={onCtaClick} />
         </div>

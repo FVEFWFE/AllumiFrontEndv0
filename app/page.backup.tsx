@@ -86,11 +86,11 @@ const heroData = {
     },
     {
       _id: "primary-cta",
-      href: "#",
+      href: "#pricing-section",
       label: "Start Free 14-Day Trial",
       sublabel: "",
       type: "primary" as const,
-      onClick: "signup",
+      onClick: "scroll",
     },
   ],
 }
@@ -490,7 +490,7 @@ const whyIBuiltThisData = {
     author: {
       name: "Jan Jegen",
       role: "Founder, Allumi",
-      image: "/founder-jan-jegen2smaller.png",
+      image: "/founder-jan-jegen2.jpg",
     },
   },
 }
@@ -517,7 +517,7 @@ export default function HomePage() {
           if (action.onClick === "demo") {
             openDemoModal()
             return
-          } else if (action.onClick === "signup") {
+          } else if (action.onClick === "scroll") {
             setIsEmailPopupOpen(true)
           }
         }}
