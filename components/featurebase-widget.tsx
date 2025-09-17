@@ -86,6 +86,39 @@ export function FeaturebaseWidget() {
       if (window.Featurebase && typeof window.Featurebase === 'function') {
         initializeWidget();
         handleThemeChange();
+        
+        // Add CSS to hide feedback widget when messenger is open
+        const style = document.createElement('style');
+        style.textContent = `
+          /* Hide feedback widget when messenger iframe is present */
+          body:has(iframe#featurebase-messenger-iframe) .fb-feedback-widget-feedback-button-container,
+          body:has(iframe[src*="featurebase"][src*="messenger"]) .fb-feedback-widget-feedback-button-container {
+            display: none !important;
+          }
+        `;
+        document.head.appendChild(style);
+        
+        // Also use MutationObserver as fallback for browsers that don't support :has()
+        const messengerObserver = new MutationObserver(() => {
+          const messengerIframe = document.querySelector('iframe#featurebase-messenger-iframe, iframe[src*="featurebase"][src*="messenger"]');
+          const feedbackWidget = document.querySelector('.fb-feedback-widget-feedback-button-container') as HTMLElement;
+          
+          if (feedbackWidget) {
+            if (messengerIframe) {
+              feedbackWidget.style.display = 'none';
+            } else {
+              feedbackWidget.style.display = '';
+            }
+          }
+        });
+        
+        messengerObserver.observe(document.body, {
+          childList: true,
+          subtree: true
+        });
+        
+        // Clean up observer on unmount
+        (window as any).__featurebaseMessengerObserver = messengerObserver;
       } else if (attempts < maxAttempts) {
         setTimeout(tryInitialize, 500);
       } else {
@@ -199,6 +232,10 @@ export function FeaturebaseWidget() {
       observer.disconnect();
       document.removeEventListener('click', handleClickOutside, true);
       window.removeEventListener('resize', handleResize);
+      // Disconnect messenger observer if it exists
+      if ((window as any).__featurebaseMessengerObserver) {
+        (window as any).__featurebaseMessengerObserver.disconnect();
+      }
     };
   }, []);
 

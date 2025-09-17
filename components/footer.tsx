@@ -49,14 +49,16 @@ export const Footer = ({
           >
             About
           </Link>
-          <Link
-            href="https://help.allumi.com/"
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            onClick={() => {
+              if (typeof window !== 'undefined' && window.Featurebase) {
+                window.Featurebase('showNewMessage', 'Hi! I need help with Allumi.');
+              }
+            }}
             className="px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"
           >
             Help
-          </Link>
+          </button>
           <button
             data-featurebase-feedback
             className="px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"
@@ -65,14 +67,8 @@ export const Footer = ({
           </button>
           <button
             onClick={() => {
-              if (typeof window !== 'undefined') {
-                window.postMessage({
-                  target: 'FeaturebaseWidget',
-                  data: { 
-                    action: 'openFeedbackWidget',
-                    setBoard: 'bugs',
-                  }
-                }, '*');
+              if (typeof window !== 'undefined' && window.Featurebase) {
+                window.Featurebase('showNewMessage', 'I found a bug in Allumi');
               }
             }}
             className="px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"
@@ -81,14 +77,8 @@ export const Footer = ({
           </button>
           <button
             onClick={() => {
-              if (typeof window !== 'undefined') {
-                window.postMessage({
-                  target: 'FeaturebaseWidget',
-                  data: { 
-                    action: 'openFeedbackWidget',
-                    setBoard: 'features',
-                  }
-                }, '*');
+              if (typeof window !== 'undefined' && window.Featurebase) {
+                window.Featurebase('showNewMessage', 'I have a feature request for Allumi');
               }
             }}
             className="px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"
