@@ -56,9 +56,9 @@ export function DemoEmailModal({ isOpen, onClose }: DemoEmailModalProps) {
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">Watch 2-Minute Demo</DialogTitle>
+          <DialogTitle className="text-2xl font-bold">See Allumi in Action</DialogTitle>
           <DialogDescription className="text-lg">
-            See how Allumi reveals the attribution data that drives real growth
+            Quick 2-minute walkthrough of your attribution dashboard
           </DialogDescription>
         </DialogHeader>
 
@@ -70,20 +70,20 @@ export function DemoEmailModal({ isOpen, onClose }: DemoEmailModalProps) {
                   <div className="w-10 h-10 bg-purple-100 dark:bg-purple-800 rounded-full flex items-center justify-center">
                     <Play className="w-5 h-5 text-purple-600 dark:text-purple-300" />
                   </div>
-                  <h3 className="font-semibold">What You'll See:</h3>
+                  <h3 className="font-semibold">Demo Includes:</h3>
                 </div>
                 <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                  <li>• Live dashboard walkthrough</li>
-                  <li>• Which content actually converts to paid</li>
-                  <li>• First-click attribution Skool can't show</li>
-                  <li>• Real ROI by traffic source</li>
-                  <li>• Member journey visualization</li>
+                  <li>• Live dashboard: track revenue by source</li>
+                  <li>• How to create tracked links in seconds</li>
+                  <li>• Real data: which content brings paying vs free members</li>
+                  <li>• Setting up your first campaign attribution</li>
+                  <li>• The daily workflow (takes 30 seconds)</li>
                 </ul>
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="demo-email">
-                  Enter your email to receive the demo video
+                  Enter your email to watch:
                 </Label>
                 <Input
                   id="demo-email"
@@ -96,7 +96,7 @@ export function DemoEmailModal({ isOpen, onClose }: DemoEmailModalProps) {
                   disabled={isSubmitting}
                 />
                 <p className="text-xs text-gray-500 dark:text-gray-500">
-                  We'll send you the demo video instantly. No spam, unsubscribe anytime.
+                  See exactly how Allumi tracks your Skool revenue.
                 </p>
               </div>
             </div>
@@ -112,7 +112,7 @@ export function DemoEmailModal({ isOpen, onClose }: DemoEmailModalProps) {
                 ) : (
                   <>
                     <Mail className="w-4 h-4 mr-2" />
-                    Send Demo Video
+                    Send Me The Demo
                   </>
                 )}
               </Button>
@@ -122,7 +122,7 @@ export function DemoEmailModal({ isOpen, onClose }: DemoEmailModalProps) {
                 onClick={onClose}
                 disabled={isSubmitting}
               >
-                Cancel
+                Maybe Later
               </Button>
             </div>
           </form>

@@ -205,5 +205,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 }
 
 export const metadata = {
+  title: "Allumi - Illuminate Your Empire",
   generator: "v0.dev",
 }
