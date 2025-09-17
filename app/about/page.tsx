@@ -121,15 +121,17 @@ export default function AboutPage() {
 
           {/* Signature */}
           <div className="mt-8 lg:mt-12 flex items-center justify-center gap-4">
-            <Image
-              src="/founder-jan-jegen2.jpg"
-              alt="Jan Jegen"
-              width={256}
-              height={256}
-              quality={100}
-              priority
-              className="w-16 h-16 rounded-full object-cover"
-            />
+            <div className="relative w-16 h-16">
+              <Image
+                src="/founder-jan-jegen2.jpg"
+                alt="Jan Jegen"
+                fill
+                sizes="64px"
+                quality={100}
+                priority
+                className="rounded-full object-cover"
+              />
+            </div>
             <div>
             <div className="font-semibold text-lg flex items-center gap-2">
               Jan Jegen
