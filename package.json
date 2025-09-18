@@ -1,5 +1,5 @@
 {
-  "name": "my-v0-project",
+  "name": "allumi",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -41,6 +41,7 @@
     "@radix-ui/react-tooltip": "latest",
     "@react-three/drei": "^10.7.6",
     "@react-three/fiber": "^9.3.0",
+    "@supabase/supabase-js": "^2.57.4",
     "@tailwindcss/typography": "latest",
     "@vercel/analytics": "1.3.1",
     "autoprefixer": "^10.4.20",
@@ -48,6 +49,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "latest",
+    "csv-stringify": "^6.6.0",
     "culori": "latest",
     "date-fns": "4.1.0",
     "embla-carousel": "latest",
