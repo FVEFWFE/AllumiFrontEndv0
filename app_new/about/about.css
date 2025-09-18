@@ -1,0 +1,99 @@
+/* Custom scrollbar styles */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(156, 163, 175, 0.3) transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.3);
+  border-radius: 10px;
+  transition: background 0.3s ease;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.5);
+}
+
+/* Dark mode scrollbar */
+.dark .custom-scrollbar {
+  scrollbar-color: rgba(75, 85, 99, 0.3) transparent;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(75, 85, 99, 0.3);
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(75, 85, 99, 0.5);
+}
+
+/* Smooth scroll behavior */
+.custom-scrollbar {
+  scroll-behavior: smooth;
+}
+
+/* Laser flow container styles */
+.laser-flow-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* Story box glow effect */
+.story-box {
+  position: relative;
+  box-shadow: 
+    0 0 30px rgba(207, 158, 255, 0.2),
+    inset 0 0 20px rgba(207, 158, 255, 0.05);
+  transition: box-shadow 0.3s ease;
+}
+
+.story-box:hover {
+  box-shadow: 
+    0 0 50px rgba(207, 158, 255, 0.3),
+    inset 0 0 30px rgba(207, 158, 255, 0.08);
+}
+
+/* Demo container dots effect */
+.demo-container-dots {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: radial-gradient(circle at 1px 1px, rgba(207, 158, 255, 0.15) 1px, transparent 1px);
+  background-size: 20px 20px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Scrolling background with hover reveal */
+.hover-reveal-container {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.hover-reveal-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: contain;
+  background-position: center top;
+  background-repeat: no-repeat;
+}

@@ -14,34 +14,12 @@ export default function SignInPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
-
-    try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      })
-
-      const data = await response.json()
-
-      if (response.ok) {
-        // Store session
-        localStorage.setItem('session', JSON.stringify(data.session))
-        localStorage.setItem('user', JSON.stringify(data.user))
-
-        // Redirect to dashboard
-        window.location.href = '/dashboard'
-      } else {
-        alert(data.error || 'Sign in failed')
-      }
-    } catch (error) {
-      console.error('Sign in error:', error)
-      alert('Sign in failed. Please try again.')
-    } finally {
+    
+    // Simulate loading - no actual login yet
+    setTimeout(() => {
       setIsLoading(false)
-    }
+      alert("Sign-in functionality coming soon!")
+    }, 1000)
   }
 
   return (
