@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useState } from "react"
-import { Play, Mail, User, Sparkles, ChevronRight, Check } from "lucide-react"
+import { Play, Mail, User, Sparkles, Square, CheckSquare, Check } from "lucide-react"
 import {
   Dialog,
   DialogContent,
@@ -162,20 +162,23 @@ export function DemoEmailModalEnhanced({ isOpen, onClose }: DemoEmailModalProps)
                     >
                       <div className="border-2 border-dashed border-purple-300 dark:border-purple-600 rounded-lg p-4 bg-purple-50 dark:bg-purple-900/20 hover:bg-purple-100 dark:hover:bg-purple-900/30 hover:border-purple-400 dark:hover:border-purple-500 transition-all cursor-pointer">
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <div className="w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-800 flex items-center justify-center">
-                              <Sparkles className="h-4 w-4 text-purple-600 dark:text-purple-400" />
-                            </div>
-                            <div>
-                              <span className="text-sm font-semibold text-purple-700 dark:text-purple-300">
-                                Want insights specific to YOUR niche?
-                              </span>
-                              <p className="text-xs text-purple-600 dark:text-purple-400">
-                                Click to add your Skool URL (takes 10 seconds)
-                              </p>
+                          <div className="flex items-center gap-3">
+                            <Square className="h-5 w-5 text-purple-600 dark:text-purple-400 group-hover:hidden" />
+                            <CheckSquare className="h-5 w-5 text-purple-600 dark:text-purple-400 hidden group-hover:block" />
+                            <div className="flex items-center gap-2">
+                              <div className="w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-800 flex items-center justify-center">
+                                <Sparkles className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+                              </div>
+                              <div>
+                                <span className="text-sm font-semibold text-purple-700 dark:text-purple-300">
+                                  Want insights specific to YOUR niche?
+                                </span>
+                                <p className="text-xs text-purple-600 dark:text-purple-400">
+                                  Click to add your Skool URL (takes 10 seconds)
+                                </p>
+                              </div>
                             </div>
                           </div>
-                          <ChevronRight className="h-5 w-5 text-purple-600 dark:text-purple-400 group-hover:translate-x-1 transition-transform" />
                         </div>
                       </div>
                     </motion.button>
