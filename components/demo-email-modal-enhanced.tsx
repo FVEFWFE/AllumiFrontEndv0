@@ -217,26 +217,21 @@ export function DemoEmailModalEnhanced({ isOpen, onClose }: DemoEmailModalProps)
                           />
                         </div>
                         <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
-                          Go to Settings → Profile → Copy the URL field
+                          <a
+                            href="https://www.skool.com/settings?t=profile"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-purple-600 dark:text-purple-400 hover:underline"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            Click Here
+                          </a>
+                          {" → Copy Your Skool Profile URL Field"}
                         </p>
                       </div>
-                      <div className="flex items-center justify-between">
-                        <Label htmlFor="skoolUrl">
-                          Your Skool Profile URL
-                        </Label>
-                        <a
-                          href="https://www.skool.com/settings?t=profile"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-xs text-purple-600 dark:text-purple-400 hover:underline flex items-center gap-1"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          Find my URL
-                          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                          </svg>
-                        </a>
-                      </div>
+                      <Label htmlFor="skoolUrl">
+                        Your Skool Profile URL
+                      </Label>
                       <Input
                         id="skoolUrl"
                         type="text"
@@ -248,19 +243,6 @@ export function DemoEmailModalEnhanced({ isOpen, onClose }: DemoEmailModalProps)
                         onBlur={(e) => setSkoolUrl(formatSkoolUrl(e.target.value))}
                         disabled={isSubmitting}
                       />
-                      <p className="text-xs text-muted-foreground">
-                        Go to{" "}
-                        <a
-                          href="https://www.skool.com/settings?t=profile"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="underline hover:no-underline text-purple-600 dark:text-purple-400"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          Skool settings → Profile
-                        </a>
-                        {" "}and copy the URL field
-                      </p>
                       {skoolUrl && formatSkoolUrl(skoolUrl) && formatSkoolUrl(skoolUrl).startsWith('skool.com/@') && (
                         <p className="text-xs text-green-600 dark:text-green-400 font-medium">
                           ✨ Perfect! Demo will include data from communities like yours
