@@ -240,9 +240,14 @@ export function DemoEmailModalEnhanced({ isOpen, onClose }: DemoEmailModalProps)
                         </a>
                         {" "}and copy the URL field
                       </p>
-                      {skoolUrl && (
+                      {skoolUrl && formatSkoolUrl(skoolUrl) && formatSkoolUrl(skoolUrl).startsWith('skool.com/@') && (
                         <p className="text-xs text-green-600 dark:text-green-400 font-medium">
                           ✨ Perfect! Demo will include data from communities like yours
+                        </p>
+                      )}
+                      {skoolUrl && (!formatSkoolUrl(skoolUrl) || !formatSkoolUrl(skoolUrl).startsWith('skool.com/@')) && (
+                        <p className="text-xs text-orange-600 dark:text-orange-400">
+                          ⚠️ Please enter a valid Skool URL (e.g., skool.com/@username)
                         </p>
                       )}
                     </motion.div>
