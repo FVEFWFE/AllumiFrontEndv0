@@ -4,40 +4,37 @@ import { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { Eye, EyeOff } from "lucide-react"
-import { createClient } from '@supabase/supabase-js'
-import { useRouter } from 'next/navigation'
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-)
 
 export default function SignInPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
 
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
       })
 
-      if (error) {
-        alert(error.message)
-        setIsLoading(false)
-        return
-      }
+      const data = await response.json()
 
-      if (data.session) {
+      if (response.ok) {
+        // Store session
+        localStorage.setItem('session', JSON.stringify(data.session))
+        localStorage.setItem('user', JSON.stringify(data.user))
+
         // Redirect to dashboard
-        router.push('/dashboard')
+        window.location.href = '/dashboard'
+      } else {
+        alert(data.error || 'Sign in failed')
       }
     } catch (error) {
       console.error('Sign in error:', error)

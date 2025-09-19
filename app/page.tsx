@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useEffect } from "react"
 import { Hero } from "./_sections/hero"
 import { trackEvent } from "../components/posthog-provider"
 import { Companies } from "./_sections/companies"
@@ -8,7 +8,6 @@ import { FeaturesGrid } from "./_sections/features/features-grid"
 import { TestimonialsGrid } from "./_sections/testimonials-grid"
 import { Pricing } from "./_sections/pricing"
 import { AccordionFaq } from "./_sections/accordion-faq"
-import { EmailPopup } from "../components/email-popup"
 import { AutoScroll } from "../components/auto-scroll"
 import TrueFocusPairs from "../components/TrueFocusPairs"
 import SpotlightCard from "../components/SpotlightCard"
@@ -358,33 +357,21 @@ const faqData = {
     items: [
       {
         _id: "faq-1",
-        _title: (
-          <>
-            How does attribution tracking work with <SkoolLogo />?
-          </>
-        ),
+        _title: "How does attribution tracking work?",
         answer:
-          (
-            <>
-              We track member signups and revenue to match them to their original source (YouTube video, Instagram post, podcast episode, etc.) and track their lifetime value. We also support Zapier for easy integration.
-            </>
-          ),
+          "We track member signups and revenue to match them to their original source (YouTube video, Instagram post, podcast episode, etc.) and track their lifetime value. We also support Zapier for easy integration.",
       },
       {
         _id: "faq-2",
-        _title: "How accurate is the attribution matching?",
+        _title: "I don't run ads yet, do I need attribution?",
         answer:
-          "Our attribution accuracy is 90-99.99% depending on your setup. We use first-party cookies, UTM parameters, and referrer data to match members to sources. Much more accurate than Google Analytics for revenue tracking.",
+          "Actually, organic tracking is where the real insights happen. You're already creating content, and some of it's working better than you realize. When you do start ads, you'll already know what to promote instead of guessing. Takes about 5 minutes to set up now, and you'll have months of data when you need it.",
       },
       {
         _id: "faq-3",
-        _title: "What if I'm already using Hyros?",
+        _title: "I'm just getting started, is this for me?",
         answer:
-          (
-            <>
-              Hyros is great but costs $379+/month and requires complex setup. We're built specifically for <SkoolLogo /> communities at $79/month with 2-minute setup. Many users switch to save $3,600/year while getting more valuable insights into what traffic sources get you the highest-quality lowest-churning <SkoolLogo /> members... down to the exact ad ID or piece of content they found you through.
-            </>
-          ),
+          "You're actually at the ideal stage. Your data is clean and patterns are easier to spot, giving you the advantage of building on what works from day one. The system grows with you, so what you learn now directly applies as you scale. Most successful communities wish they'd started tracking earlier when establishing their authority was simpler.",
       },
       {
         _id: "faq-4",
@@ -398,40 +385,66 @@ const faqData = {
       },
       {
         _id: "faq-5",
+        _title: "Can't I just track this in spreadsheets?",
+        answer:
+          "Spreadsheets always seem fine until they break. We've seen too many people lose months of data when a formula corrupts. Our system uses seven different data points for verification and runs automatically. One user told us they found revenue they didn't even know existed because their spreadsheet was missing entire traffic sources. We update our tracking algorithms daily to stay ahead of platform changes.",
+      },
+      {
+        _id: "faq-6",
+        _title: "What if I wait to install attribution later?",
+        answer:
+          "The thing is, you're getting members right now who might be your best ones, but without tracking, that information just disappears. Communities that track from the start tend to make completely different decisions and save months of trial and error. It's a 5 minute setup that changes how you see everything and eliminates the worry of guessing.",
+      },
+      {
+        _id: "faq-7",
+        _title: "How accurate is the attribution matching?",
+        answer:
+          "Accurate enough that you can make real decisions with confidence. We use multiple verification methods including cookies, UTM parameters, referrer data, device fingerprinting, IP matching, behavioral patterns, and time-based correlation. The system improves daily as we refine our matching algorithms. Works reliably whether you're tracking dozens or thousands of members.",
+      },
+      {
+        _id: "faq-8",
+        _title: "I only use one platform, why do I need this?",
+        answer:
+          "Even on one platform, some content brings paying members while other content just brings lurkers. You'd be surprised which posts actually drive revenue. Most people find their casual content outperforms what they spent hours on. This saves you time by showing exactly what to double down on.",
+      },
+      {
+        _id: "faq-9",
+        _title: "What if I'm already using Hyros?",
+        answer: (
+          <>
+            Hyros is great but costs $379+/month and requires complex setup. We're built specifically for Skool communities at $79/month with 2-minute setup. Many users switch to save $3,600/year while getting more valuable insights into what traffic sources get you the highest-quality lowest-churning Skool members... down to the exact ad ID or piece of content they found you through.
+          </>
+        ),
+      },
+      {
+        _id: "faq-10",
         _title: "How is this different from Google Analytics?",
         answer:
           "Google Analytics shows website visits. We show revenue attribution. You'll see which specific YouTube video drove $3,400 in member revenue, not just that YouTube sent traffic.",
       },
       {
-        _id: "faq-6",
-        _title: "Can I track historical data?",
-        answer:
-          "We can track going forward from setup. For historical analysis, we can help you import past member data if you have source information in spreadsheets or other tools.",
-      },
-      {
-        _id: "faq-7",
+        _id: "faq-11",
         _title: "What sources can you track?",
-        answer:
-          (
-            <>
-              Everything - YouTube videos, Instagram posts, podcast episodes, blog articles, email campaigns, paid ads, referrals, and more. If it drives traffic to your <SkoolLogo /> community, we can track it.
-            </>
-          ),
+        answer: (
+          <>
+            Everything - YouTube videos, Instagram posts, podcast episodes, blog articles, email campaigns, paid ads, referrals, and more. If it drives traffic to your Skool community, we can track it.
+          </>
+        ),
       },
       {
-        _id: "faq-8",
+        _id: "faq-12",
         _title: "How quickly will I see results?",
         answer:
-          "Most users discover their first major insight within 48 hours. Common discoveries: one content type converts 5x better, Instagram drives $0 while YouTube drives thousands, or specific topics drive higher LTV members.",
+          "Most users discover their first major insight within 48 hours. Common discoveries: one content type converts 5x better, certain topics drive higher LTV members, or finding hidden revenue sources. This pride of accomplishment from finally understanding your data often leads to immediate business advancement.",
       },
       {
-        _id: "faq-9",
+        _id: "faq-13",
         _title: "What's the setup process?",
         answer:
-          "2-minute connection. We provide step-by-step instructions and will do it for you if you need help. No coding or complex integrations required.",
+          "2-minute connection through Zapier. We provide step-by-step instructions and will do it for you if you need help. No coding or complex integrations required. This convenience lets you focus on what matters - growing your community.",
       },
       {
-        _id: "faq-10",
+        _id: "faq-14",
         _title: (
           <>
             Is Allumi an official <SkoolLogo /> plugin or third-party?
@@ -439,7 +452,7 @@ const faqData = {
         ),
         answer: (
           <>
-            We're a third-party attribution tracking tool built specifically for <SkoolLogo /> communities. Skool is a registered trademark of Skool Inc. We simply provide better tracking and analytics for <SkoolLogo /> community owners who want to understand what drives revenue.
+            We're a third-party attribution tracking tool built specifically for Skool communities. Skool is a registered trademark of Skool Inc. We simply provide better tracking and analytics for Skool community owners who want to understand what drives revenue and be recognized as data-driven authorities in their space.
           </>
         ),
       },
@@ -497,8 +510,7 @@ const whyIBuiltThisData = {
 }
 
 export default function HomePage() {
-  const [isEmailPopupOpen, setIsEmailPopupOpen] = useState(false)
-  const { openDemoModal, isAnyPopupOpen } = useDemoModal()
+  const { openDemoModal, openEmailPopup, isAnyPopupOpen } = useDemoModal()
 
   // Track scroll depth
   useEffect(() => {
@@ -519,7 +531,7 @@ export default function HomePage() {
 
   return (
     <>
-      {!isAnyPopupOpen && !isEmailPopupOpen && (
+      {!isAnyPopupOpen && (
         <div className="hidden sm:block">
           <HeroTargetCursor 
             targetSelector=".cursor-target, .callout-cursor-target"
@@ -528,10 +540,6 @@ export default function HomePage() {
         </div>
       )}
       <AutoScroll />
-      <EmailPopup 
-        isOpen={isEmailPopupOpen} 
-        onClose={() => setIsEmailPopupOpen(false)} 
-      />
       <Hero
         {...heroData}
         eventsKey="allumi-events"
@@ -542,7 +550,7 @@ export default function HomePage() {
             return
           } else if (action.onClick === "signup") {
             trackEvent('hero_cta_clicked', { cta_type: 'trial_start', source: 'hero' });
-            setIsEmailPopupOpen(true)
+            openEmailPopup()
           }
         }}
       />
@@ -554,7 +562,7 @@ export default function HomePage() {
             openDemoModal()
           } else {
             trackEvent('hero_cta_clicked', { cta_type: 'trial_start', source: 'features' });
-            setIsEmailPopupOpen(true)
+            openEmailPopup()
           }
         }} />
       </div>
@@ -696,7 +704,7 @@ export default function HomePage() {
       </section>
 
       <div id="pricing-section">
-        <Pricing {...pricingData} onCtaClick={() => setIsEmailPopupOpen(true)} />
+        <Pricing {...pricingData} onCtaClick={() => openEmailPopup()} />
       </div>
 
       <section className="callout-section py-24 bg-muted/30 relative">
@@ -714,7 +722,7 @@ export default function HomePage() {
                     if (action.onClick === "demo") {
                       openDemoModal()
                     } else {
-                      setIsEmailPopupOpen(true)
+                      openEmailPopup()
                     }
                   }}
                   className={`callout-cursor-target px-8 py-4 rounded-lg font-semibold transition-colors ${

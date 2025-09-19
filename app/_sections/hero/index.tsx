@@ -140,7 +140,7 @@ export function Hero(
                   name="cta_click"
                   onClick={(e) => {
                     if (onClick && hero.onActionClick) {
-                      if (onClick === "demo") {
+                      if (onClick === "demo" || onClick === "signup") {
                         e.preventDefault()
                       }
                       hero.onActionClick({ onClick, href, label, type, _id })

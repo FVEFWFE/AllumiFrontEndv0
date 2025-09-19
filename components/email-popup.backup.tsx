@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { createPortal } from "react-dom"
 import { X } from "lucide-react"
 import Image from "next/image"
 import { trackEvent, identifyUser } from "./posthog-provider"
@@ -17,9 +16,9 @@ interface EmailPopupProps {
 const MAILERLITE_API_KEY = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI0IiwianRpIjoiMzAyNzNhZTg1MzI2MGU3ZjM2YmE5MGIzZDcxZWEwOTVhODUxN2RjMmJkYmQ0ZDIxNzA2NWJjOGZjZDg5M2UxNDg3ZTUyZDg0M2NiNTZmZGIiLCJpYXQiOjE3NTgwNDYxMTUuMDE5MTU4LCJuYmYiOjE3NTgwNDYxMTUuMDE5MTYyLCJleHAiOjQ5MTM3MTk3MTUuMDExNTc4LCJzdWIiOiIxNzUxMDI4Iiwic2NvcGVzIjpbXX0.is0ny9DWls5mcOz2DCoS7r43R5HZcDQfqOwYLKiPgcqCK9zOmuKI0k8v8cMXmop3zRcOxYlFkRtPLLGk3V-lxUWKJlEUn54rjECBAZ5228DmK6MNnyI61izBbnMHrIFk08S1UHM1FQVHTu4Br3XdzUGVikvLeJMfl7YNgSluQQyfzQZB_ziljC6tMy2fT6GueRISFKr7vf0qMl3Ddy2dN5LgglfaqAV0NRbMV3djLncEZ6IOvS98DTLW8ZNfpp74PJw4nd2fNpnF1aQ2G6wMJ_xzh0bmVqi43QNovIVM1pdyJwohOLpObW2d7xiz7FveYLkF75oAWkmpjVdb3hjX4VMCNbhvlOmCzJQFU96ksaiYmvV3NDfqpEPBo354CgT1kwXVGcEqNktG1BmrjLxa790mS6Eg3P7oPbsDOdoZ8jr-oK2oahpc4AVvi9BRBgT0DoSOB3STPzc6egqIrCQpayB5WUPyqO8H3hxYWrLc-5SqrdrT22HVdFyMTru1UoMl4xz6G2ZPiyO771ZJqBc3sQWqjXw-WDNbF1ioMs6Uo7PfPY7vQ8S8jMy3zXdIcbSxgTeftoqUnV1sKt5X1MXFB_VXMplEqjpdF81tsTXWsgiXd3-WakIZuqwqyQapp3FMB4erpy3RjKRUcdiOgBbCn9KwEWedXXylFZpaxhmBbmg"
 const DEFAULT_GROUP_ID = "165723410007065963"
 
-export function EmailPopup({
-  isOpen,
-  onClose,
+export function EmailPopup({ 
+  isOpen, 
+  onClose, 
   groupId = DEFAULT_GROUP_ID,
   customTitle,
   customDescription
@@ -27,12 +26,6 @@ export function EmailPopup({
   const [email, setEmail] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [message, setMessage] = useState<{ type: "success" | "error", text: string } | null>(null)
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-    return () => setMounted(false)
-  }, [])
 
   useEffect(() => {
     if (isOpen) {
@@ -102,28 +95,23 @@ export function EmailPopup({
     }
   }
 
-  if (!isOpen || !mounted) return null
+  if (!isOpen) return null
 
-  return createPortal(
-    <div
-      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm"
-      onClick={(e) => {
-        // Only close when clicking the backdrop itself
-        if (e.target === e.currentTarget) {
-          onClose()
-        }
-      }}
-    >
-      {/* Modal content */}
-      <div
-        className="relative w-full max-w-[95vw] sm:max-w-md bg-background border border-[--border] dark:border-[--dark-border] rounded-xl shadow-2xl m-4"
-        onClick={(e) => e.stopPropagation()}
-      >
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4">
+      {/* Backdrop */}
+      <div 
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        onClick={onClose}
+      />
+      
+      {/* Modal */}
+      <div className="relative w-full max-w-[95vw] sm:max-w-md bg-background border border-[--border] dark:border-[--dark-border] rounded-xl shadow-2xl">
           {/* Close button */}
           <button
             onClick={onClose}
-            className="absolute right-4 top-4 p-1 rounded-lg hover:bg-muted transition-colors z-10"
-            aria-label="Close email popup"
+            className="absolute right-4 top-4 p-1 rounded-lg hover:bg-muted transition-colors"
+            aria-label="Close"
           >
             <X className="h-5 w-5" />
           </button>
@@ -160,22 +148,14 @@ export function EmailPopup({
             </div>
 
             {/* Form */}
-            <form
-              onSubmit={handleSubmit}
-              onClick={(e) => e.stopPropagation()}
-              onMouseDown={(e) => e.stopPropagation()}
-              className="space-y-4"
-            >
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  onClick={(e) => e.stopPropagation()}
-                  onMouseDown={(e) => e.stopPropagation()}
-                  onFocus={(e) => e.stopPropagation()}
-                  placeholder="Enter your email"
-                  required
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                required
                   className="w-full px-3 py-2.5 sm:px-4 sm:py-3 border border-[--border] dark:border-[--dark-border] rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-sm sm:text-base"
                 />
               </div>
@@ -223,8 +203,7 @@ export function EmailPopup({
               </div>
             </div>
           </div>
+        </div>
       </div>
-    </div>,
-    document.body
   )
 }

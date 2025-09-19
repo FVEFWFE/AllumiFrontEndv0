@@ -86,11 +86,8 @@ export const Footer = ({
             Bug Report
           </button>
           <button
-            onClick={() => {
-              if (typeof window !== 'undefined' && window.Featurebase) {
-                window.Featurebase('showNewMessage', 'I have a feature request for Allumi');
-              }
-            }}
+            data-featurebase-feedback
+            onClick={() => trackEvent('footer_navigation_clicked', { link: 'feature-request' })}
             className="px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"
           >
             Feature Request

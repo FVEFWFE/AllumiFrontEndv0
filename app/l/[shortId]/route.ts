@@ -57,6 +57,7 @@ export async function GET(
         link_id: linkData.id,
         identity_id: identityId,
         user_id: linkData.user_id,
+        short_id: shortId,
         campaign_name: linkData.campaign_name,
         recipient_id: linkData.recipient_id,
         utm_source: linkData.utm_source,
@@ -65,6 +66,7 @@ export async function GET(
         ip_address: ip,
         user_agent: userAgent,
         device_fingerprint: fingerprint,
+        referrer: request.headers.get('referer') || null,
         clicked_at: new Date().toISOString()
       });
 

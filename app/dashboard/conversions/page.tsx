@@ -1,19 +1,26 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { createClient } from '@supabase/supabase-js';
+import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { 
+import {
   BarChart, Bar, LineChart, Line, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
   Area, AreaChart, Funnel, FunnelChart, LabelList
 } from 'recharts';
 import { ArrowUpRight, ArrowDownRight, Users, DollarSign, Target, TrendingUp, Clock, LinkIcon } from 'lucide-react';
 
-// Mock data - replace with real Supabase queries
-const conversionData = {
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
+
+// Default conversion data structure
+const defaultConversionData = {
   summary: {
     totalConversions: 47,
     conversionRate: 3.2,
@@ -64,6 +71,7 @@ const conversionData = {
 export default function ConversionsDashboard() {
   const [selectedModel, setSelectedModel] = useState<'firstTouch' | 'lastTouch' | 'timeDecay'>('timeDecay');
   const [dateRange, setDateRange] = useState('7days');
+  const conversionData = defaultConversionData; // Use default data for now
 
   const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff7c7c'];
 

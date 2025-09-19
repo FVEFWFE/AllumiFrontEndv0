@@ -88,7 +88,7 @@ export default function AboutPage() {
           {/* LaserFlow effect above the story box - centered */}
           <div className="relative h-[500px] -mb-64 -mt-16 overflow-hidden">
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-full h-full">
+              <div className="w-full max-w-7xl px-4 mx-auto h-full">
                 <LaserFlow 
                   horizontalSizing={0.85}
                   verticalSizing={2.3}

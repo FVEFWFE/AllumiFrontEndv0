@@ -3,6 +3,12 @@
 import { useEffect, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
+import OnboardingFlow from '@/components/onboarding/OnboardingFlow';
+import TooltipGuide from '@/components/onboarding/TooltipGuide';
+import EmptyState from '@/components/dashboard/EmptyState';
+import SetupProgress from '@/components/dashboard/SetupProgress';
+import IntegrationStatus from '@/components/dashboard/IntegrationStatus';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -31,6 +37,7 @@ export default function Dashboard() {
   const [campaigns, setCampaigns] = useState<CampaignData[]>([]);
   const [recentLinks, setRecentLinks] = useState<any[]>([]);
   const [recentConversions, setRecentConversions] = useState<any[]>([]);
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
   useEffect(() => {
     checkAuth();
@@ -40,7 +47,7 @@ export default function Dashboard() {
   const checkAuth = async () => {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) {
-      router.push('/auth/login');
+      router.push('/sign-in');
     }
   };
 
@@ -51,17 +58,40 @@ export default function Dashboard() {
 
       const userId = session.user.id;
 
-      // Load stats
-      const [linksRes, clicksRes, conversionsRes] = await Promise.all([
-        supabase.from('links').select('*').eq('user_id', userId),
-        supabase.from('clicks').select('*').eq('user_id', userId),
-        supabase.from('conversions').select('*').eq('user_id', userId)
-      ]);
+      // Get all user's links with their click counts from the clicks column
+      const { data: links, error: linksError } = await supabase
+        .from('links')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false });
 
-      const totalLinks = linksRes.data?.length || 0;
-      const totalClicks = clicksRes.data?.length || 0;
-      const totalConversions = conversionsRes.data?.length || 0;
-      const conversionRate = totalClicks > 0 ? (totalConversions / totalClicks) * 100 : 0;
+      if (linksError) {
+        console.error('Error loading links:', linksError);
+        return;
+      }
+
+      // Get all clicks for this user
+      const { data: clicks } = await supabase
+        .from('clicks')
+        .select('*')
+        .eq('user_id', userId);
+
+      // Get conversions count
+      const { data: conversions, count: conversionsCount } = await supabase
+        .from('conversions')
+        .select('*', { count: 'exact', head: false })
+        .eq('user_id', userId);
+
+      // Calculate total clicks from links table (using the clicks column)
+      const totalClicks = links?.reduce((sum, link) => {
+        return sum + (link.clicks || 0);
+      }, 0) || 0;
+
+      const totalLinks = links?.length || 0;
+      const totalConversions = conversionsCount || 0;
+      const conversionRate = totalClicks > 0
+        ? (totalConversions / totalClicks) * 100
+        : 0;
 
       setStats({
         totalLinks,
@@ -70,74 +100,61 @@ export default function Dashboard() {
         conversionRate
       });
 
-      // Load recent links
-      const { data: links } = await supabase
-        .from('links')
-        .select('*')
-        .eq('user_id', userId)
-        .order('created_at', { ascending: false })
-        .limit(5);
-      
-      setRecentLinks(links || []);
+      setRecentLinks(links?.slice(0, 5) || []);
+
+      // Check if user needs onboarding (no links created yet)
+      if (!links || links.length === 0) {
+        const hasSeenOnboarding = localStorage.getItem('onboarding_completed');
+        if (!hasSeenOnboarding) {
+          setShowOnboarding(true);
+        }
+      }
 
       // Load recent conversions
-      const { data: conversions } = await supabase
+      const { data: recentConversionsData } = await supabase
         .from('conversions')
         .select('*')
         .eq('user_id', userId)
         .order('created_at', { ascending: false })
         .limit(10);
 
-      setRecentConversions(conversions || []);
+      setRecentConversions(recentConversionsData || []);
 
-      // Calculate campaign performance
-      if (clicksRes.data && conversionsRes.data) {
-        const campaignMap = new Map<string, CampaignData>();
-        
-        // Count clicks per campaign
-        clicksRes.data.forEach(click => {
-          const name = click.campaign_name || 'Direct';
-          if (!campaignMap.has(name)) {
-            campaignMap.set(name, {
-              campaign_name: name,
-              clicks: 0,
-              conversions: 0,
-              conversion_rate: 0,
-              attributed_revenue: 0
-            });
-          }
-          const campaign = campaignMap.get(name)!;
-          campaign.clicks++;
+      // Calculate campaign performance from links data
+      if (links && links.length > 0) {
+        const campaignStats = links.map(link => {
+          // Calculate conversions for this specific link/campaign
+          const linkConversions = conversions?.filter(conv => {
+            // Check if conversion is attributed to this campaign
+            if (conv.attribution_data) {
+              return Object.keys(conv.attribution_data).includes(link.campaign_name);
+            }
+            return false;
+          }).length || 0;
+
+          const linkClicks = link.clicks || 0;
+          const conversionRate = linkClicks > 0 ? (linkConversions / linkClicks) * 100 : 0;
+
+          // Calculate attributed revenue for this campaign
+          const attributedRevenue = conversions?.reduce((sum, conv) => {
+            if (conv.attribution_data && conv.attribution_data[link.campaign_name]) {
+              return sum + (conv.revenue_tracked || 0);
+            }
+            return sum;
+          }, 0) || 0;
+
+          return {
+            campaign_name: link.campaign_name,
+            clicks: linkClicks,
+            conversions: linkConversions,
+            conversion_rate: conversionRate,
+            attributed_revenue: attributedRevenue
+          };
         });
 
-        // Count conversions per campaign
-        conversionsRes.data.forEach(conversion => {
-          if (conversion.attribution_data) {
-            Object.entries(conversion.attribution_data).forEach(([campaign, data]: [string, any]) => {
-              if (!campaignMap.has(campaign)) {
-                campaignMap.set(campaign, {
-                  campaign_name: campaign,
-                  clicks: 0,
-                  conversions: 0,
-                  conversion_rate: 0,
-                  attributed_revenue: 0
-                });
-              }
-              const campaignData = campaignMap.get(campaign)!;
-              campaignData.conversions++;
-              campaignData.attributed_revenue += conversion.revenue_tracked || 0;
-            });
-          }
-        });
-
-        // Calculate conversion rates
-        campaignMap.forEach(campaign => {
-          campaign.conversion_rate = campaign.clicks > 0 
-            ? (campaign.conversions / campaign.clicks) * 100 
-            : 0;
-        });
-
-        setCampaigns(Array.from(campaignMap.values()));
+        setCampaigns(campaignStats);
+      } else {
+        setCampaigns([]);
       }
 
       setLoading(false);
@@ -149,6 +166,7 @@ export default function Dashboard() {
 
   const copyLink = (shortUrl: string) => {
     navigator.clipboard.writeText(shortUrl);
+    toast.success('Link copied to clipboard!');
   };
 
   const formatDate = (date: string) => {
@@ -170,18 +188,60 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Onboarding Flow for New Users */}
+      {showOnboarding && (
+        <OnboardingFlow
+          onComplete={() => {
+            setShowOnboarding(false);
+            loadDashboardData(); // Refresh data after onboarding
+          }}
+        />
+      )}
+
       <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-foreground mb-2">Attribution Dashboard</h1>
-          <p className="text-muted-foreground">Track your Skool community growth and attribution</p>
+        {/* Header with Create Link Button */}
+        <div className="mb-6 flex items-start justify-between">
+          <div>
+            <h1 className="text-4xl font-bold text-foreground mb-2">Attribution Dashboard</h1>
+            <p className="text-muted-foreground">Track your Skool community growth and attribution</p>
+          </div>
+          <TooltipGuide
+            id="create-link-button-top"
+            title="Create Tracking Links"
+            content="Create unique links for each piece of content to track what drives conversions."
+            position="left"
+          >
+            <button
+              onClick={() => router.push('/dashboard/links/create')}
+              className="px-6 py-3 bg-accent text-accent-foreground rounded-lg font-medium hover:opacity-90 transition flex items-center gap-2 group"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+              Create Link
+            </button>
+          </TooltipGuide>
         </div>
+
+        {/* Setup Progress for New Users */}
+        <SetupProgress />
+
+        {/* Integration Status */}
+        <IntegrationStatus />
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <div className="bg-card border border-border rounded-lg p-6">
             <div className="text-sm text-muted-foreground mb-2">Total Links</div>
             <div className="text-3xl font-bold text-foreground">{stats?.totalLinks || 0}</div>
+            {stats?.totalLinks === 0 && (
+              <button
+                onClick={() => router.push('/dashboard/links/create')}
+                className="text-xs text-accent hover:underline mt-2"
+              >
+                Create your first →
+              </button>
+            )}
           </div>
           <div className="bg-card border border-border rounded-lg p-6">
             <div className="text-sm text-muted-foreground mb-2">Total Clicks</div>
@@ -229,8 +289,8 @@ export default function Dashboard() {
                 ))}
                 {campaigns.length === 0 && (
                   <tr>
-                    <td colSpan={5} className="text-center p-4 text-muted-foreground">
-                      No campaign data yet. Create your first tracking link!
+                    <td colSpan={5} className="p-0">
+                      <EmptyState type="campaigns" />
                     </td>
                   </tr>
                 )}
@@ -243,28 +303,44 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Recent Links */}
           <div className="bg-card border border-border rounded-lg p-6">
-            <h2 className="text-xl font-bold text-foreground mb-4">Recent Links</h2>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-bold text-foreground">Recent Links</h2>
+              <button
+                onClick={() => router.push('/dashboard/links/create')}
+                className="text-sm px-3 py-1.5 bg-accent/10 text-accent rounded-lg hover:bg-accent/20 transition"
+              >
+                + New Link
+              </button>
+            </div>
             <div className="space-y-3">
-              {recentLinks.map(link => (
-                <div key={link.id} className="flex items-center justify-between p-3 bg-background rounded-lg">
-                  <div>
-                    <div className="text-sm font-medium text-foreground">{link.campaign_name}</div>
-                    <div className="text-xs text-muted-foreground">
-                      {link.clicks} clicks • {formatDate(link.created_at)}
+              {recentLinks.map(link => {
+                const shortUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3003'}/l/${link.short_id}`;
+                const clickCount = link.clicks || 0;
+
+                return (
+                  <div key={link.id} className="flex items-center justify-between p-3 bg-background rounded-lg">
+                    <div className="flex-1">
+                      <div className="text-sm font-medium text-foreground">
+                        {link.campaign_name}
+                      </div>
+                      <div className="text-xs text-muted-foreground">
+                        {clickCount} clicks • {formatDate(link.created_at)}
+                      </div>
+                      <div className="text-xs text-muted-foreground truncate max-w-[300px]">
+                        {link.destination_url}
+                      </div>
                     </div>
+                    <button
+                      onClick={() => copyLink(shortUrl)}
+                      className="px-3 py-1 text-xs bg-accent text-accent-foreground rounded hover:opacity-90"
+                    >
+                      Copy
+                    </button>
                   </div>
-                  <button
-                    onClick={() => copyLink(`${process.env.NEXT_PUBLIC_APP_URL}/l/${link.short_id}`)}
-                    className="px-3 py-1 text-xs bg-accent text-accent-foreground rounded hover:opacity-90"
-                  >
-                    Copy
-                  </button>
-                </div>
-              ))}
+                );
+              })}
               {recentLinks.length === 0 && (
-                <div className="text-center p-4 text-muted-foreground">
-                  No links created yet
-                </div>
+                <EmptyState type="links" />
               )}
             </div>
           </div>
@@ -296,23 +372,12 @@ export default function Dashboard() {
                 </div>
               ))}
               {recentConversions.length === 0 && (
-                <div className="text-center p-4 text-muted-foreground">
-                  No conversions tracked yet
-                </div>
+                <EmptyState type="conversions" />
               )}
             </div>
           </div>
         </div>
 
-        {/* Create Link Button */}
-        <div className="fixed bottom-8 right-8">
-          <button
-            onClick={() => router.push('/dashboard/links/create')}
-            className="px-6 py-3 bg-accent text-accent-foreground rounded-lg font-medium shadow-lg hover:opacity-90 transition"
-          >
-            + Create Link
-          </button>
-        </div>
       </div>
     </div>
   );

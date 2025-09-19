@@ -13,6 +13,7 @@ import { Footer } from "@/components/footer"
 import { FeaturebaseWidget } from "@/components/featurebase-widget"
 import { PHProvider, PostHogPageview } from "@/components/posthog-provider"
 import { ClientLayout } from "@/components/layout-client"
+import { Toaster } from 'react-hot-toast'
 
 const geist = Geist({
   subsets: ["latin"],
@@ -191,12 +192,20 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <Providers theme={settings.theme}>
             <PostHogPageview />
             <FeaturebaseWidget />
-            <ClientLayout logo={settings.logo} header={header}>
+            <ClientLayout logo={settings.logo} header={header} footer={footer}>
               <main>{children}</main>
-              <NewsletterMailerLite />
-              {/* Footer */}
-              <Footer footer={footer} logo={settings.logo} />
             </ClientLayout>
+            <Toaster
+              position="top-right"
+              toastOptions={{
+                duration: 4000,
+                style: {
+                  background: 'var(--card)',
+                  color: 'var(--foreground)',
+                  border: '1px solid var(--border)',
+                },
+              }}
+            />
           </Providers>
         </PHProvider>
       </body>
