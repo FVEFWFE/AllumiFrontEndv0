@@ -202,36 +202,53 @@ export function DemoEmailModalEnhanced({ isOpen, onClose }: DemoEmailModalProps)
                       </div>
 
                       {/* Visual guide for finding Skool URL */}
-                      <div className="mt-3 p-2 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
-                        <p className="text-xs text-gray-600 dark:text-gray-400 mb-2 font-medium">
-                          📍 Where to find your Skool URL:
-                        </p>
-                        <div className="relative w-full rounded-md overflow-hidden border border-gray-300 dark:border-gray-600">
-                          <Image
-                            src="/profileurl.png"
-                            alt="Where to find your Skool profile URL"
-                            width={400}
-                            height={200}
-                            className="w-full h-auto"
-                            priority
-                          />
+                      <div className="mt-3 space-y-2">
+                        {/* Step 1 & 2 */}
+                        <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
+                          <div className="flex items-center gap-2 mb-2">
+                            <div className="w-6 h-6 rounded-full bg-purple-600 text-white flex items-center justify-center text-xs font-bold">1</div>
+                            <p className="text-xs text-gray-700 dark:text-gray-300 font-medium">
+                              <a
+                                href="https://www.skool.com/settings?t=profile"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-purple-600 dark:text-purple-400 hover:underline font-semibold"
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                Click Here to Open Skool Settings
+                              </a>
+                            </p>
+                          </div>
+
+                          <div className="relative w-full rounded-md overflow-hidden border border-gray-300 dark:border-gray-600">
+                            <Image
+                              src="/profileurl.png"
+                              alt="Where to find your Skool profile URL"
+                              width={400}
+                              height={200}
+                              className="w-full h-auto"
+                              priority
+                            />
+                          </div>
+
+                          <div className="flex items-center gap-2 mt-2">
+                            <div className="w-6 h-6 rounded-full bg-purple-600 text-white flex items-center justify-center text-xs font-bold">2</div>
+                            <p className="text-xs text-gray-700 dark:text-gray-300 font-medium">
+                              Copy the URL from your profile settings
+                            </p>
+                          </div>
                         </div>
-                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
-                          <a
-                            href="https://www.skool.com/settings?t=profile"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-purple-600 dark:text-purple-400 hover:underline"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            Click Here
-                          </a>
-                          {" → Copy Your Skool Profile URL Field"}
-                        </p>
+
+                        {/* Step 3 - Input field with number */}
+                        <div className="relative">
+                          <div className="absolute -left-9 top-2.5">
+                            <div className="w-6 h-6 rounded-full bg-purple-600 text-white flex items-center justify-center text-xs font-bold">3</div>
+                          </div>
+                          <Label htmlFor="skoolUrl" className="text-xs font-medium flex items-center gap-2">
+                            Paste your Skool URL here:
+                          </Label>
+                        </div>
                       </div>
-                      <Label htmlFor="skoolUrl">
-                        Your Skool Profile URL
-                      </Label>
                       <Input
                         id="skoolUrl"
                         type="text"
@@ -242,6 +259,7 @@ export function DemoEmailModalEnhanced({ isOpen, onClose }: DemoEmailModalProps)
                         onFocus={(e) => e.stopPropagation()}
                         onBlur={(e) => setSkoolUrl(formatSkoolUrl(e.target.value))}
                         disabled={isSubmitting}
+                        className="border-2 border-purple-300 dark:border-purple-600 focus:border-purple-500 dark:focus:border-purple-400"
                       />
                       {skoolUrl && formatSkoolUrl(skoolUrl) && formatSkoolUrl(skoolUrl).startsWith('skool.com/@') && (
                         <p className="text-xs text-green-600 dark:text-green-400 font-medium">
