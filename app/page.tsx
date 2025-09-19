@@ -571,18 +571,18 @@ export default function HomePage() {
         {/* Background hamster images */}
         <div className="absolute inset-0 pointer-events-none">
           {/* Light mode - white hamster */}
-          <div className="dark:hidden absolute inset-0 opacity-5" style={{
+          <div className="dark:hidden absolute inset-0 opacity-20" style={{
             backgroundImage: 'url(/hamsterwhite.png)',
             backgroundRepeat: 'no-repeat',
-            backgroundPosition: 'center',
-            backgroundSize: 'contain'
+            backgroundPosition: '10% center',
+            backgroundSize: '300px'
           }} />
           {/* Dark mode - black hamster */}
-          <div className="hidden dark:block absolute inset-0 opacity-5" style={{
+          <div className="hidden dark:block absolute inset-0 opacity-20" style={{
             backgroundImage: 'url(/hamsterblack.png)',
             backgroundRepeat: 'no-repeat',
-            backgroundPosition: 'center',
-            backgroundSize: 'contain'
+            backgroundPosition: '10% center',
+            backgroundSize: '300px'
           }} />
         </div>
 
