@@ -122,8 +122,8 @@ async function enrichSkoolProfile(skoolUrl: string): Promise<EnrichmentData> {
 function extractSkoolUsername(url: string): string | null {
   try {
     // Handle various formats:
+    // https://www.skool.com/@username?g=groupname
     // skool.com/@username
-    // https://skool.com/@username
     // @username
     // username
 
@@ -132,17 +132,27 @@ function extractSkoolUsername(url: string): string | null {
     // Remove protocol if present
     cleanUrl = cleanUrl.replace(/^https?:\/\//, '');
 
-    // Remove skool.com if present
-    cleanUrl = cleanUrl.replace(/^(www\.)?skool\.com\//, '');
+    // Remove www. if present
+    cleanUrl = cleanUrl.replace(/^www\./, '');
 
-    // Remove @ symbol if present
-    cleanUrl = cleanUrl.replace(/^@/, '');
+    // Extract username from Skool URL
+    if (cleanUrl.includes('skool.com')) {
+      const match = cleanUrl.match(/skool\.com\/@([^/?]+)/);
+      if (match && match[1]) {
+        return match[1];
+      }
+    } else {
+      // Handle just username or @username
+      cleanUrl = cleanUrl.replace(/^@/, '');
+      // Remove any query parameters
+      cleanUrl = cleanUrl.split('?')[0];
+      // Remove any slashes
+      cleanUrl = cleanUrl.replace(/\//g, '');
 
-    // Remove trailing slashes
-    cleanUrl = cleanUrl.replace(/\/$/, '');
+      return cleanUrl || null;
+    }
 
-    // Return cleaned username
-    return cleanUrl || null;
+    return null;
   } catch {
     return null;
   }

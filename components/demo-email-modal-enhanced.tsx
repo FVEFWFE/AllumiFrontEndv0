@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { motion, AnimatePresence } from "framer-motion"
 import { Portal } from "./portal"
+import { processDemoCapture, formatSkoolUrl } from "@/lib/demo-capture"
 
 interface DemoEmailModalProps {
   isOpen: boolean
@@ -28,15 +29,8 @@ export function DemoEmailModalEnhanced({ isOpen, onClose }: DemoEmailModalProps)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [showSkoolOption, setShowSkoolOption] = useState(false)
-  const [enrichmentData, setEnrichmentData] = useState<any>(null)
 
-  const formatSkoolUrl = (url: string) => {
-    if (!url) return ''
-    if (!url.includes('skool.com')) {
-      return `skool.com/@${url.replace('@', '')}`
-    }
-    return url
-  }
+  // Using formatSkoolUrl from lib/demo-capture now
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -45,40 +39,25 @@ export function DemoEmailModalEnhanced({ isOpen, onClose }: DemoEmailModalProps)
     setIsSubmitting(true)
 
     try {
-      // Send to capture API with enrichment
-      const captureResponse = await fetch('/api/demo/capture', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email,
-          firstName,
-          skoolUrl: skoolUrl || null,
-          source: 'demo',
-          captureType: skoolUrl ? 'email_and_url' : 'email_only'
-        })
-      })
+      // Process the demo capture with Attio enrichment and PostHog tracking
+      const result = await processDemoCapture({
+        email,
+        firstName,
+        skoolUrl: skoolUrl || null,
+        source: 'demo',
+        captureType: skoolUrl ? 'email_and_url' : 'email_only'
+      });
 
-      if (captureResponse.ok) {
-        const data = await captureResponse.json()
-        if (data.enriched && data.data) {
-          setEnrichmentData(data.data)
-        }
+      if (result.success) {
+        setIsSubmitted(true)
+
+        // Redirect to demo after 2 seconds
+        setTimeout(() => {
+          window.location.href = '/attribution-demo'
+        }, 2000)
+      } else {
+        console.error('Demo capture failed:', result.error)
       }
-
-      // Track event
-      if (typeof window !== 'undefined' && (window as any).posthog) {
-        (window as any).posthog.capture('demo_requested', {
-          has_skool_url: !!skoolUrl,
-          source: 'modal'
-        })
-      }
-
-      setIsSubmitted(true)
-
-      // Redirect to demo after 2 seconds
-      setTimeout(() => {
-        window.location.href = '/attribution-demo'
-      }, 2000)
     } catch (error) {
       console.error("Error submitting demo request:", error)
     } finally {
@@ -309,15 +288,9 @@ export function DemoEmailModalEnhanced({ isOpen, onClose }: DemoEmailModalProps)
               <Check className="w-8 h-8 text-green-600 dark:text-green-300" />
             </motion.div>
             <h3 className="text-xl font-semibold">Perfect! Loading Your Demo...</h3>
-            {enrichmentData?.communityName ? (
-              <p className="text-gray-600 dark:text-gray-400">
-                Found <strong>{enrichmentData.communityName}</strong> with {enrichmentData.memberCount} members!
-              </p>
-            ) : (
-              <p className="text-gray-600 dark:text-gray-400">
-                Welcome <strong>{firstName}</strong>! Preparing your personalized demo...
-              </p>
-            )}
+            <p className="text-gray-600 dark:text-gray-400">
+              Welcome <strong>{firstName}</strong>! Preparing your personalized demo...
+            </p>
             <div className="flex justify-center">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
             </div>
