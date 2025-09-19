@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation"
 import { Header } from "./header"
 import { Footer } from "./footer"
 import { EmailPopup } from "./email-popup"
-import { DemoEmailModalEnhanced } from "./demo-email-modal-enhanced"
+import { DemoEmailModalSimple } from "./demo-email-modal-simple"
 import { NewsletterMailerLite } from "@/app/_sections/newsletter/newsletter-mailerlite"
 import type { DarkLightImageFragment, HeaderFragment } from "@/lib/basehub/fragments"
 
@@ -70,7 +70,7 @@ export function ClientLayout({
         isOpen={isEmailPopupOpen}
         onClose={() => setIsEmailPopupOpen(false)}
       />
-      <DemoEmailModalEnhanced
+      <DemoEmailModalSimple
         isOpen={isDemoPopupOpen}
         onClose={() => setIsDemoPopupOpen(false)}
       />
