@@ -570,16 +570,16 @@ export default function HomePage() {
       <section className="py-24 bg-background relative overflow-hidden">
         {/* Background hamster images */}
         <div className="absolute inset-0 pointer-events-none">
-          {/* Light mode hamster */}
+          {/* Light mode - white hamster */}
           <div className="dark:hidden absolute inset-0 opacity-5" style={{
-            backgroundImage: 'url(/hamsterblack.png)',
+            backgroundImage: 'url(/hamsterwhite.png)',
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'center',
             backgroundSize: 'contain'
           }} />
-          {/* Dark mode hamster */}
+          {/* Dark mode - black hamster */}
           <div className="hidden dark:block absolute inset-0 opacity-5" style={{
-            backgroundImage: 'url(/hamsterwhite.png)',
+            backgroundImage: 'url(/hamsterblack.png)',
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'center',
             backgroundSize: 'contain'
