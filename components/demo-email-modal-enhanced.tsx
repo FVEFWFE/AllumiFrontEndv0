@@ -16,6 +16,7 @@ import { Label } from "@/components/ui/label"
 import { motion, AnimatePresence } from "framer-motion"
 import { Portal } from "./portal"
 import { processDemoCapture, formatSkoolUrl } from "@/lib/demo-capture"
+import Image from "next/image"
 
 interface DemoEmailModalProps {
   isOpen: boolean
@@ -198,6 +199,26 @@ export function DemoEmailModalEnhanced({ isOpen, onClose }: DemoEmailModalProps)
                           <li>• What's working for similar communities</li>
                           <li>• Conversion rates you can expect</li>
                         </ul>
+                      </div>
+
+                      {/* Visual guide for finding Skool URL */}
+                      <div className="mt-3 p-2 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
+                        <p className="text-xs text-gray-600 dark:text-gray-400 mb-2 font-medium">
+                          📍 Where to find your Skool URL:
+                        </p>
+                        <div className="relative w-full rounded-md overflow-hidden border border-gray-300 dark:border-gray-600">
+                          <Image
+                            src="/profileurl.png"
+                            alt="Where to find your Skool profile URL"
+                            width={400}
+                            height={200}
+                            className="w-full h-auto"
+                            priority
+                          />
+                        </div>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
+                          Go to Settings → Profile → Copy the URL field
+                        </p>
                       </div>
                       <div className="flex items-center justify-between">
                         <Label htmlFor="skoolUrl">
