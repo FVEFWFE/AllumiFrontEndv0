@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useState } from "react"
-import { Play, Check, HelpCircle, Mail, User, Link } from "lucide-react"
+import { Play, Check, Mail, User, Link } from "lucide-react"
 import {
   Dialog,
   DialogContent,
@@ -15,12 +15,6 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { motion } from "framer-motion"
 import { processDemoCapture, formatSkoolUrl } from "@/lib/demo-capture"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
 import Image from "next/image"
 
 interface DemoEmailModalProps {
@@ -151,42 +145,6 @@ export function DemoEmailModalSimple({ isOpen, onClose }: DemoEmailModalProps) {
                 <Label htmlFor="skoolUrl" className="flex items-center gap-1.5 mb-1.5">
                   <span className="w-5 h-5 rounded-full bg-purple-600 text-white flex items-center justify-center text-xs font-bold">3</span>
                   Skool Profile URL
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <button
-                          type="button"
-                          className="ml-auto"
-                          onClick={(e) => {
-                            e.preventDefault()
-                            setShowUrlHelp(!showUrlHelp)
-                          }}
-                        >
-                          <HelpCircle className="h-3.5 w-3.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" />
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent className="max-w-xs">
-                        <div className="space-y-2">
-                          <p className="text-xs">Find your profile URL:</p>
-                          <Image
-                            src="/profileurl.png"
-                            alt="Where to find Skool URL"
-                            width={250}
-                            height={125}
-                            className="rounded border"
-                          />
-                          <a
-                            href="https://www.skool.com/settings?t=profile"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-xs text-purple-600 hover:underline block"
-                          >
-                            Open Skool Settings →
-                          </a>
-                        </div>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
                 </Label>
                 <div className="relative">
                   <Link className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -202,6 +160,35 @@ export function DemoEmailModalSimple({ isOpen, onClose }: DemoEmailModalProps) {
                     disabled={isSubmitting}
                   />
                 </div>
+
+                {/* Help link - always visible */}
+                <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                  <a
+                    href="https://www.skool.com/settings?t=profile"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-purple-600 dark:text-purple-400 hover:underline inline-flex items-center gap-1"
+                  >
+                    Click here to grab your Skool profile URL
+                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </a>
+                </div>
+
+                {/* Visual guide */}
+                {showUrlHelp && (
+                  <div className="mt-2 p-2 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
+                    <Image
+                      src="/profileurl.png"
+                      alt="Where to find your Skool profile URL"
+                      width={350}
+                      height={175}
+                      className="w-full h-auto rounded border border-gray-300 dark:border-gray-600"
+                    />
+                  </div>
+                )}
+
                 {skoolUrl && !isValidSkoolUrl && (
                   <p className="text-xs text-orange-600 dark:text-orange-400 mt-1">
                     Please enter your profile URL (e.g., skool.com/@username)
