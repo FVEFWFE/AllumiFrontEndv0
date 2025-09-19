@@ -26,6 +26,33 @@ export interface AttioPersonData {
   leadScore?: number;
 }
 
+// Validate that Skool URL doesn't contain an email address
+export function validateSkoolUrl(url: string): { isValid: boolean; error?: string } {
+  if (!url) return { isValid: false, error: 'Please enter your Skool profile URL' };
+
+  // Check if it looks like an email was entered
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const cleanUrl = url.replace(/^(https?:\/\/)?(www\.)?/, '').replace('skool.com/@', '');
+
+  if (emailPattern.test(cleanUrl) || cleanUrl.includes('@gmail.com') || cleanUrl.includes('@yahoo.com') || cleanUrl.includes('@hotmail.com') || cleanUrl.includes('@outlook.com')) {
+    return {
+      isValid: false,
+      error: 'Whoops! Looks like you entered your email instead of your Skool profile link'
+    };
+  }
+
+  // Check if it's formatted correctly
+  const formatted = formatSkoolUrl(url);
+  if (!formatted || !formatted.startsWith('skool.com/@')) {
+    return {
+      isValid: false,
+      error: 'Please enter a valid Skool profile URL (e.g., skool.com/@username)'
+    };
+  }
+
+  return { isValid: true };
+}
+
 // Format Skool URL to standard format: skool.com/@username
 export function formatSkoolUrl(url: string): string {
   if (!url) return '';

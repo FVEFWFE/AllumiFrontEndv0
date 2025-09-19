@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { motion } from "framer-motion"
-import { processDemoCapture, formatSkoolUrl } from "@/lib/demo-capture"
+import { processDemoCapture, formatSkoolUrl, validateSkoolUrl } from "@/lib/demo-capture"
 import Image from "next/image"
 
 interface DemoEmailModalProps {
@@ -58,7 +58,7 @@ export function DemoEmailModalSimple({ isOpen, onClose }: DemoEmailModalProps) {
     }
   }
 
-  const isValidSkoolUrl = skoolUrl && formatSkoolUrl(skoolUrl).startsWith('skool.com/@')
+  const skoolValidation = skoolUrl ? validateSkoolUrl(skoolUrl) : { isValid: false }
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
@@ -145,6 +145,28 @@ export function DemoEmailModalSimple({ isOpen, onClose }: DemoEmailModalProps) {
                 <Label htmlFor="skoolUrl" className="flex items-center gap-1.5 mb-1.5">
                   <span className="w-5 h-5 rounded-full bg-purple-600 text-white flex items-center justify-center text-xs font-bold">3</span>
                   Skool Profile URL
+                  {/* Question mark with instant hover */}
+                  <div className="relative group">
+                    <svg
+                      className="w-4 h-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 cursor-help"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    {/* Hover tooltip with image - no delay */}
+                    <div className="absolute left-0 top-6 z-50 hidden group-hover:block w-80 p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl">
+                      <p className="text-xs font-semibold mb-2">Where to find your Skool profile URL:</p>
+                      <Image
+                        src="/profileurl.png"
+                        alt="Where to find your Skool profile URL"
+                        width={300}
+                        height={150}
+                        className="w-full h-auto rounded border border-gray-300 dark:border-gray-600"
+                      />
+                    </div>
+                  </div>
                 </Label>
                 <div className="relative">
                   <Link className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -189,12 +211,12 @@ export function DemoEmailModalSimple({ isOpen, onClose }: DemoEmailModalProps) {
                   </div>
                 )}
 
-                {skoolUrl && !isValidSkoolUrl && (
+                {skoolUrl && !skoolValidation.isValid && (
                   <p className="text-xs text-orange-600 dark:text-orange-400 mt-1">
-                    Please enter your profile URL (e.g., skool.com/@username)
+                    {skoolValidation.error || 'Please enter your profile URL (e.g., skool.com/@username)'}
                   </p>
                 )}
-                {isValidSkoolUrl && (
+                {skoolValidation.isValid && (
                   <p className="text-xs text-green-600 dark:text-green-400 mt-1">
                     ✓ Perfect! We'll show data from communities like yours
                   </p>
@@ -206,7 +228,7 @@ export function DemoEmailModalSimple({ isOpen, onClose }: DemoEmailModalProps) {
             <div className="flex gap-3">
               <Button
                 type="submit"
-                disabled={isSubmitting || !email || !firstName || !skoolUrl || !isValidSkoolUrl}
+                disabled={isSubmitting || !email || !firstName || !skoolUrl || !skoolValidation.isValid}
                 className="flex-1 bg-purple-600 hover:bg-purple-700 text-white"
               >
                 {isSubmitting ? (

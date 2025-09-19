@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { sendDemoNotification } from '@/lib/email-notifications';
 
 interface DemoCaptureData {
   email: string;
@@ -43,6 +44,18 @@ export async function POST(request: NextRequest) {
       source: data.source,
       captureType: data.captureType,
       leadScore: calculateLeadScore(data, cleanSkoolUrl)
+    });
+
+    // Send email notification to Jan
+    await sendDemoNotification({
+      email: data.email,
+      firstName: data.firstName,
+      skoolUrl: cleanSkoolUrl,
+      skoolUsername,
+      source: data.source,
+      captureType: data.captureType,
+      leadScore: calculateLeadScore(data, cleanSkoolUrl),
+      enrichedExisting: attioResult?.enrichedSkoolProfile || false
     });
 
     return NextResponse.json({
@@ -163,40 +176,77 @@ async function createOrUpdateAttioRecord(data: {
     if (data.skoolUsername || data.skoolUrl) {
       console.log('Searching for existing Skool profile:', data.skoolUsername || data.skoolUrl);
 
-      // Search by Skool Profile URL or username
-      const skoolSearchResponse = await fetch(`${ATTIO_API_URL}/objects/people/records/query`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${ATTIO_API_KEY}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          filter: {
-            or: [
-              // Search by exact Skool Profile URL
-              data.skoolUrl ? {
-                attribute: 'skool_profile_url',
-                relation: 'equals',
-                value: data.skoolUrl
-              } : null,
-              // Also search by username pattern in Skool Profile URL
-              data.skoolUsername ? {
-                attribute: 'skool_profile_url',
-                relation: 'contains',
-                value: `@${data.skoolUsername}`
-              } : null
-            ].filter(Boolean)
-          }
-        })
-      });
+      // Search by Skool Profile URL using correct Attio filter format
+      console.log('🔍 Searching for Skool profile:', data.skoolUrl);
+      console.log('Username extracted:', data.skoolUsername);
 
-      if (skoolSearchResponse.ok) {
-        const skoolResult = await skoolSearchResponse.json();
-        if (skoolResult.data && skoolResult.data.length > 0) {
-          existingRecord = skoolResult.data[0];
-          searchedBySkool = true;
-          console.log('Found existing Skool profile:', existingRecord.id?.record_id);
+      // Use the correct filter formats that work with Attio's API
+      const searchStrategies = [
+        // 1. Exact match of the clean URL format (most likely to match)
+        {
+          filter: { skool_profile_url: data.skoolUrl }
+        },
+        // 2. Contains operator for partial match
+        {
+          filter: { skool_profile_url: { '$contains': `@${data.skoolUsername}` } }
+        },
+        // 3. Just the username in case stored differently
+        {
+          filter: { skool_profile_url: { '$contains': data.skoolUsername } }
+        },
+        // 4. Try with full URL format
+        {
+          filter: { skool_profile_url: `https://www.skool.com/@${data.skoolUsername}` }
+        },
+        // 5. Try $or operator to match multiple formats
+        {
+          filter: {
+            '$or': [
+              { skool_profile_url: data.skoolUrl },
+              { skool_profile_url: `https://www.skool.com/@${data.skoolUsername}` },
+              { skool_profile_url: `https://www.skool.com/@${data.skoolUsername}?g=skoolers` }
+            ]
+          }
         }
+      ];
+
+      let existingSkoolRecord: any = null;
+
+      for (const searchQuery of searchStrategies) {
+        console.log(`Trying search strategy:`, JSON.stringify(searchQuery.filter));
+
+        const response = await fetch(`${ATTIO_API_URL}/objects/people/records/query`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${ATTIO_API_KEY}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(searchQuery)
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          console.log(`API response: ${result.data?.length || 0} records found`);
+          if (result.data && result.data.length > 0) {
+            existingSkoolRecord = result.data[0];
+            console.log(`✅ Found match with strategy:`, searchQuery.filter);
+            const skoolUrl = existingSkoolRecord.values?.skool_profile_url?.[0];
+            console.log('Found record Skool URL:', skoolUrl?.value || skoolUrl);
+            console.log('Found record emails:', existingSkoolRecord.values?.email_addresses);
+            break;
+          }
+        } else {
+          const errorText = await response.text();
+          console.log(`Search error:`, errorText.substring(0, 200));
+        }
+      }
+
+      if (existingSkoolRecord) {
+        existingRecord = existingSkoolRecord;
+        searchedBySkool = true;
+        console.log('✅ Found existing Skool profile:', existingRecord.id?.record_id);
+      } else {
+        console.log('❌ No Skool profile found with any search strategy');
       }
     }
 
@@ -211,9 +261,7 @@ async function createOrUpdateAttioRecord(data: {
         },
         body: JSON.stringify({
           filter: {
-            attribute: 'email_addresses',
-            relation: 'contains',
-            value: data.email
+            email_addresses: data.email
           }
         })
       });
@@ -232,47 +280,61 @@ async function createOrUpdateAttioRecord(data: {
       values: {}
     };
 
-    // IMPORTANT: Only add email if it doesn't exist or if we're creating new
-    // This prevents overwriting existing emails
-    if (!existingRecord || !existingRecord.values?.email_addresses?.length) {
-      personData.values.email_addresses = [{ email_address: data.email }];
-    } else if (searchedBySkool && existingRecord) {
-      // We found by Skool and they have no email - ADD the email!
-      const hasEmail = existingRecord.values?.email_addresses?.some((e: any) =>
-        e.email_address === data.email
-      );
+    // Handle email addresses - key field for enrichment
+    if (searchedBySkool && existingRecord) {
+      // CRITICAL: Found by Skool - ENRICH with email!
+      console.log('🎯 Enriching Skool profile with email:', data.email);
+      const existingEmails = existingRecord.values?.email_addresses || [];
+
+      // Check if email already exists (handle different possible formats)
+      const hasEmail = existingEmails.some((e: any) => {
+        const emailValue = e.email_address || e.value || e.email || e;
+        return emailValue === data.email;
+      });
+
       if (!hasEmail) {
-        personData.values.email_addresses = [
-          ...(existingRecord.values.email_addresses || []),
-          { email_address: data.email }
-        ];
+        // Using PATCH will append to existing emails
+        // Try simple format first - Attio may auto-format it
+        personData.values.email_addresses = [data.email];
+        console.log('Adding email to Skool profile');
       }
+    } else if (!existingRecord) {
+      // New record - add email in simple format
+      personData.values.email_addresses = [data.email];
+    } else if (!existingRecord.values?.email_addresses?.length) {
+      // Existing record with no email - add it
+      personData.values.email_addresses = [data.email];
     }
 
-    // Only update name if not present
-    if (!existingRecord || !existingRecord.values?.name?.length) {
-      personData.values.name = [{ first_name: data.firstName }];
+    // Set name - use proper Attio format
+    if (!existingRecord || !existingRecord.values?.name ||
+        (Array.isArray(existingRecord.values?.name) && !existingRecord.values?.name[0]?.first_name)) {
+      personData.values.name = [{
+        first_name: data.firstName,
+        full_name: data.firstName
+      }];
     }
 
-    // Add/update custom attributes - using the actual Attio field names from your schema
-    // Note: Some of these might need to be arrays or specific formats
+    // Skip custom fields that don't exist in Attio
+    // You can add these fields in Attio later if needed:
+    // - demo_source
+    // - demo_capture_type
+    // - demo_lead_score
+    // - demo_requested_at
 
-    // Always update these demo-specific fields
-    personData.values.demo_source = data.source;
-    personData.values.demo_capture_type = data.captureType;
-    personData.values.demo_lead_score = data.leadScore;
-    personData.values.demo_requested_at = new Date().toISOString();
-
-    // Only add Skool URL if not already present
+    // Add Skool URL - try different formats
     if (data.skoolUrl && (!existingRecord || !existingRecord.values?.skool_profile_url)) {
-      personData.values.skool_profile_url = [{ value: data.skoolUrl }];
+      // Try as a text field (most likely format)
+      personData.values.skool_profile_url = data.skoolUrl;
     }
 
     let recordId: string;
 
     if (existingRecord) {
       // UPDATE existing record (whether found by Skool or email)
-      console.log('Updating existing record with demo data and email:', existingRecord.id.record_id);
+      console.log('Updating existing record:', existingRecord.id.record_id);
+      console.log('Was found by Skool?', searchedBySkool);
+      console.log('Update payload:', JSON.stringify(personData, null, 2));
 
       const updateResponse = await fetch(`${ATTIO_API_URL}/objects/people/records/${existingRecord.id.record_id}`, {
         method: 'PATCH',
@@ -286,8 +348,11 @@ async function createOrUpdateAttioRecord(data: {
       if (!updateResponse.ok) {
         const errorText = await updateResponse.text();
         console.error('Attio update error:', errorText);
+        console.error('Failed update payload:', JSON.stringify(personData, null, 2));
+
         // Try simpler update with just email
         if (searchedBySkool) {
+          console.log('Trying fallback simple email update...');
           const simpleUpdate = await fetch(`${ATTIO_API_URL}/objects/people/records/${existingRecord.id.record_id}`, {
             method: 'PATCH',
             headers: {
@@ -297,15 +362,20 @@ async function createOrUpdateAttioRecord(data: {
             body: JSON.stringify({
               data: {
                 values: {
-                  email_addresses: [{ email_address: data.email }]
+                  email_addresses: [data.email]
                 }
               }
             })
           });
           if (!simpleUpdate.ok) {
-            console.error('Simple email update also failed:', await simpleUpdate.text());
+            const simpleError = await simpleUpdate.text();
+            console.error('Simple email update also failed:', simpleError);
+          } else {
+            console.log('✅ Email successfully added via fallback method');
           }
         }
+      } else {
+        console.log('✅ Successfully updated Attio record');
       }
 
       recordId = existingRecord.id.record_id;
@@ -314,11 +384,15 @@ async function createOrUpdateAttioRecord(data: {
       console.log('Creating new person record');
 
       // For new records, ensure we have all basic fields
-      personData.values.email_addresses = [{ email_address: data.email }];
-      personData.values.name = [{ first_name: data.firstName }];
+      personData.values.email_addresses = [data.email];
+      personData.values.name = [{
+        first_name: data.firstName,
+        full_name: data.firstName
+      }];
 
       if (data.skoolUrl) {
-        personData.values.skool_profile_url = [{ value: data.skoolUrl }];
+        // For new records, set as simple string
+        personData.values.skool_profile_url = data.skoolUrl;
       }
 
       const createResponse = await fetch(`${ATTIO_API_URL}/objects/people/records`, {
