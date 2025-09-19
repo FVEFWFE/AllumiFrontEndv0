@@ -174,7 +174,7 @@ export function DemoEmailModalEnhanced({ isOpen, onClose }: DemoEmailModalProps)
                                   Want insights specific to YOUR niche?
                                 </span>
                                 <p className="text-xs text-purple-600 dark:text-purple-400">
-                                  Click to add your Skool URL (takes 10 seconds)
+                                  Click to add your Skool URL (takes 5 seconds)
                                 </p>
                               </div>
                             </div>
