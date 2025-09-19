@@ -567,8 +567,26 @@ export default function HomePage() {
         }} />
       </div>
 
-      <section className="py-24 bg-background">
-        <div className="container mx-auto px-4">
+      <section className="py-24 bg-background relative overflow-hidden">
+        {/* Background hamster images */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Light mode hamster */}
+          <div className="dark:hidden absolute inset-0 opacity-5" style={{
+            backgroundImage: 'url(/hamsterblack.png)',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center',
+            backgroundSize: 'contain'
+          }} />
+          {/* Dark mode hamster */}
+          <div className="hidden dark:block absolute inset-0 opacity-5" style={{
+            backgroundImage: 'url(/hamsterwhite.png)',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center',
+            backgroundSize: 'contain'
+          }} />
+        </div>
+
+        <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-4xl mx-auto text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-balance">{contextSection.heading.title}</h2>
             <p className="text-lg text-muted-foreground">{contextSection.heading.subtitle}</p>
