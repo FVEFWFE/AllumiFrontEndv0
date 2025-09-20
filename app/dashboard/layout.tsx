@@ -1,4 +1,5 @@
 import Sidebar from '@/components/dashboard/Sidebar';
+import ConversionNotifications from '@/components/dashboard/ConversionNotifications';
 
 export default function DashboardLayout({
   children,
@@ -11,6 +12,7 @@ export default function DashboardLayout({
       <main className="flex-1">
         {children}
       </main>
+      <ConversionNotifications />
     </div>
   );
 }

@@ -1,6 +1,43 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sendDemoNotification } from '@/lib/email-notifications';
 
+// Simple webhook to notify Jan
+async function sendWebhookToJan(data: any) {
+  // You can use services like:
+  // 1. webhook.site for testing
+  // 2. Zapier webhook to send email
+  // 3. Make.com (Integromat) webhook
+  // 4. n8n webhook
+  // 5. IFTTT webhook
+
+  // For now, log to console - replace with actual webhook URL
+  console.log('🔔 DEMO REQUEST NOTIFICATION:');
+  console.log('================================');
+  console.log(`Name: ${data.firstName}`);
+  console.log(`Email: ${data.email}`);
+  console.log(`Skool: ${data.skoolUrl || 'Not provided'}`);
+  console.log(`Source: ${data.source}`);
+  console.log(`Lead Score: ${data.leadScore}/100`);
+  console.log(`Enriched: ${data.enrichedExisting ? 'YES - Existing Skool profile!' : 'No'}`);
+  console.log('================================');
+
+  // Uncomment and add your webhook URL here:
+  /*
+  try {
+    await fetch('YOUR_WEBHOOK_URL_HERE', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        text: `🎯 Demo Request: ${data.firstName} (${data.email})`,
+        ...data
+      })
+    });
+  } catch (error) {
+    console.error('Webhook failed:', error);
+  }
+  */
+}
+
 interface DemoCaptureData {
   email: string;
   firstName: string;
@@ -47,7 +84,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Send email notification to Jan
-    await sendDemoNotification({
+    const notificationResult = await sendDemoNotification({
       email: data.email,
       firstName: data.firstName,
       skoolUrl: cleanSkoolUrl,
@@ -57,6 +94,21 @@ export async function POST(request: NextRequest) {
       leadScore: calculateLeadScore(data, cleanSkoolUrl),
       enrichedExisting: attioResult?.enrichedSkoolProfile || false
     });
+
+    // If MailerLite fails, try webhook notification as fallback
+    if (!notificationResult?.success) {
+      console.log('MailerLite notification failed, trying webhook...');
+      await sendWebhookToJan({
+        email: data.email,
+        firstName: data.firstName,
+        skoolUrl: cleanSkoolUrl,
+        skoolUsername,
+        source: data.source,
+        captureType: data.captureType,
+        leadScore: calculateLeadScore(data, cleanSkoolUrl),
+        enrichedExisting: attioResult?.enrichedSkoolProfile || false
+      });
+    }
 
     return NextResponse.json({
       success: true,
@@ -306,11 +358,12 @@ async function createOrUpdateAttioRecord(data: {
       personData.values.email_addresses = [data.email];
     }
 
-    // Set name - use proper Attio format
+    // Set name - use proper Attio format (requires last_name field)
     if (!existingRecord || !existingRecord.values?.name ||
         (Array.isArray(existingRecord.values?.name) && !existingRecord.values?.name[0]?.first_name)) {
       personData.values.name = [{
         first_name: data.firstName,
+        last_name: '',  // Attio requires last_name, even if empty
         full_name: data.firstName
       }];
     }
@@ -327,6 +380,10 @@ async function createOrUpdateAttioRecord(data: {
       // Try as a text field (most likely format)
       personData.values.skool_profile_url = data.skoolUrl;
     }
+
+    // Set pipeline status to "Interest Shown or Demo Requested" for demo requests
+    // This moves the contact to the appropriate stage in the pipeline
+    personData.values.AllumiPipeline = "Interest Shown or Demo Requested";
 
     let recordId: string;
 
@@ -387,6 +444,7 @@ async function createOrUpdateAttioRecord(data: {
       personData.values.email_addresses = [data.email];
       personData.values.name = [{
         first_name: data.firstName,
+        last_name: '',  // Attio requires last_name, even if empty
         full_name: data.firstName
       }];
 

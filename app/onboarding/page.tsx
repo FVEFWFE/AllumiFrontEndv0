@@ -96,40 +96,49 @@ export default function OnboardingPage() {
       icon: <Link className="h-8 w-8 text-purple-600" />
     },
     {
-      title: "Connect Zapier for Full Attribution",
-      description: "See which clicks become paying members",
+      title: "Import Your Skool Members",
+      description: "See which content drove your existing members",
       content: (
         <div className="space-y-4">
           <div className="border rounded-lg p-4">
-            <p className="text-sm font-medium mb-3">Connect in 2 minutes:</p>
-            <ol className="space-y-3 text-sm">
-              <li className="flex items-start">
-                <Badge className="mr-2 mt-0.5">1</Badge>
-                <div>
-                  <p className="font-medium">Copy your Webhook URL</p>
-                  <div className="flex items-center mt-1 bg-gray-50 rounded p-2">
-                    <code className="text-xs flex-1">https://allumi.to/api/webhooks/zapier?key=abc123</code>
-                    <Button variant="ghost" size="sm">
-                      <Copy className="h-3 w-3" />
-                    </Button>
-                  </div>
-                </div>
-              </li>
-              <li className="flex items-start">
-                <Badge className="mr-2 mt-0.5">2</Badge>
-                <div>
-                  <p className="font-medium">Open our Zapier template</p>
-                  <Button variant="outline" size="sm" className="mt-1">
-                    <ExternalLink className="h-3 w-3 mr-1" />
-                    Open Zapier Template
+            <p className="text-sm font-medium mb-3">Two ways to import members:</p>
+            <div className="space-y-3">
+              <div className="flex items-start">
+                <Badge className="mr-2 mt-0.5">A</Badge>
+                <div className="flex-1">
+                  <p className="font-medium">Manual CSV Upload (Easy)</p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Export members from Skool, upload to Allumi dashboard
+                  </p>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="mt-2"
+                    onClick={() => router.push('/dashboard/import')}
+                  >
+                    Go to Import Page
                   </Button>
                 </div>
-              </li>
-              <li className="flex items-start">
-                <Badge className="mr-2 mt-0.5">3</Badge>
-                <p className="font-medium">Paste the webhook URL and activate</p>
-              </li>
-            </ol>
+              </div>
+              <div className="flex items-start">
+                <Badge variant="outline" className="mr-2 mt-0.5">B</Badge>
+                <div className="flex-1">
+                  <p className="font-medium">Zapier Automation (Advanced)</p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Auto-sync via Google Sheets + Zapier webhook
+                  </p>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="mt-2"
+                    onClick={() => router.push('/dashboard/settings/zapier')}
+                  >
+                    <Zap className="h-3 w-3 mr-1" />
+                    Setup Zapier
+                  </Button>
+                </div>
+              </div>
+            </div>
           </div>
           
           <div className="bg-green-50 rounded-lg p-4">

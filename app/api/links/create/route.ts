@@ -28,7 +28,10 @@ export async function POST(request: NextRequest) {
     }
 
     const shortId = nanoid(8);
-    const shortUrl = `${process.env.NEXT_PUBLIC_APP_URL}/l/${shortId}`;
+
+    // Use the request origin for local development, fallback to env var for production
+    const origin = request.headers.get('origin') || process.env.NEXT_PUBLIC_APP_URL;
+    const shortUrl = `${origin}/l/${shortId}`;
 
     const { data, error } = await supabase
       .from('links')
@@ -49,7 +52,7 @@ export async function POST(request: NextRequest) {
     if (error) {
       console.error('Error creating link:', error);
       return NextResponse.json(
-        { error: 'Failed to create link' },
+        { error: 'Failed to create link', details: error.message },
         { status: 500 }
       );
     }

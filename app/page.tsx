@@ -86,9 +86,9 @@ const heroData = {
     },
     {
       _id: "primary-cta",
-      href: "#",
+      href: "/api/start-trial", // Redirect to Whop via API
       label: "Start Free 14-Day Trial",
-      sublabel: "",
+      sublabel: "No credit card required",
       type: "primary" as const,
       onClick: "signup",
     },
@@ -247,73 +247,45 @@ const testimonialsData = {
 const pricingData = {
   heading: {
     title: "Simple Attribution Pricing",
-    subtitle: "Track what drives revenue without breaking the bank. Hyros costs $379+/month for similar tracking.",
+    subtitle: "Track what drives revenue without breaking the bank. One simple plan for everything.",
     align: "center" as const,
   },
   plans: {
     items: [
       {
         plan: {
-          _id: "professional",
-          _title: "Professional",
-          price: "$79/month",
-          billed: "Everything you need to track attribution",
+          _id: "beta",
+          _title: "Beta Access",
+          price: "$59/month",
+          billed: "14-day free trial, then $59/month",
           isMostPopular: true,
-          badge: "MOST POPULAR",
+          badge: "LIMITED TIME",
           list: {
             items: [
-              { _id: "prof-1", _title: "Unlimited members tracked" },
-              { _id: "prof-2", _title: "Full attribution dashboard" },
-              { _id: "prof-3", _title: "First-click & last-click attribution" },
-              { _id: "prof-4", _title: "Source → Revenue tracking" },
-              { _id: "prof-5", _title: "LTV by channel" },
-              { _id: "prof-6", _title: "Conversion quality metrics (who pays vs freeloads)" },
-              { _id: "prof-7", _title: "Free-to-paid conversion tracking" },
-              { _id: "prof-8", _title: "Churn detection (payment-based)" },
-              { _id: "prof-9", _title: "Zapier integration setup" },
-              { _id: "prof-10", _title: "CSV exports" },
-              { _id: "prof-11", _title: "Chat support" },
+              { _id: "beta-1", _title: "Unlimited tracking links" },
+              { _id: "beta-2", _title: "Full attribution analytics" },
+              { _id: "beta-3", _title: "CSV member imports" },
+              { _id: "beta-4", _title: "Zapier integration" },
+              { _id: "beta-5", _title: "Real-time conversion tracking" },
+              { _id: "beta-6", _title: "Revenue attribution" },
+              { _id: "beta-7", _title: "Source → Revenue tracking" },
+              { _id: "beta-8", _title: "LTV by channel" },
+              { _id: "beta-9", _title: "Email support" },
+              { _id: "beta-10", _title: "40% lifetime affiliate commission" },
             ],
           },
           comparison: "Compare: Hyros charges $379/month minimum",
           cta: {
             label: "Start 14-Day Free Trial",
-            href: "/start-trial",
-          },
-        },
-      },
-      {
-        plan: {
-          _id: "scale",
-          _title: "Scale",
-          price: "$149/month",
-          billed: "For advanced attribution needs",
-          isMostPopular: false,
-          list: {
-            items: [
-              { _id: "scale-1", _title: "Everything in Professional, plus:" },
-              { _id: "scale-2", _title: "Multi-touch attribution" },
-              { _id: "scale-3", _title: "API access (pull data anywhere)" },
-              { _id: "scale-4", _title: 'Custom alerts ("CAC exceeds $100")' },
-              { _id: "scale-5", _title: "Cohort analysis" },
-              { _id: "scale-6", _title: "Predictive scoring" },
-              { _id: "scale-7", _title: "Chrome extension (accurate member tracking)" },
-              { _id: "scale-8", _title: "Priority support (2-hour response)" },
-              { _id: "scale-9", _title: "Custom onboarding call" },
-            ],
-          },
-          comparison: "Still $230/month less than Hyros",
-          cta: {
-            label: "Start 14-Day Free Trial",
-            href: "/start-trial-scale",
+            href: "/api/start-trial",
           },
         },
       },
     ],
   },
   betaSpecial: {
-    title: "Beta Special",
-    highlight: "🔥 First 20 customers: Lock in $49/month forever (Professional tier)",
+    title: "Limited Beta",
+    highlight: "🚀 Be among the first to track what actually drives your Skool revenue",
   },
 }
 
@@ -328,8 +300,8 @@ const calloutData = {
   actions: [
     {
       _id: "final-cta",
-      href: "/join-beta",
-      label: "Start Free 14-Day Trial",
+      href: "/api/start-trial",
+      label: "Start Free 30-Day Trial",
       type: "primary" as const,
     },
     {
@@ -550,7 +522,8 @@ export default function HomePage() {
             return
           } else if (action.onClick === "signup") {
             trackEvent('hero_cta_clicked', { cta_type: 'trial_start', source: 'hero' });
-            openEmailPopup()
+            // Redirect to Whop for trial signup
+            window.location.href = '/api/start-trial';
           }
         }}
       />

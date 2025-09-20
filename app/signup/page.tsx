@@ -65,7 +65,7 @@ export default function SignupPage() {
   ];
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 via-white to-blue-50 py-12">
+    <div className="min-h-screen flex items-center justify-center bg-background py-12">
       <div className="w-full max-w-md px-4">
         {/* Logo */}
         <div className="text-center mb-8">

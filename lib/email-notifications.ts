@@ -69,13 +69,12 @@ export async function sendDemoNotification(data: DemoNotificationData) {
     `;
 
     // Send transactional email to Jan
-    // NOTE: This requires a verified sending domain in MailerLite
-    // For now, rely on MailerLite automation rules for the demo group
+    // Using validated dexvolkov.com domain
     try {
       const emailPayload = {
         from: {
-          email: 'noreply@allumi.com',
-          name: 'Allumi System'
+          email: 'noreply@dexvolkov.com',
+          name: 'Allumi Demo System'
         },
         to: [{
           email: 'jan@allumi.com',

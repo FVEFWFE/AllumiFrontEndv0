@@ -12,7 +12,9 @@ import {
   Menu,
   X,
   Users,
-  Sparkles
+  Sparkles,
+  BarChart3,
+  Upload
 } from 'lucide-react';
 import { useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
@@ -40,6 +42,19 @@ const navItems = [
     label: 'Attribution',
     icon: TrendingUp,
     description: 'Track conversions'
+  },
+  {
+    href: '/dashboard/analytics',
+    label: 'Analytics',
+    icon: BarChart3,
+    description: 'ROI & metrics',
+    badge: 'New'
+  },
+  {
+    href: '/dashboard/import',
+    label: 'Import Members',
+    icon: Upload,
+    description: 'CSV upload'
   },
   {
     href: '/dashboard/affiliate',
