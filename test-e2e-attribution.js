@@ -7,7 +7,7 @@ const supabase = createClient(
 );
 
 // Test configuration
-const BASE_URL = 'http://localhost:3002';
+const BASE_URL = 'http://localhost:3004';
 let TEST_USER_ID = null; // Will be set dynamically
 
 // Color codes for console output

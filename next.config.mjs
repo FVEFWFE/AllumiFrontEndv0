@@ -1,3 +1,5 @@
+import { withSentryConfig } from "@sentry/nextjs";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   eslint: {
@@ -34,4 +36,20 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+// Sentry configuration
+const sentryWebpackPluginOptions = {
+  org: "allumi",
+  project: "allumi-frontend",
+
+  silent: true,
+
+  widenClientFileUpload: true,
+
+  hideSourceMaps: true,
+
+  disableLogger: true,
+
+  automaticVercelMonitors: true,
+};
+
+export default withSentryConfig(nextConfig, sentryWebpackPluginOptions);

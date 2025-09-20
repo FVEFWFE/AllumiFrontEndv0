@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { getFingerprint } from '@/lib/fingerprint-server';
+import {
+  getFingerprint,
+  enhancedAttributionResolution,
+  AttributionSignals,
+  matchIdentity,
+  IdentitySignals,
+  generateIdentityHash
+} from '@/lib/fingerprint-server';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -39,106 +46,142 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Step 1: Look for recent clicks from this user
+    // Generate server-side fingerprint
+    const serverFingerprint = await getFingerprint(request);
+
+    // Build attribution signals
+    const attributionSignals: AttributionSignals = {
+      directLinkId: allumi_id,
+      deviceFingerprint: device_fingerprint || serverFingerprint,
+      email: skool_email,
+      ip: request.headers.get('x-forwarded-for')?.split(',')[0] ||
+          request.headers.get('x-real-ip') ||
+          'unknown',
+      referrer: request.headers.get('referer'),
+      timestamp: new Date(joined_at),
+      cookieId: request.cookies?.get('_allumi_id')?.value,
+      sessionId: request.cookies?.get('_allumi_session')?.value
+    };
+
+    // Get recent clicks for attribution
+    const { data: recentClicks } = await supabase
+      .from('clicks')
+      .select('*, links(*)')
+      .order('clicked_at', { ascending: false })
+      .limit(50);
+
+    // Use enhanced attribution resolution
+    const attribution = await enhancedAttributionResolution(
+      attributionSignals,
+      recentClicks || []
+    );
+
     let attributionData = {};
-    let confidenceScore = 0;
-    let attributedLinkId = null;
-    let userId = null;
+    let confidenceScore = attribution.confidence;
+    let attributedLinkId = attribution.attributedClick?.link_id || null;
+    let userId = attribution.attributedClick?.user_id || null;
 
-    // Try to find attribution by allumi_id (direct tracking)
-    if (allumi_id) {
-      const { data: clickData } = await supabase
-        .from('clicks')
-        .select('*, links(*)')
-        .eq('short_id', allumi_id)
-        .order('clicked_at', { ascending: false })
-        .limit(1)
-        .single();
+    // Build attribution data from the matched click
+    if (attribution.attributedClick) {
+      const click = attribution.attributedClick;
 
-      if (clickData) {
-        attributedLinkId = clickData.link_id;
-        userId = clickData.user_id;
-        confidenceScore = 95; // High confidence with direct tracking
-        attributionData = {
-          [clickData.campaign_name]: {
-            source: clickData.utm_source,
-            medium: clickData.utm_medium,
-            campaign: clickData.utm_campaign,
-            clicked_at: clickData.clicked_at,
-            attribution_weight: 1.0
-          }
-        };
-      }
-    }
-
-    // Try device fingerprint matching if no direct attribution
-    if (!attributedLinkId && device_fingerprint) {
-      const { data: fingerprintClicks } = await supabase
-        .from('clicks')
-        .select('*, links(*)')
-        .eq('device_fingerprint', device_fingerprint)
-        .gte('clicked_at', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()) // Last 30 days
-        .order('clicked_at', { ascending: false });
-
-      if (fingerprintClicks && fingerprintClicks.length > 0) {
-        // Use time-decay attribution
-        const now = Date.now();
-        let totalWeight = 0;
+      if (attribution.multiTouchAttribution) {
+        // Use multi-touch attribution weights
         attributionData = {};
+        for (const [campaign, weight] of Object.entries(attribution.multiTouchAttribution)) {
+          const clickForCampaign = recentClicks?.find(c =>
+            (c.campaign_name || c.utm_campaign || 'direct') === campaign
+          );
 
-        fingerprintClicks.forEach(click => {
-          const clickTime = new Date(click.clicked_at).getTime();
-          const daysSince = (now - clickTime) / (1000 * 60 * 60 * 24);
-          const weight = Math.exp(-daysSince / 7); // Exponential decay with 7-day half-life
-
-          totalWeight += weight;
-
-          if (!attributionData[click.campaign_name]) {
-            attributionData[click.campaign_name] = {
-              source: click.utm_source,
-              medium: click.utm_medium,
-              campaign: click.utm_campaign,
-              clicked_at: click.clicked_at,
-              attribution_weight: 0
+          if (clickForCampaign) {
+            attributionData[campaign] = {
+              source: clickForCampaign.utm_source,
+              medium: clickForCampaign.utm_medium,
+              campaign: clickForCampaign.utm_campaign,
+              clicked_at: clickForCampaign.clicked_at,
+              attribution_weight: weight
             };
           }
-          attributionData[click.campaign_name].attribution_weight += weight;
-        });
-
-        // Normalize weights
-        Object.keys(attributionData).forEach(campaign => {
-          attributionData[campaign].attribution_weight /= totalWeight;
-        });
-
-        attributedLinkId = fingerprintClicks[0].link_id;
-        userId = fingerprintClicks[0].user_id;
-        confidenceScore = Math.min(80, 50 + (fingerprintClicks.length * 10)); // Max 80% for fingerprint matching
-      }
-    }
-
-    // Try email-based identity resolution
-    if (!attributedLinkId) {
-      const { data: identityData } = await supabase
-        .from('identities')
-        .select('*, clicks(*, links(*))')
-        .eq('email', skool_email)
-        .single();
-
-      if (identityData && identityData.clicks && identityData.clicks.length > 0) {
-        const recentClick = identityData.clicks[0];
-        attributedLinkId = recentClick.link_id;
-        userId = recentClick.user_id;
-        confidenceScore = 70; // Medium confidence for email matching
+        }
+      } else {
+        // Single-touch attribution
         attributionData = {
-          [recentClick.campaign_name]: {
-            source: recentClick.utm_source,
-            medium: recentClick.utm_medium,
-            campaign: recentClick.utm_campaign,
-            clicked_at: recentClick.clicked_at,
+          [click.campaign_name || 'direct']: {
+            source: click.utm_source,
+            medium: click.utm_medium,
+            campaign: click.utm_campaign,
+            clicked_at: click.clicked_at,
             attribution_weight: 1.0
           }
         };
       }
+    }
+
+    // Enhanced identity matching for better accuracy
+    if (!attributedLinkId && skool_email) {
+      // Build identity signals
+      const identitySignals: IdentitySignals = {
+        email: skool_email,
+        deviceFingerprint: device_fingerprint || serverFingerprint,
+        ip: attributionSignals.ip,
+        userAgent: request.headers.get('user-agent') || undefined,
+        sessionId: attributionSignals.sessionId,
+        userId: userId || undefined
+      };
+
+      // Try to match with existing identities
+      const { data: existingIdentities } = await supabase
+        .from('identities')
+        .select('*')
+        .or(`email.eq.${skool_email},device_fingerprint.eq.${identitySignals.deviceFingerprint}`);
+
+      if (existingIdentities && existingIdentities.length > 0) {
+        const match = await matchIdentity(identitySignals, existingIdentities);
+
+        if (match.matched && match.confidence > confidenceScore) {
+          // Get clicks for matched identity
+          const { data: identityClicks } = await supabase
+            .from('clicks')
+            .select('*, links(*)')
+            .eq('identity_id', match.matchedId)
+            .order('clicked_at', { ascending: false })
+            .limit(10);
+
+          if (identityClicks && identityClicks.length > 0) {
+            const identityAttribution = await enhancedAttributionResolution(
+              attributionSignals,
+              identityClicks
+            );
+
+            if (identityAttribution.confidence > confidenceScore) {
+              attribution.attributedClick = identityAttribution.attributedClick;
+              attribution.confidence = identityAttribution.confidence;
+              attribution.method = 'identity_match';
+              confidenceScore = identityAttribution.confidence;
+              attributedLinkId = identityAttribution.attributedClick?.link_id || null;
+              userId = identityAttribution.attributedClick?.user_id || null;
+            }
+          }
+        }
+      }
+
+      // Store identity for future matching
+      const identityHash = await generateIdentityHash(identitySignals);
+      await supabase
+        .from('identities')
+        .upsert({
+          id: identityHash,
+          email: skool_email,
+          device_fingerprint: identitySignals.deviceFingerprint,
+          ip_address: identitySignals.ip,
+          user_agent: identitySignals.userAgent,
+          last_seen: new Date().toISOString(),
+          metadata: {
+            skool_name,
+            skool_username,
+            membership_type
+          }
+        });
     }
 
     // Calculate revenue attribution
@@ -169,7 +212,15 @@ export async function POST(request: NextRequest) {
         metadata: {
           price_paid,
           attributed_revenue,
-          attribution_method: allumi_id ? 'direct' : (device_fingerprint ? 'fingerprint' : 'email')
+          attribution_method: attribution.method,
+          attribution_signals: {
+            hasDirectLink: !!allumi_id,
+            hasDeviceFingerprint: !!device_fingerprint,
+            hasServerFingerprint: !!serverFingerprint,
+            hasEmail: !!skool_email,
+            hasSession: !!attributionSignals.sessionId,
+            hasCookie: !!attributionSignals.cookieId
+          }
         }
       })
       .select()

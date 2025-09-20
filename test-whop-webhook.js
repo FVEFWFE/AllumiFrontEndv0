@@ -1,8 +1,8 @@
 const crypto = require('crypto');
 
 // Test Whop webhook endpoint
-const WEBHOOK_URL = 'http://localhost:3002/api/webhooks/whop';
-const WEBHOOK_SECRET = 'ws_ae77b2fb2fc95'; // Partial secret - need full one
+const WEBHOOK_URL = 'http://localhost:3004/api/webhooks/whop';
+const WEBHOOK_SECRET = 'ws_2da9fdb5e2cfd79c4cb668767da6d19439aebfad60393d25124c65de44076ec0'; // Full secret from Whop
 
 // Test events
 const testEvents = [
