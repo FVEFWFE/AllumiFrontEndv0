@@ -3,6 +3,7 @@
 import { Check, X, ArrowRight } from 'lucide-react';
 import { trackEvent } from './posthog-provider';
 import { PricingBento } from './PricingBento';
+import { type SVGProps } from 'react';
 
 interface PricingTableProps {
   onGetStarted?: () => void;
@@ -36,214 +37,238 @@ export default function PricingTable({ onGetStarted }: PricingTableProps) {
 
         <div className="grid md:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto">
           {/* Hyros Comparison */}
-          <div className="relative rounded-2xl border border-border bg-card/50 p-6 lg:p-8">
-            <div className="text-center mb-8">
-              <p className="text-sm text-muted-foreground mb-4">Competitor</p>
-              <h3 className="text-2xl font-semibold mb-2">Hyros</h3>
-              <div className="text-3xl lg:text-4xl font-bold">
-                $379+<span className="text-lg font-normal text-muted-foreground">/month</span>
+          <PricingBento
+            className="flex flex-1 flex-col overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900/50"
+            enableGlow={false}
+            enableTilt={false}
+            enableMagnetism={false}
+            clickEffect={false}
+            particleCount={0}
+          >
+            <header className="flex flex-col gap-4 px-8 pb-0 pt-10">
+              <p className="text-center text-xs text-gray-500 uppercase tracking-wider">Competitor</p>
+              <span className="text-center text-3xl font-medium lg:text-4xl">$379+</span>
+              <div className="flex flex-col">
+                <h5 className="text-center text-lg font-medium lg:text-xl">Hyros</h5>
+                <p className="text-center text-sm text-gray-500 dark:text-gray-400 lg:text-base">
+                  per month
+                </p>
               </div>
-              <p className="text-sm text-muted-foreground mt-2">Complex enterprise solution</p>
+            </header>
+            <div className="flex flex-1 flex-col gap-6 p-6 !pb-12 lg:p-8">
+              <ul className="flex flex-col gap-4">
+                <li className="flex items-start gap-3 text-sm text-gray-600 dark:text-gray-400 lg:text-base">
+                  <X className="mt-0.5 w-4 h-4 text-red-500 shrink-0 lg:w-5 lg:h-5" />
+                  <span>Steep learning curve</span>
+                </li>
+                <li className="flex items-start gap-3 text-sm text-gray-600 dark:text-gray-400 lg:text-base">
+                  <X className="mt-0.5 w-4 h-4 text-red-500 shrink-0 lg:w-5 lg:h-5" />
+                  <span>Complex setup process</span>
+                </li>
+                <li className="flex items-start gap-3 text-sm text-gray-600 dark:text-gray-400 lg:text-base">
+                  <X className="mt-0.5 w-4 h-4 text-red-500 shrink-0 lg:w-5 lg:h-5" />
+                  <span>Requires technical expertise</span>
+                </li>
+                <li className="flex items-start gap-3 text-sm text-gray-600 dark:text-gray-400 lg:text-base">
+                  <X className="mt-0.5 w-4 h-4 text-red-500 shrink-0 lg:w-5 lg:h-5" />
+                  <span>30+ day implementation</span>
+                </li>
+                <li className="flex items-start gap-3 text-sm text-gray-600 dark:text-gray-400 lg:text-base">
+                  <X className="mt-0.5 w-4 h-4 text-red-500 shrink-0 lg:w-5 lg:h-5" />
+                  <span>No Skool-specific features</span>
+                </li>
+              </ul>
             </div>
-
-            <ul className="space-y-3 mb-8">
-              <li className="flex items-start gap-3">
-                <X className="w-5 h-5 text-destructive flex-shrink-0 mt-0.5" />
-                <span className="text-sm text-muted-foreground">Steep learning curve</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <X className="w-5 h-5 text-destructive flex-shrink-0 mt-0.5" />
-                <span className="text-sm text-muted-foreground">Complex setup process</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <X className="w-5 h-5 text-destructive flex-shrink-0 mt-0.5" />
-                <span className="text-sm text-muted-foreground">Requires technical expertise</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <X className="w-5 h-5 text-destructive flex-shrink-0 mt-0.5" />
-                <span className="text-sm text-muted-foreground">30+ day implementation</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <X className="w-5 h-5 text-destructive flex-shrink-0 mt-0.5" />
-                <span className="text-sm text-muted-foreground">No Skool-specific features</span>
-              </li>
-            </ul>
-
-            <button
-              className="w-full py-3 rounded-lg bg-muted text-muted-foreground font-medium cursor-not-allowed opacity-50"
-              disabled
-            >
-              Not Available
-            </button>
-          </div>
+            <footer className="relative flex w-full items-center self-stretch p-8 pt-0">
+              <button
+                className="z-10 w-full px-6 py-3 rounded-lg font-medium border border-gray-200 dark:border-gray-800 bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed"
+                disabled
+              >
+                Not Available
+              </button>
+            </footer>
+          </PricingBento>
 
           {/* Professional Plan - Most Popular */}
           <PricingBento
+            className="flex flex-1 flex-col overflow-hidden rounded-2xl border-2 border-purple-500 bg-white dark:bg-gray-900/50 shadow-lg"
             enableGlow={true}
             glowColor="139, 92, 246"
             enableTilt={true}
             enableMagnetism={true}
             clickEffect={true}
-            particleCount={10}
-            className="relative rounded-2xl border-2 border-purple-600 bg-card p-6 lg:p-8 shadow-xl shadow-purple-600/20">
-            <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-              <span className="bg-gradient-to-r from-purple-600 to-purple-700 text-white px-4 py-1 rounded-full text-sm font-semibold">
+            particleCount={12}
+          >
+            <header className="flex flex-col gap-4 px-8 pb-0 pt-10 relative">
+              <span className="absolute left-1/2 top-4 -translate-x-1/2 bg-gradient-to-r from-purple-500 to-purple-600 text-white px-4 py-1 rounded-full text-xs font-medium lg:text-sm">
                 MOST POPULAR
               </span>
-            </div>
-
-            <div className="text-center mb-8">
-              <h3 className="text-2xl font-semibold mb-4">Professional</h3>
-              <div className="text-4xl lg:text-5xl font-bold">
-                $79<span className="text-lg font-normal text-muted-foreground">/month</span>
+              <div className="mt-6">
+                <span className="text-center block text-4xl font-bold lg:text-5xl">$79</span>
+                <span className="text-center block text-sm text-purple-600 font-semibold mt-2">
+                  Beta: $59/mo forever
+                </span>
               </div>
-              <p className="text-sm text-primary mt-3 font-semibold">
-                Beta: $59/mo forever
-              </p>
-              <p className="text-sm text-muted-foreground mt-1">Everything you need to scale</p>
+              <div className="flex flex-col">
+                <h5 className="text-center text-lg font-medium lg:text-xl">Professional</h5>
+                <p className="text-center text-sm text-gray-500 dark:text-gray-400 lg:text-base">
+                  Everything you need to scale
+                </p>
+              </div>
+            </header>
+            <div className="flex flex-1 flex-col gap-6 p-6 !pb-12 lg:p-8">
+              <ul className="flex flex-col gap-4">
+                <li className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300 lg:text-base">
+                  <Check className="mt-0.5 w-4 h-4 text-purple-500 shrink-0 lg:w-5 lg:h-5" />
+                  <span>Unlimited members tracked</span>
+                </li>
+                <li className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300 lg:text-base">
+                  <Check className="mt-0.5 w-4 h-4 text-purple-500 shrink-0 lg:w-5 lg:h-5" />
+                  <span>Full attribution dashboard</span>
+                </li>
+                <li className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300 lg:text-base">
+                  <Check className="mt-0.5 w-4 h-4 text-purple-500 shrink-0 lg:w-5 lg:h-5" />
+                  <span>First & last-click attribution</span>
+                </li>
+                <li className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300 lg:text-base">
+                  <Check className="mt-0.5 w-4 h-4 text-purple-500 shrink-0 lg:w-5 lg:h-5" />
+                  <span>Multi-touch attribution</span>
+                </li>
+                <li className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300 lg:text-base">
+                  <Check className="mt-0.5 w-4 h-4 text-purple-500 shrink-0 lg:w-5 lg:h-5" />
+                  <span>Source → Revenue tracking</span>
+                </li>
+                <li className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300 lg:text-base">
+                  <Check className="mt-0.5 w-4 h-4 text-purple-500 shrink-0 lg:w-5 lg:h-5" />
+                  <span>LTV by channel</span>
+                </li>
+                <li className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300 lg:text-base">
+                  <Check className="mt-0.5 w-4 h-4 text-purple-500 shrink-0 lg:w-5 lg:h-5" />
+                  <span>Free-to-paid conversion tracking</span>
+                </li>
+                <li className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300 lg:text-base">
+                  <Check className="mt-0.5 w-4 h-4 text-purple-500 shrink-0 lg:w-5 lg:h-5" />
+                  <span>Churn detection (payment-based)</span>
+                </li>
+                <li className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300 lg:text-base">
+                  <Check className="mt-0.5 w-4 h-4 text-purple-500 shrink-0 lg:w-5 lg:h-5" />
+                  <span>Custom alerts (CAC exceeds limits)</span>
+                </li>
+                <li className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300 lg:text-base">
+                  <Check className="mt-0.5 w-4 h-4 text-purple-500 shrink-0 lg:w-5 lg:h-5" />
+                  <span>Cohort analysis</span>
+                </li>
+                <li className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300 lg:text-base">
+                  <Check className="mt-0.5 w-4 h-4 text-purple-500 shrink-0 lg:w-5 lg:h-5" />
+                  <span>Predictive scoring</span>
+                </li>
+                <li className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300 lg:text-base">
+                  <Check className="mt-0.5 w-4 h-4 text-purple-500 shrink-0 lg:w-5 lg:h-5" />
+                  <span>Zapier integration</span>
+                </li>
+                <li className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300 lg:text-base">
+                  <Check className="mt-0.5 w-4 h-4 text-purple-500 shrink-0 lg:w-5 lg:h-5" />
+                  <span>CSV exports</span>
+                </li>
+                <li className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300 lg:text-base">
+                  <Check className="mt-0.5 w-4 h-4 text-purple-500 shrink-0 lg:w-5 lg:h-5" />
+                  <span>Priority chat support</span>
+                </li>
+              </ul>
             </div>
-
-            <ul className="space-y-3 mb-8">
-              <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                <span className="text-sm">Unlimited members tracked</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                <span className="text-sm">Full attribution dashboard</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                <span className="text-sm">First & last-click attribution</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                <span className="text-sm">Multi-touch attribution</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                <span className="text-sm">Source → Revenue tracking</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                <span className="text-sm">LTV by channel</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                <span className="text-sm">Free-to-paid conversion tracking</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                <span className="text-sm">Churn detection (payment-based)</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                <span className="text-sm">Custom alerts (CAC exceeds limits)</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                <span className="text-sm">Cohort analysis</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                <span className="text-sm">Predictive scoring</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                <span className="text-sm">Zapier integration</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                <span className="text-sm">CSV exports</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                <span className="text-sm">Priority chat support</span>
-              </li>
-            </ul>
-
-            <button
-              onClick={() => handlePlanClick('professional')}
-              className="w-full py-3 rounded-lg bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold hover:from-purple-700 hover:to-purple-800 transition-all transform hover:scale-105 flex items-center justify-center gap-2"
-            >
-              Start Free 14-Day Trial
-              <ArrowRight className="w-4 h-4" />
-            </button>
-
-            <p className="text-center text-xs text-muted-foreground mt-3">
+            <footer className="relative flex w-full items-center self-stretch p-8 pt-0">
+              <Shadow className="pointer-events-none absolute left-0 top-0 h-full w-full origin-bottom scale-[2.0] text-purple-500" />
+              <button
+                onClick={() => handlePlanClick('professional')}
+                className="z-10 w-full px-6 py-3 rounded-lg font-medium bg-gradient-to-r from-purple-500 to-purple-600 text-white hover:from-purple-600 hover:to-purple-700 transition-all transform hover:scale-105 flex items-center justify-center gap-2"
+              >
+                Start Free 14-Day Trial
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </footer>
+            <p className="text-center text-xs text-gray-500 pb-6">
               No credit card required • Instant setup
             </p>
           </PricingBento>
 
           {/* DFY Ad Management */}
-          <div className="relative rounded-2xl border border-border bg-card p-6 lg:p-8">
-            <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-              <span className="bg-white text-gray-900 border border-gray-200 px-4 py-1 rounded-full text-sm font-semibold">
+          <PricingBento
+            className="flex flex-1 flex-col overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900/50"
+            enableGlow={true}
+            glowColor="107, 114, 128"
+            enableTilt={true}
+            enableMagnetism={true}
+            clickEffect={true}
+            particleCount={6}
+          >
+            <header className="flex flex-col gap-4 px-8 pb-0 pt-10 relative">
+              <span className="absolute left-1/2 top-4 -translate-x-1/2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100 px-4 py-1 rounded-full text-xs font-medium lg:text-sm">
                 DONE-FOR-YOU
               </span>
-            </div>
-
-            <div className="text-center mb-8">
-              <h3 className="text-2xl font-semibold mb-4">DFY Growth</h3>
-              <div className="text-3xl lg:text-4xl font-bold">
-                $1,997<span className="text-lg font-normal text-muted-foreground">/month</span>
+              <div className="mt-6">
+                <span className="text-center block text-3xl font-bold lg:text-4xl">$1,997</span>
               </div>
-              <p className="text-sm text-muted-foreground mt-2">+ Ad spend</p>
-              <p className="text-sm text-muted-foreground mt-1">We manage everything</p>
+              <div className="flex flex-col">
+                <h5 className="text-center text-lg font-medium lg:text-xl">DFY Growth</h5>
+                <p className="text-center text-sm text-gray-500 dark:text-gray-400 lg:text-base">
+                  per month + ad spend
+                </p>
+              </div>
+            </header>
+            <div className="flex flex-1 flex-col gap-6 p-6 !pb-12 lg:p-8">
+              <ul className="flex flex-col gap-4">
+                <li className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300 lg:text-base font-semibold">
+                  <Check className="mt-0.5 w-4 h-4 text-green-500 shrink-0 lg:w-5 lg:h-5" />
+                  <span>Everything in Professional</span>
+                </li>
+                <li className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300 lg:text-base">
+                  <Check className="mt-0.5 w-4 h-4 text-green-500 shrink-0 lg:w-5 lg:h-5" />
+                  <span>Complete ad management</span>
+                </li>
+                <li className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300 lg:text-base">
+                  <Check className="mt-0.5 w-4 h-4 text-green-500 shrink-0 lg:w-5 lg:h-5" />
+                  <span>Facebook & Google Ads</span>
+                </li>
+                <li className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300 lg:text-base">
+                  <Check className="mt-0.5 w-4 h-4 text-green-500 shrink-0 lg:w-5 lg:h-5" />
+                  <span>Creative development</span>
+                </li>
+                <li className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300 lg:text-base">
+                  <Check className="mt-0.5 w-4 h-4 text-green-500 shrink-0 lg:w-5 lg:h-5" />
+                  <span>Weekly optimization calls</span>
+                </li>
+                <li className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300 lg:text-base">
+                  <Check className="mt-0.5 w-4 h-4 text-green-500 shrink-0 lg:w-5 lg:h-5" />
+                  <span>Custom funnel development</span>
+                </li>
+                <li className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300 lg:text-base">
+                  <Check className="mt-0.5 w-4 h-4 text-green-500 shrink-0 lg:w-5 lg:h-5" />
+                  <span>Dedicated growth manager</span>
+                </li>
+                <li className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300 lg:text-base">
+                  <Check className="mt-0.5 w-4 h-4 text-green-500 shrink-0 lg:w-5 lg:h-5" />
+                  <span>ROI guarantee</span>
+                </li>
+              </ul>
             </div>
-
-            <ul className="space-y-3 mb-8">
-              <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                <span className="text-sm font-semibold">Everything in Professional</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                <span className="text-sm">Complete ad management</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                <span className="text-sm">Facebook & Google Ads</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                <span className="text-sm">Creative development</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                <span className="text-sm">Weekly optimization calls</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                <span className="text-sm">Custom funnel development</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                <span className="text-sm">Dedicated growth manager</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-                <span className="text-sm">ROI guarantee</span>
-              </li>
-            </ul>
-
-            <button
-              onClick={() => handlePlanClick('dfy')}
-              className="w-full py-3 rounded-lg bg-secondary text-secondary-foreground font-semibold hover:bg-secondary/80 transition-colors"
-            >
-              Apply Now
-            </button>
-
-            <p className="text-center text-xs text-muted-foreground mt-3">
+            <footer className="relative flex w-full items-center self-stretch p-8 pt-0">
+              <button
+                onClick={() => handlePlanClick('dfy')}
+                className="z-10 w-full px-6 py-3 rounded-lg font-medium border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+              >
+                Apply Now
+              </button>
+            </footer>
+            <p className="text-center text-xs text-gray-500 pb-6">
               Limited spots • Application required
             </p>
-          </div>
+          </PricingBento>
         </div>
 
         {/* Trust badges */}
         <div className="mt-16 text-center">
-          <p className="text-sm text-muted-foreground mb-4">Trusted by 100+ Skool communities</p>
-          <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-muted-foreground">
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">Trusted by 100+ Skool communities</p>
+          <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-gray-500 dark:text-gray-400">
             <span className="flex items-center gap-2">
               <span className="text-base">🔒</span>
               Bank-level security
@@ -260,5 +285,33 @@ export default function PricingTable({ onGetStarted }: PricingTableProps) {
         </div>
       </div>
     </section>
+  );
+}
+
+function Shadow(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg fill="none" viewBox="0 0 312 175" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <g filter="url(#filter0_f_6956_27669)">
+        <path
+          d="M-41 398C-41 371.998 -35.9174 346.251 -26.0424 322.229C-16.1673 298.206 -1.69321 276.379 16.5535 257.993C34.8002 239.607 56.4622 225.022 80.3027 215.072C104.143 205.121 129.695 200 155.5 200C181.305 200 206.857 205.121 230.697 215.072C254.538 225.022 276.2 239.607 294.446 257.993C312.693 276.379 327.167 298.206 337.042 322.229C346.917 346.251 352 371.998 352 398L-41 398Z"
+          fill="currentColor"
+        />
+      </g>
+      <defs>
+        <filter
+          colorInterpolationFilters="sRGB"
+          filterUnits="userSpaceOnUse"
+          height="598"
+          id="filter0_f_6956_27669"
+          width="793"
+          x="-241"
+          y="0"
+        >
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
+          <feBlend in="SourceGraphic" in2="BackgroundImageFix" mode="normal" result="shape" />
+          <feGaussianBlur result="effect1_foregroundBlur_6956_27669" stdDeviation="100" />
+        </filter>
+      </defs>
+    </svg>
   );
 }
