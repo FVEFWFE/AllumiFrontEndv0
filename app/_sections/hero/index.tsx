@@ -135,7 +135,7 @@ export function Hero(
                       ? "flex w-full"
                       : "max-w-sm:!border-x-0 flex w-full !border-x !border-y-0 border-[--border] !bg-transparent backdrop-blur-xl transition-colors duration-150 hover:!bg-black/5 dark:border-[--dark-border] dark:hover:!bg-white/5",
                   )}
-                  href={onClick === "demo" ? "#" : href}
+                  href={onClick === "demo" || onClick === "signup" ? "#" : href}
                   intent={type}
                   name="cta_click"
                   onClick={(e) => {
