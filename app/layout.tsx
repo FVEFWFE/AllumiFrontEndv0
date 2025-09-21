@@ -183,6 +183,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html suppressHydrationWarning lang="en" className="dark" style={{ colorScheme: 'dark' }}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <script src="https://cdn.whop.com/embed/v1.js" async></script>
       </head>
       <body
         suppressHydrationWarning
