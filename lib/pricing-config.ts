@@ -13,54 +13,67 @@ export interface PricingTier {
 
 export const PRICING_TIERS = {
   beta: {
-    name: 'Beta Launch',
-    price: '$59',
-    originalPrice: '$79',
+    name: 'Beta Founder',
+    price: '$49',
+    originalPrice: '',
     period: '/month',
-    trial: '14-day free trial',
-    spots: 15,
-    spotsRemaining: 15, // TODO: Update dynamically from database
-    badge: 'LIMITED TIME',
+    trial: 'Limited to 10 communities',
+    spots: 10,
+    spotsRemaining: 7, // TODO: Update dynamically from database
+    badge: '[7 spots remaining]',
     popular: true,
     features: [
-      'Full attribution tracking for Skool',
-      'Unlimited tracking links',
-      'Zapier webhook integration',
-      'Chrome extension (bulk export)',
-      'Time-decay attribution models',
-      'Priority support & onboarding',
-      '🔥 Founder pricing locked forever'
+      '✓ Everything you need to track attribution',
+      '✓ Unlimited members tracked',
+      '✓ Full attribution dashboard',
+      '✓ First-click & last-click attribution',
+      '✓ Source → Revenue tracking',
+      '✓ LTV by channel',
+      '✓ Conversion quality metrics',
+      '✓ Free-to-paid conversion tracking',
+      '✓ Churn detection',
+      '✓ Zapier integration setup',
+      '✓ CSV exports',
+      '✓ Chat support',
+      '✓ Beta exclusive: Weekly group office hours',
+      '🔥 Lock this rate forever'
     ]
   } as PricingTier,
 
-  regular: {
+  professional: {
     name: 'Professional',
     price: '$79',
     period: '/month',
-    trial: '14-day free trial',
+    trial: 'Everything you need to scale with confidence',
+    badge: '[Most popular]',
     features: [
-      'Full attribution tracking for Skool',
-      'Unlimited tracking links',
-      'Zapier webhook integration',
-      'Chrome extension (bulk export)',
-      'Time-decay attribution models',
-      'Email support'
+      '✓ Everything in Beta Founder',
+      '✓ Priority support (4-hour response)',
+      '✓ Custom tracking links',
+      '✓ Advanced filters & segments',
+      '✓ Monthly attribution insights email',
+      '✓ ROI calculator dashboard'
     ]
   } as PricingTier,
 
-  enterprise: {
-    name: 'Enterprise',
-    price: 'Custom',
-    period: '',
-    trial: 'Custom trial period',
+  doneForYou: {
+    name: 'Done-For-You Growth',
+    price: '$1,997',
+    period: '/month',
+    trial: 'I personally manage your paid ads + attribution',
+    spots: 5,
+    spotsRemaining: 2,
+    badge: '[2 spots available]',
     features: [
-      'Everything in Professional',
-      'White-label options',
-      'Custom integrations',
-      'Dedicated account manager',
-      'Priority phone support',
-      'Custom attribution models',
-      'API access'
+      '✓ Everything in Professional',
+      '✓ Full ad management by Allumi founder',
+      '✓ Daily optimization based on YOUR attribution data',
+      '✓ 3-5 campaigns managed',
+      '✓ Weekly 30-min strategy call',
+      '✓ Creative testing & iteration',
+      '✓ Custom scaling roadmap',
+      '✓ Requirement: $2,000+ monthly ad spend',
+      '✓ Limited to 5 clients total'
     ]
   } as PricingTier
 };
@@ -75,20 +88,13 @@ export function getCurrentPricing(): PricingTier {
     return PRICING_TIERS.beta;
   }
 
-  return PRICING_TIERS.regular;
+  return PRICING_TIERS.professional;
 }
 
 // Get all pricing tiers for comparison
 export function getAllPricingTiers(): PricingTier[] {
-  const betaSpotsRemaining = PRICING_TIERS.beta.spotsRemaining || 0;
-
-  if (betaSpotsRemaining > 0) {
-    // Show beta and enterprise during beta phase
-    return [PRICING_TIERS.beta, PRICING_TIERS.enterprise];
-  }
-
-  // Show regular and enterprise after beta
-  return [PRICING_TIERS.regular, PRICING_TIERS.enterprise];
+  // Always show all three tiers
+  return [PRICING_TIERS.beta, PRICING_TIERS.professional, PRICING_TIERS.doneForYou];
 }
 
 // Check if user qualifies for beta pricing
