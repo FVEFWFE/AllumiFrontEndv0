@@ -14,10 +14,14 @@ export default function GetStartedPopup({ isOpen, onClose }: GetStartedPopupProp
   const [email, setEmail] = useState('');
   const [showCheckout, setShowCheckout] = useState(false);
   const [checkoutComplete, setCheckoutComplete] = useState(false);
+  const [checkoutKey, setCheckoutKey] = useState(0);
 
   // Check for saved email and reset state when popup opens/closes
   useEffect(() => {
     if (isOpen) {
+      // Increment key to force WhopCheckout to remount
+      setCheckoutKey(prev => prev + 1);
+
       // Check if user has previously entered email
       const savedEmail = sessionStorage.getItem('checkout_email');
       if (savedEmail) {
@@ -196,6 +200,7 @@ export default function GetStartedPopup({ isOpen, onClose }: GetStartedPopupProp
               </div>
 
               <WhopCheckout
+                key={checkoutKey}
                 planId="plan_ufRzE7PHJgEXR"
                 email={email}
                 onComplete={handleCheckoutComplete}

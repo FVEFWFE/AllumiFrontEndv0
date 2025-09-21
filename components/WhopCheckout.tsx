@@ -25,33 +25,83 @@ export default function WhopCheckout({
   const [isLoading, setIsLoading] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
   const scriptLoadedRef = useRef(false);
+  const initializationAttemptRef = useRef(0);
 
   useEffect(() => {
     let checkInterval: NodeJS.Timeout;
+    let initTimeout: NodeJS.Timeout;
     let attempts = 0;
     const maxAttempts = 20;
 
+    // Reset loading state when component mounts
+    setIsLoading(true);
+
+    // Increment initialization attempt counter to force fresh init
+    initializationAttemptRef.current++;
+    const currentAttempt = initializationAttemptRef.current;
+
     // Function to initialize Whop
     const initializeWhop = () => {
-      if (!containerRef.current) return;
+      if (!containerRef.current) {
+        console.log('Container not ready yet...');
+        return;
+      }
+
+      // Check if this is still the current attempt
+      if (currentAttempt !== initializationAttemptRef.current) {
+        clearInterval(checkInterval);
+        return;
+      }
 
       // Check if Whop loaded
       if (window.Whop && typeof window.Whop.init === 'function') {
-        console.log('Initializing Whop checkout...');
+        console.log('Whop SDK found, initializing...', { attempt: currentAttempt });
 
-        // Force re-initialization by clearing any existing Whop elements first
-        const existingWhopElements = document.querySelectorAll('.whop-embed, iframe[src*="whop.com"]');
-        existingWhopElements.forEach(el => el.remove());
+        // Force re-initialization by clearing ALL existing Whop elements
+        const existingWhopElements = document.querySelectorAll('.whop-embed, iframe[src*="whop.com"], .whop-checkout-container iframe, iframe[title*="Whop"], iframe[id*="whop"]');
+        console.log(`Clearing ${existingWhopElements.length} existing Whop elements`);
+        existingWhopElements.forEach(el => {
+          el.remove();
+        });
 
-        // Call init to scan for our data attributes
-        window.Whop.init();
-        setIsLoading(false);
+        // Multiple initialization attempts with delays
+        const tryInit = (retryCount = 0) => {
+          if (currentAttempt !== initializationAttemptRef.current) return;
+
+          console.log(`Calling Whop.init() - retry ${retryCount}`);
+
+          // Force a fresh scan by temporarily hiding and showing the container
+          if (containerRef.current) {
+            const container = containerRef.current;
+
+            // Call init multiple times to ensure it catches our element
+            window.Whop.init();
+
+            // If no iframe appears after a short delay, try again
+            initTimeout = setTimeout(() => {
+              const iframe = document.querySelector('iframe[src*="whop.com"]');
+              if (!iframe && retryCount < 3 && currentAttempt === initializationAttemptRef.current) {
+                console.log('No iframe found, retrying init...');
+                tryInit(retryCount + 1);
+              } else if (iframe) {
+                console.log('✅ Whop iframe created successfully');
+                setIsLoading(false);
+              } else {
+                console.log('⚠️ Failed to create iframe after retries');
+                setIsLoading(false);
+              }
+            }, 500);
+          }
+        };
+
+        // Start initialization
+        tryInit();
         clearInterval(checkInterval);
       } else if (attempts < maxAttempts) {
         attempts++;
-        console.log(`Waiting for Whop... attempt ${attempts}`);
+        console.log(`Waiting for Whop SDK... attempt ${attempts}`);
       } else {
-        const error = new Error('Whop failed to load after maximum attempts');
+        const error = new Error('Whop SDK failed to load after maximum attempts');
         console.error(error.message);
         trackError(error, {
           source: 'WhopCheckout',
@@ -110,10 +160,14 @@ export default function WhopCheckout({
     return () => {
       window.removeEventListener('message', handleMessage);
       if (checkInterval) clearInterval(checkInterval);
+      if (initTimeout) clearTimeout(initTimeout);
 
       // Clean up any Whop elements when component unmounts
-      const whopElements = containerRef.current?.querySelectorAll('.whop-embed, iframe');
-      whopElements?.forEach(el => el.remove());
+      const whopElements = document.querySelectorAll('.whop-embed, iframe[src*="whop.com"], .whop-checkout-container iframe, iframe[title*="Whop"], iframe[id*="whop"]');
+      whopElements.forEach(el => el.remove());
+
+      // Mark that we're unmounting
+      initializationAttemptRef.current++;
     };
   }, [onComplete]);
 
@@ -130,6 +184,7 @@ export default function WhopCheckout({
 
       {/* Whop checkout embed div */}
       <div
+        key={`whop-checkout-${initializationAttemptRef.current}`}
         ref={containerRef}
         data-whop-checkout-plan-id={planId}
         data-whop-checkout-prefill-email={email}
