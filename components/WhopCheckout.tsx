@@ -99,16 +99,25 @@ export default function WhopCheckout({
         clearInterval(checkInterval);
       } else if (attempts < maxAttempts) {
         attempts++;
-        console.log(`Waiting for Whop SDK... attempt ${attempts}`);
+        // Only log every 5th attempt to reduce noise
+        if (attempts % 5 === 0) {
+          console.log(`Waiting for Whop SDK... attempt ${attempts}/${maxAttempts}`);
+        }
       } else {
-        const error = new Error('Whop SDK failed to load after maximum attempts');
-        console.error(error.message);
-        trackError(error, {
-          source: 'WhopCheckout',
-          attempts,
-          maxAttempts,
-          level: 'error'
-        });
+        // Only log error if we really failed and no iframe exists
+        const iframe = document.querySelector('iframe[src*="whop.com"]');
+        if (!iframe) {
+          const error = new Error('Whop SDK failed to load after maximum attempts');
+          console.error(error.message);
+          trackError(error, {
+            source: 'WhopCheckout',
+            attempts,
+            maxAttempts,
+            level: 'error'
+          });
+        } else {
+          console.log('Whop iframe exists despite timeout - initialization successful');
+        }
         setIsLoading(false);
         clearInterval(checkInterval);
       }
@@ -142,9 +151,17 @@ export default function WhopCheckout({
 
       document.head.appendChild(script);
     } else {
-      console.log('Whop script already exists, attempting to reinitialize...');
-      // Script already exists, start checking immediately
-      checkInterval = setInterval(initializeWhop, 250);
+      console.log('Whop script already exists, checking if SDK is ready...');
+
+      // If window.Whop already exists, initialize immediately
+      if (window.Whop && typeof window.Whop.init === 'function') {
+        console.log('Whop SDK already loaded, initializing immediately');
+        initializeWhop();
+      } else {
+        // Otherwise wait for it to become available
+        console.log('Waiting for Whop SDK to become available...');
+        checkInterval = setInterval(initializeWhop, 250);
+      }
     }
 
     // Listen for checkout completion
