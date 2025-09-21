@@ -7,6 +7,7 @@ import { Companies } from "./_sections/companies"
 import { FeaturesGrid } from "./_sections/features/features-grid"
 import { TestimonialsGrid } from "./_sections/testimonials-grid"
 import { Pricing } from "./_sections/pricing"
+import PricingTable from "../components/pricing-table"
 import { AccordionFaq } from "./_sections/accordion-faq"
 import { AutoScroll } from "../components/auto-scroll"
 import TrueFocusPairs from "../components/TrueFocusPairs"
@@ -691,7 +692,7 @@ export default function HomePage() {
       </section>
 
       <div id="pricing-section">
-        <Pricing {...pricingData} onCtaClick={() => setIsCheckoutOpen(true)} />
+        <PricingTable onGetStarted={() => setIsCheckoutOpen(true)} />
       </div>
 
       <section className="callout-section py-24 bg-muted/30 relative">
