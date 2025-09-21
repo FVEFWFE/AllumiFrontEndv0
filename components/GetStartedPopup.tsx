@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { X } from 'lucide-react';
+import { X, Check } from 'lucide-react';
+import Image from 'next/image';
 import WhopCheckout from './WhopCheckout';
 
 interface GetStartedPopupProps {
@@ -63,7 +64,7 @@ export default function GetStartedPopup({ isOpen, onClose }: GetStartedPopupProp
 
   return (
     <div
-      className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+      className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4"
       onClick={(e) => {
         // Only close if clicking the backdrop, not the modal content
         if (e.target === e.currentTarget) {
@@ -72,11 +73,11 @@ export default function GetStartedPopup({ isOpen, onClose }: GetStartedPopupProp
       }}
     >
       <div
-        className="bg-white dark:bg-gray-900 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto relative"
+        className="bg-black text-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto relative"
         onClick={(e) => e.stopPropagation()}>
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 z-10"
+          className="absolute top-4 right-4 text-gray-400 hover:text-white z-10 transition-colors"
           aria-label="Close"
         >
           <X className="w-6 h-6" />
@@ -85,19 +86,31 @@ export default function GetStartedPopup({ isOpen, onClose }: GetStartedPopupProp
         <div className="p-8">
           {!showCheckout && !checkoutComplete && (
             <>
-              <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">
+              {/* Logo */}
+              <div className="flex justify-center mb-6">
+                <Image
+                  src="/allumi.png"
+                  alt="Allumi"
+                  width={140}
+                  height={50}
+                  priority
+                  className="h-10 w-auto"
+                />
+              </div>
+
+              <h2 className="text-3xl font-bold mb-4 text-center text-white">
                 Start Your 14-Day Free Trial
               </h2>
-              <p className="text-gray-600 dark:text-gray-300 mb-6">
-                See exactly what drives revenue in your Skool community
+              <p className="text-gray-300 mb-8 text-center">
+                See exactly what drives paying members to your Skool community
               </p>
 
               {/* Beta pricing callout */}
-              <div className="mb-6 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
-                <p className="text-sm font-bold text-yellow-900 dark:text-yellow-200 mb-1">
+              <div className="mb-8 p-4 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border border-yellow-500/30 rounded-lg">
+                <p className="text-sm font-bold text-yellow-300 mb-1">
                   🔥 Limited Beta Founder Pricing - Only 7 spots left!
                 </p>
-                <p className="text-sm text-yellow-800 dark:text-yellow-300">
+                <p className="text-sm text-yellow-200/90">
                   Lock in $59/month forever (regular price $79/month)
                 </p>
               </div>
@@ -107,10 +120,7 @@ export default function GetStartedPopup({ isOpen, onClose }: GetStartedPopupProp
                 onClick={(e) => e.stopPropagation()}
                 onMouseDown={(e) => e.stopPropagation()}
               >
-                <div className="mb-4">
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Email address
-                  </label>
+                <div className="mb-6">
                   <input
                     id="email"
                     type="email"
@@ -119,8 +129,8 @@ export default function GetStartedPopup({ isOpen, onClose }: GetStartedPopupProp
                     onClick={(e) => e.stopPropagation()}
                     onMouseDown={(e) => e.stopPropagation()}
                     onFocus={(e) => e.stopPropagation()}
-                    placeholder="your@email.com"
-                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                    placeholder="Enter your email"
+                    className="w-full px-4 py-4 bg-zinc-900 border border-zinc-700 rounded-lg focus:ring-2 focus:ring-white focus:border-transparent text-white placeholder-gray-400 text-base"
                     required
                     autoFocus
                   />
@@ -128,22 +138,25 @@ export default function GetStartedPopup({ isOpen, onClose }: GetStartedPopupProp
 
                 <button
                   type="submit"
-                  className="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors"
+                  className="w-full bg-white text-black py-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors text-base"
                 >
-                  Continue to Secure Checkout →
+                  Get Instant Access
                 </button>
               </form>
 
-              <div className="mt-6 text-center">
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  ✓ No credit card required for trial
-                </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                  ✓ Cancel anytime, no questions asked
-                </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                  ✓ 2-minute setup with Zapier
-                </p>
+              <div className="mt-8 space-y-3">
+                <div className="flex items-center gap-3">
+                  <Check className="w-5 h-5 text-green-500 flex-shrink-0" />
+                  <span className="text-gray-300">No credit card required</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Check className="w-5 h-5 text-green-500 flex-shrink-0" />
+                  <span className="text-gray-300">Instant automatic installation</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Check className="w-5 h-5 text-green-500 flex-shrink-0" />
+                  <span className="text-gray-300">Track unlimited traffic sources</span>
+                </div>
               </div>
             </>
           )}
