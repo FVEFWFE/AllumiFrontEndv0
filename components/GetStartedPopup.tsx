@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { X, Check } from 'lucide-react';
 import Image from 'next/image';
 import WhopCheckout from './WhopCheckout';
@@ -14,6 +14,23 @@ export default function GetStartedPopup({ isOpen, onClose }: GetStartedPopupProp
   const [email, setEmail] = useState('');
   const [showCheckout, setShowCheckout] = useState(false);
   const [checkoutComplete, setCheckoutComplete] = useState(false);
+
+  // Check for saved email and reset state when popup opens/closes
+  useEffect(() => {
+    if (isOpen) {
+      // Check if user has previously entered email
+      const savedEmail = sessionStorage.getItem('checkout_email');
+      if (savedEmail) {
+        setEmail(savedEmail);
+        // Skip directly to checkout if they've already opted in
+        setShowCheckout(true);
+      }
+    } else {
+      // Don't clear email from storage, just reset local state
+      setShowCheckout(false);
+      setCheckoutComplete(false);
+    }
+  }, [isOpen]);
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -73,7 +90,7 @@ export default function GetStartedPopup({ isOpen, onClose }: GetStartedPopupProp
       }}
     >
       <div
-        className="bg-black text-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto relative"
+        className="bg-black text-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto relative border border-zinc-700"
         onClick={(e) => e.stopPropagation()}>
         <button
           onClick={onClose}
@@ -108,10 +125,10 @@ export default function GetStartedPopup({ isOpen, onClose }: GetStartedPopupProp
               {/* Beta pricing callout */}
               <div className="mb-8 p-4 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border border-yellow-500/30 rounded-lg">
                 <p className="text-sm font-bold text-yellow-300 mb-1">
-                  🔥 Limited Beta Founder Pricing - Only 7 spots left!
+                  🔥 Use promo code "BETA" for lifetime $20/month off
                 </p>
                 <p className="text-sm text-yellow-200/90">
-                  Lock in $59/month forever (regular price $79/month)
+                  Only for first 10 members - 7 spots left!
                 </p>
               </div>
 

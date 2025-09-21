@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 declare global {
   interface Window {
@@ -21,102 +21,118 @@ export default function WhopCheckout({
   onComplete,
   showBetaDiscount = false
 }: WhopCheckoutProps) {
-  const checkoutRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const scriptLoadedRef = useRef(false);
 
   useEffect(() => {
-    // Load Whop script if not already loaded
-    if (!document.querySelector('script[src*="whop.com/embed"]')) {
+    let checkInterval: NodeJS.Timeout;
+    let attempts = 0;
+    const maxAttempts = 20;
+
+    // Function to initialize Whop
+    const initializeWhop = () => {
+      if (!containerRef.current) return;
+
+      // Check if Whop loaded
+      if (window.Whop && typeof window.Whop.init === 'function') {
+        console.log('Initializing Whop checkout...');
+
+        // Force re-initialization by clearing any existing Whop elements first
+        const existingWhopElements = document.querySelectorAll('.whop-embed, iframe[src*="whop.com"]');
+        existingWhopElements.forEach(el => el.remove());
+
+        // Call init to scan for our data attributes
+        window.Whop.init();
+        setIsLoading(false);
+        clearInterval(checkInterval);
+      } else if (attempts < maxAttempts) {
+        attempts++;
+        console.log(`Waiting for Whop... attempt ${attempts}`);
+      } else {
+        console.error('Whop failed to load after maximum attempts');
+        setIsLoading(false);
+        clearInterval(checkInterval);
+      }
+    };
+
+    // Load the script if not already loaded
+    const existingScript = document.querySelector('script[src*="js.whop.com/static/checkout/loader.js"]');
+
+    if (!existingScript) {
       const script = document.createElement('script');
-      script.src = 'https://cdn.whop.com/embed/v1.js';
+      script.src = 'https://js.whop.com/static/checkout/loader.js';
       script.async = true;
-      script.onload = () => initializeCheckout();
+      script.defer = true;
+
+      script.onload = () => {
+        console.log('Whop script loaded');
+        // Start checking for Whop availability
+        checkInterval = setInterval(initializeWhop, 250);
+      };
+
+      script.onerror = () => {
+        console.error('Failed to load Whop script');
+        setIsLoading(false);
+      };
+
       document.head.appendChild(script);
     } else {
-      initializeCheckout();
+      console.log('Whop script already exists, attempting to reinitialize...');
+      // Script already exists, start checking immediately
+      checkInterval = setInterval(initializeWhop, 250);
     }
 
-    function initializeCheckout() {
-      if (typeof window !== 'undefined' && window.Whop && checkoutRef.current) {
-        try {
-          // Clear any existing checkout
-          checkoutRef.current.innerHTML = '';
-
-          // Create checkout configuration
-          const checkoutConfig = {
-            planId: planId,
-            checkoutTheme: 'dark', // Match site theme
-            accentColor: 'blue',
-            hidePrice: false,
-            skipRedirect: true,
-            checkoutOnComplete: (data: any) => {
-              console.log('Checkout completed:', data);
-              if (onComplete) {
-                onComplete(data);
-              }
-            }
-          };
-
-          // Add email if provided
-          if (email) {
-            (checkoutConfig as any).prefillEmail = email;
-          }
-
-          // Add discount for beta users
-          if (showBetaDiscount) {
-            (checkoutConfig as any).discount = 'BETA10';
-          }
-
-          // Initialize embedded checkout
-          window.Whop.checkout(checkoutConfig);
-          setIsLoading(false);
-        } catch (err) {
-          console.error('Checkout initialization error:', err);
-          setError('Failed to load checkout. Please refresh and try again.');
-          setIsLoading(false);
-        }
+    // Listen for checkout completion
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data && event.data.type === 'whop_checkout_complete' && onComplete) {
+        onComplete(event.data);
       }
-    }
+    };
 
-    // Retry initialization after a delay if Whop not ready
-    const timer = setTimeout(() => {
-      if (window.Whop) {
-        initializeCheckout();
-      }
-    }, 1000);
+    window.addEventListener('message', handleMessage);
 
-    return () => clearTimeout(timer);
-  }, [planId, email, onComplete, showBetaDiscount]);
+    // Cleanup function
+    return () => {
+      window.removeEventListener('message', handleMessage);
+      if (checkInterval) clearInterval(checkInterval);
+
+      // Clean up any Whop elements when component unmounts
+      const whopElements = containerRef.current?.querySelectorAll('.whop-embed, iframe');
+      whopElements?.forEach(el => el.remove());
+    };
+  }, [onComplete]);
 
   return (
     <div className="whop-checkout-container">
+      {/* Loading state */}
       {isLoading && (
-        <div className="flex items-center justify-center min-h-[500px]">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        <div className="flex flex-col items-center justify-center min-h-[400px]">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mb-4"></div>
+          <p className="text-white text-lg">Loading checkout...</p>
+          <p className="text-gray-400 text-sm mt-2">This may take a few seconds</p>
         </div>
       )}
 
-      {error && (
-        <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-          <p className="text-red-800">{error}</p>
-        </div>
-      )}
-
+      {/* Whop checkout embed div */}
       <div
-        ref={checkoutRef}
-        id="whop-checkout"
-        className="w-full max-w-md mx-auto"
-        style={{ minHeight: '500px', display: isLoading ? 'none' : 'block' }}
+        ref={containerRef}
+        data-whop-checkout-plan-id={planId}
+        data-whop-checkout-prefill-email={email}
+        data-whop-checkout-discount-code={showBetaDiscount ? 'BETA' : undefined}
+        data-whop-checkout-theme="dark"
+        data-whop-checkout-button-text="Start Free Trial"
+        className="min-h-[600px]"
+        style={{ display: isLoading ? 'none' : 'block' }}
       />
 
       {showBetaDiscount && !isLoading && (
-        <div className="mt-4 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
-          <p className="text-sm text-green-800 dark:text-green-200 font-semibold">
-            🎉 Beta founder pricing applied!
+        <div className="mt-4 p-4 bg-green-900/20 border border-green-800 rounded-lg">
+          <p className="text-sm text-green-200 font-semibold">
+            🎉 Use promo code "BETA" for lifetime $20/month off
           </p>
-          <p className="text-sm text-green-700 dark:text-green-300">
-            You save $20/month forever (Regular price: $79/month)
+          <p className="text-sm text-green-300">
+            (only for first 10 members)
           </p>
         </div>
       )}
