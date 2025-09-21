@@ -14,7 +14,8 @@ import {
   Users,
   Sparkles,
   BarChart3,
-  Upload
+  Upload,
+  Grid3x3
 } from 'lucide-react';
 import { useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
@@ -36,6 +37,13 @@ const navItems = [
     label: 'Tracking Links',
     icon: Link2,
     description: 'Create & manage'
+  },
+  {
+    href: '/dashboard/bio',
+    label: 'Link in Bio',
+    icon: Grid3x3,
+    description: 'Bio page & links',
+    badge: 'New'
   },
   {
     href: '/dashboard/conversions',

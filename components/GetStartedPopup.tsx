@@ -98,13 +98,13 @@ export default function GetStartedPopup({ isOpen, onClose }: GetStartedPopupProp
         onClick={(e) => e.stopPropagation()}>
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-white z-10 transition-colors"
+          className="absolute top-4 right-4 text-gray-400 hover:text-white z-50 transition-colors"
           aria-label="Close"
         >
           <X className="w-6 h-6" />
         </button>
 
-        <div className="p-8">
+        <div className="p-4 sm:p-6 md:p-8 pt-12 sm:pt-8">
           {!showCheckout && !checkoutComplete && (
             <>
               {/* Logo */}
@@ -119,7 +119,7 @@ export default function GetStartedPopup({ isOpen, onClose }: GetStartedPopupProp
                 />
               </div>
 
-              <h2 className="text-3xl font-bold mb-4 text-center text-white">
+              <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-center text-white">
                 Start Your 14-Day Free Trial
               </h2>
               <p className="text-gray-300 mb-8 text-center">
@@ -127,11 +127,11 @@ export default function GetStartedPopup({ isOpen, onClose }: GetStartedPopupProp
               </p>
 
               {/* Beta pricing callout */}
-              <div className="mb-8 p-4 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border border-yellow-500/30 rounded-lg">
-                <p className="text-sm font-bold text-yellow-300 mb-1">
+              <div className="mb-6 sm:mb-8 p-3 sm:p-4 bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border border-yellow-500/30 rounded-lg">
+                <p className="text-xs sm:text-sm font-bold text-yellow-300 mb-1">
                   🔥 Use promo code "BETA" for lifetime $20/month off
                 </p>
-                <p className="text-sm text-yellow-200/90">
+                <p className="text-xs sm:text-sm text-yellow-200/90">
                   Only for first 10 members - 7 spots left!
                 </p>
               </div>
@@ -184,17 +184,28 @@ export default function GetStartedPopup({ isOpen, onClose }: GetStartedPopupProp
 
           {showCheckout && !checkoutComplete && (
             <>
-              <div className="mb-6">
+              <div className="mb-4 sm:mb-6">
                 <button
                   onClick={() => setShowCheckout(false)}
-                  className="text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 flex items-center gap-1"
+                  className="text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 flex items-center gap-1 mb-2"
                 >
                   ← Back
                 </button>
-                <h2 className="text-2xl font-bold mt-2 text-gray-900 dark:text-white">
+                {/* Logo for mobile */}
+                <div className="flex justify-center mb-4 sm:hidden">
+                  <Image
+                    src="/allumi.png"
+                    alt="Allumi"
+                    width={120}
+                    height={40}
+                    priority
+                    className="h-8 w-auto"
+                  />
+                </div>
+                <h2 className="text-xl sm:text-2xl font-bold mt-2 text-white">
                   Complete Your Registration
                 </h2>
-                <p className="text-gray-600 dark:text-gray-300 mt-2">
+                <p className="text-sm sm:text-base text-gray-300 mt-1 sm:mt-2">
                   Secure checkout powered by Whop
                 </p>
               </div>

@@ -87,7 +87,7 @@ export function FeaturebaseWidget() {
         initializeWidget();
         handleThemeChange();
         
-        // Add CSS to hide feedback widget when messenger is open and lower opacity when modal is open
+        // Add CSS to hide feedback widget when messenger is open and ensure proper z-index
         const style = document.createElement('style');
         style.textContent = `
           /* Hide feedback widget when messenger iframe is present */
@@ -96,16 +96,16 @@ export function FeaturebaseWidget() {
             display: none !important;
           }
 
-          /* Lower opacity of featurebase widget when modal is open */
-          body:has(.fixed[class*="z-50"]) .fb-feedback-widget-feedback-button-container {
-            opacity: 0.3 !important;
-            transition: opacity 0.3s ease;
+          /* Ensure feedback widget is always on top with full opacity */
+          .fb-feedback-widget-feedback-button-container {
+            z-index: 999999 !important;
+            opacity: 1 !important;
           }
 
-          /* Also lower opacity of the messenger iframe if open */
-          body:has(.fixed[class*="z-50"]) iframe[src*="featurebase"] {
-            opacity: 0.3 !important;
-            transition: opacity 0.3s ease;
+          /* Ensure messenger iframe is also properly visible */
+          iframe[src*="featurebase"] {
+            z-index: 999998 !important;
+            opacity: 1 !important;
           }
         `;
         document.head.appendChild(style);
