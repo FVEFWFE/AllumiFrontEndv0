@@ -2,20 +2,60 @@
 
 import { Check, X, ArrowRight } from 'lucide-react';
 import { trackEvent } from './posthog-provider';
+import { useEffect } from 'react';
+import confetti from 'canvas-confetti';
 
 interface PricingTableProps {
   onGetStarted?: () => void;
 }
 
 export default function PricingTable({ onGetStarted }: PricingTableProps) {
+  useEffect(() => {
+    // Subtle particle effect when component mounts
+    const duration = 3 * 1000;
+    const animationEnd = Date.now() + duration;
+    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+    function randomInRange(min: number, max: number) {
+      return Math.random() * (max - min) + min;
+    }
+
+    const interval: any = setInterval(function() {
+      const timeLeft = animationEnd - Date.now();
+
+      if (timeLeft <= 0) {
+        return clearInterval(interval);
+      }
+
+      const particleCount = 50 * (timeLeft / duration);
+      // since particles fall down, start a bit higher than random
+      confetti({
+        ...defaults,
+        particleCount,
+        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+        colors: ['#8B5CF6', '#A855F7', '#C084FC']
+      });
+      confetti({
+        ...defaults,
+        particleCount,
+        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+        colors: ['#8B5CF6', '#A855F7', '#C084FC']
+      });
+    }, 250);
+
+    return () => clearInterval(interval);
+  }, []);
+
   const handlePlanClick = (plan: string) => {
     trackEvent('pricing_plan_clicked', { plan });
 
     if (plan === 'professional' && onGetStarted) {
       onGetStarted();
     } else if (plan === 'dfy') {
-      // Open application form or calendly
-      window.open('https://calendly.com/allumi/strategy', '_blank');
+      // Open Featurebase chat instead of Calendly
+      if (typeof window !== 'undefined' && (window as any).Featurebase) {
+        (window as any).Featurebase('show');
+      }
     }
   };
 
@@ -75,9 +115,9 @@ export default function PricingTable({ onGetStarted }: PricingTableProps) {
           </div>
 
           {/* Professional Plan - Most Popular */}
-          <div className="relative rounded-2xl border-2 border-primary bg-card p-6 lg:p-8 shadow-xl">
+          <div className="relative rounded-2xl border-2 border-purple-600 bg-card p-6 lg:p-8 shadow-xl shadow-purple-600/20">
             <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-              <span className="bg-primary text-primary-foreground px-4 py-1 rounded-full text-sm font-semibold">
+              <span className="bg-gradient-to-r from-purple-600 to-purple-700 text-white px-4 py-1 rounded-full text-sm font-semibold">
                 MOST POPULAR
               </span>
             </div>
@@ -154,7 +194,7 @@ export default function PricingTable({ onGetStarted }: PricingTableProps) {
 
             <button
               onClick={() => handlePlanClick('professional')}
-              className="w-full py-3 rounded-lg bg-primary text-primary-foreground font-semibold hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
+              className="w-full py-3 rounded-lg bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold hover:from-purple-700 hover:to-purple-800 transition-all transform hover:scale-105 flex items-center justify-center gap-2"
             >
               Start Free 14-Day Trial
               <ArrowRight className="w-4 h-4" />
@@ -168,7 +208,7 @@ export default function PricingTable({ onGetStarted }: PricingTableProps) {
           {/* DFY Ad Management */}
           <div className="relative rounded-2xl border border-border bg-card p-6 lg:p-8">
             <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-              <span className="bg-accent text-accent-foreground px-4 py-1 rounded-full text-sm font-semibold">
+              <span className="bg-white text-gray-900 border border-gray-200 px-4 py-1 rounded-full text-sm font-semibold">
                 DONE-FOR-YOU
               </span>
             </div>
