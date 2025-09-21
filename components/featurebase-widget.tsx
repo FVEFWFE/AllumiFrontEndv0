@@ -197,11 +197,19 @@ export function FeaturebaseWidget() {
             }
           }, '*');
           
-          // Alternative method: try to click any close button
-          const closeButton = document.querySelector('[aria-label="Close"]') as HTMLElement;
-          if (closeButton) {
-            closeButton.click();
-          }
+          // Alternative method: try to click Featurebase's close button specifically
+          // Only target close buttons within Featurebase widget frames
+          const featurebaseFrames = document.querySelectorAll('iframe[src*="featurebase"], iframe[title*="Featurebase"]');
+          featurebaseFrames.forEach(frame => {
+            try {
+              const closeButton = frame.contentDocument?.querySelector('[aria-label="Close"]') as HTMLElement;
+              if (closeButton) {
+                closeButton.click();
+              }
+            } catch (e) {
+              // Cross-origin frame, can't access
+            }
+          });
         }
       }
     };

@@ -102,7 +102,11 @@ export default function GetStartedPopup({ isOpen, onClose }: GetStartedPopupProp
                 </p>
               </div>
 
-              <form onSubmit={handleEmailSubmit}>
+              <form
+                onSubmit={handleEmailSubmit}
+                onClick={(e) => e.stopPropagation()}
+                onMouseDown={(e) => e.stopPropagation()}
+              >
                 <div className="mb-4">
                   <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Email address
@@ -112,6 +116,9 @@ export default function GetStartedPopup({ isOpen, onClose }: GetStartedPopupProp
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    onClick={(e) => e.stopPropagation()}
+                    onMouseDown={(e) => e.stopPropagation()}
+                    onFocus={(e) => e.stopPropagation()}
                     placeholder="your@email.com"
                     className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                     required
