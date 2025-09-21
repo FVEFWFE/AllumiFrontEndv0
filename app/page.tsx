@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { Hero } from "./_sections/hero"
 import { trackEvent } from "../components/posthog-provider"
 import { Companies } from "./_sections/companies"
@@ -15,6 +15,7 @@ import TextType from "../components/TextType"
 import HeroTargetCursor from "../components/HeroTargetCursor"
 import Image from "next/image"
 import { useDemoModal } from "../components/layout-client"
+import GetStartedPopup from "../components/GetStartedPopup"
 
 // Reusable Skool logo component
 const SkoolLogo = () => (
@@ -483,6 +484,7 @@ const whyIBuiltThisData = {
 
 export default function HomePage() {
   const { openDemoModal, openEmailPopup, isAnyPopupOpen } = useDemoModal()
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false)
 
   // Track scroll depth
   useEffect(() => {
@@ -522,8 +524,8 @@ export default function HomePage() {
             return
           } else if (action.onClick === "signup") {
             trackEvent('hero_cta_clicked', { cta_type: 'trial_start', source: 'hero' });
-            // Redirect to Whop for trial signup
-            window.location.href = '/api/start-trial';
+            // Open embedded checkout popup
+            setIsCheckoutOpen(true);
           }
         }}
       />
@@ -688,7 +690,7 @@ export default function HomePage() {
       </section>
 
       <div id="pricing-section">
-        <Pricing {...pricingData} onCtaClick={() => openEmailPopup()} />
+        <Pricing {...pricingData} onCtaClick={() => setIsCheckoutOpen(true)} />
       </div>
 
       <section className="callout-section py-24 bg-muted/30 relative">
@@ -706,7 +708,9 @@ export default function HomePage() {
                     if (action.onClick === "demo") {
                       openDemoModal()
                     } else {
-                      openEmailPopup()
+                      // Open embedded checkout popup instead of redirect
+                      trackEvent('trial_start_clicked', { source: 'callout_section' });
+                      setIsCheckoutOpen(true);
                     }
                   }}
                   className={`callout-cursor-target px-8 py-4 rounded-lg font-semibold transition-colors ${
@@ -724,6 +728,12 @@ export default function HomePage() {
       </section>
 
       <AccordionFaq {...faqData} eventsKey="allumi-events" />
+
+      {/* Embedded Checkout Popup */}
+      <GetStartedPopup
+        isOpen={isCheckoutOpen}
+        onClose={() => setIsCheckoutOpen(false)}
+      />
     </>
   )
 }
