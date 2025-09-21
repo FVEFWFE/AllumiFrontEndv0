@@ -186,9 +186,6 @@ export default function PricingTable({ onGetStarted }: PricingTableProps) {
                 <ArrowRight className="w-4 h-4" />
               </button>
             </footer>
-            <p className="text-center text-xs text-gray-500 pb-6">
-              No credit card required • Instant setup
-            </p>
           </PricingBento>
 
           {/* DFY Ad Management */}
@@ -263,25 +260,6 @@ export default function PricingTable({ onGetStarted }: PricingTableProps) {
               Limited spots • Application required
             </p>
           </PricingBento>
-        </div>
-
-        {/* Trust badges */}
-        <div className="mt-16 text-center">
-          <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">Trusted by 100+ Skool communities</p>
-          <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-gray-500 dark:text-gray-400">
-            <span className="flex items-center gap-2">
-              <span className="text-base">🔒</span>
-              Bank-level security
-            </span>
-            <span className="flex items-center gap-2">
-              <span className="text-base">⚡</span>
-              99.9% uptime
-            </span>
-            <span className="flex items-center gap-2">
-              <span className="text-base">🚀</span>
-              5-minute setup
-            </span>
-          </div>
         </div>
       </div>
     </section>
