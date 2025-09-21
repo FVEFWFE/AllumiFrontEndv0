@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
+import { trackError } from './posthog-provider';
 
 declare global {
   interface Window {
@@ -50,7 +51,14 @@ export default function WhopCheckout({
         attempts++;
         console.log(`Waiting for Whop... attempt ${attempts}`);
       } else {
-        console.error('Whop failed to load after maximum attempts');
+        const error = new Error('Whop failed to load after maximum attempts');
+        console.error(error.message);
+        trackError(error, {
+          source: 'WhopCheckout',
+          attempts,
+          maxAttempts,
+          level: 'error'
+        });
         setIsLoading(false);
         clearInterval(checkInterval);
       }
@@ -72,7 +80,13 @@ export default function WhopCheckout({
       };
 
       script.onerror = () => {
-        console.error('Failed to load Whop script');
+        const error = new Error('Failed to load Whop script');
+        console.error(error.message);
+        trackError(error, {
+          source: 'WhopCheckout',
+          scriptSrc: script.src,
+          level: 'error'
+        });
         setIsLoading(false);
       };
 

@@ -16,6 +16,7 @@ import HeroTargetCursor from "../components/HeroTargetCursor"
 import Image from "next/image"
 import { useDemoModal } from "../components/layout-client"
 import GetStartedPopup from "../components/GetStartedPopup"
+import { ErrorBoundary } from "../components/error-boundary"
 
 // Reusable Skool logo component
 const SkoolLogo = () => (
@@ -730,10 +731,29 @@ export default function HomePage() {
       <AccordionFaq {...faqData} eventsKey="allumi-events" />
 
       {/* Embedded Checkout Popup */}
-      <GetStartedPopup
-        isOpen={isCheckoutOpen}
-        onClose={() => setIsCheckoutOpen(false)}
-      />
+      <ErrorBoundary
+        fallback={(error, reset) => (
+          <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+            <div className="bg-black text-white rounded-xl max-w-md w-full p-8 border border-zinc-700">
+              <h2 className="text-xl font-bold mb-4">Checkout Error</h2>
+              <p className="text-gray-300 mb-6">
+                We're having trouble loading the checkout. This has been reported automatically.
+              </p>
+              <button
+                onClick={reset}
+                className="bg-white text-black px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+              >
+                Try Again
+              </button>
+            </div>
+          </div>
+        )}
+      >
+        <GetStartedPopup
+          isOpen={isCheckoutOpen}
+          onClose={() => setIsCheckoutOpen(false)}
+        />
+      </ErrorBoundary>
     </>
   )
 }
