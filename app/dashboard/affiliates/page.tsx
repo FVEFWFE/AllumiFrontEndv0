@@ -1,11 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Progress } from '@/components/ui/progress';
 import {
   DollarSign,
   Users,
@@ -19,21 +20,75 @@ import {
   Sparkles
 } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { createClient } from '@supabase/supabase-js';
+import {
+  getAffiliateStats,
+  getAffiliateReferrals,
+  getTopAffiliates,
+  getAffiliateCode,
+  type AffiliateStats,
+  type AffiliateReferral,
+  type TopAffiliate
+} from '@/lib/affiliate-data';
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 export default function AffiliatesPage() {
-  const [affiliateLink] = useState('https://allumi.to/partner/YOURCODE');
+  const [affiliateLink, setAffiliateLink] = useState('https://allumi.to/partner/loading...');
+  const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState<AffiliateStats | null>(null);
+  const [referrals, setReferrals] = useState<AffiliateReferral[]>([]);
+  const [topAffiliates, setTopAffiliates] = useState<TopAffiliate[]>([]);
+
+  useEffect(() => {
+    loadAffiliateData();
+  }, []);
+
+  const loadAffiliateData = async () => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+
+      const userId = session.user.id;
+
+      // Load all affiliate data
+      const [statsData, referralsData, topAffiliatesData, affiliateCode] = await Promise.all([
+        getAffiliateStats(userId),
+        getAffiliateReferrals(userId),
+        getTopAffiliates(10),
+        getAffiliateCode(userId)
+      ]);
+
+      setStats(statsData);
+      setReferrals(referralsData);
+      setTopAffiliates(topAffiliatesData);
+
+      if (affiliateCode) {
+        setAffiliateLink(`https://allumi.to/partner/${affiliateCode}`);
+      }
+
+      setLoading(false);
+    } catch (error) {
+      console.error('Error loading affiliate data:', error);
+      setLoading(false);
+    }
+  };
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(affiliateLink);
     toast.success('Affiliate link copied!');
   };
 
-  const topAffiliates = [
-    { name: 'Sarah Johnson', referrals: 45, earnings: 1602, status: 'gold' },
-    { name: 'Mike Chen', referrals: 32, earnings: 1139, status: 'silver' },
-    { name: 'Emily Davis', referrals: 28, earnings: 996, status: 'silver' },
-    { name: 'Alex Thompson', referrals: 19, earnings: 676, status: 'bronze' },
-  ];
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-xl">Loading affiliate data...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -51,9 +106,11 @@ export default function AffiliatesPage() {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">$4,413</div>
+            <div className="text-2xl font-bold">
+              ${(stats?.totalEarnings || 0).toLocaleString()}
+            </div>
             <p className="text-xs text-muted-foreground">
-              <span className="text-green-500">+$423</span> this month
+              <span className="text-yellow-500">${stats?.pendingEarnings || 0}</span> pending
             </p>
           </CardContent>
         </Card>
@@ -64,9 +121,9 @@ export default function AffiliatesPage() {
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">124</div>
+            <div className="text-2xl font-bold">{stats?.activeReferrals || 0}</div>
             <p className="text-xs text-muted-foreground">
-              <span className="text-green-500">+12</span> this month
+              {stats?.conversionRate || 0}% conversion rate
             </p>
           </CardContent>
         </Card>
@@ -89,10 +146,15 @@ export default function AffiliatesPage() {
           </CardHeader>
           <CardContent>
             <div className="flex items-center gap-2">
-              <Star className="h-5 w-5 text-yellow-500 fill-yellow-500" />
-              <span className="text-2xl font-bold">Gold</span>
+              <Star className={`h-5 w-5 ${
+                stats?.tier === 'platinum' ? 'text-purple-500 fill-purple-500' :
+                stats?.tier === 'gold' ? 'text-yellow-500 fill-yellow-500' :
+                stats?.tier === 'silver' ? 'text-gray-400 fill-gray-400' :
+                'text-orange-600 fill-orange-600'
+              }`} />
+              <span className="text-2xl font-bold capitalize">{stats?.tier || 'Bronze'}</span>
             </div>
-            <p className="text-xs text-muted-foreground">Top 10% affiliate</p>
+            <Progress value={stats?.nextTierProgress || 0} className="mt-2 h-2" />
           </CardContent>
         </Card>
       </div>

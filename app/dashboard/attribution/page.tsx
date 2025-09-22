@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
@@ -15,23 +15,67 @@ import {
   Clock,
   AlertCircle
 } from 'lucide-react';
+import { createClient } from '@supabase/supabase-js';
+import {
+  getAttributionOverview,
+  getAttributedMembers,
+  getSourceMetrics,
+  getConversionPathways,
+  type SourceMetrics,
+  type ConversionPathway,
+  type AttributionMember
+} from '@/lib/attribution-data';
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 export default function AttributionPage() {
   const [selectedSource, setSelectedSource] = useState('all');
+  const [loading, setLoading] = useState(true);
+  const [overview, setOverview] = useState<any>(null);
+  const [attributionData, setAttributionData] = useState<SourceMetrics[]>([]);
+  const [pathways, setPathways] = useState<ConversionPathway[]>([]);
+  const [members, setMembers] = useState<AttributionMember[]>([]);
 
-  const attributionData = [
-    { source: 'YouTube', members: 145, revenue: 12850, confidence: 92 },
-    { source: 'Instagram', members: 89, revenue: 7901, confidence: 87 },
-    { source: 'TikTok', members: 67, revenue: 5963, confidence: 79 },
-    { source: 'Email', members: 45, revenue: 3995, confidence: 95 },
-    { source: 'Direct', members: 23, revenue: 2047, confidence: 68 },
-  ];
+  useEffect(() => {
+    loadAttributionData();
+  }, []);
 
-  const pathways = [
-    { path: 'YouTube → Landing Page → Skool', conversions: 89, avgTime: '2.3 days' },
-    { path: 'Instagram → Link in Bio → Skool', conversions: 56, avgTime: '1.8 days' },
-    { path: 'Email → Direct → Skool', conversions: 45, avgTime: '0.5 days' },
-  ];
+  const loadAttributionData = async () => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+
+      const userId = session.user.id;
+
+      // Load all attribution data
+      const [overviewData, sourceData, pathwayData, memberData] = await Promise.all([
+        getAttributionOverview(userId),
+        getSourceMetrics(userId),
+        getConversionPathways(userId),
+        getAttributedMembers(userId, 50)
+      ]);
+
+      setOverview(overviewData);
+      setAttributionData(sourceData);
+      setPathways(pathwayData);
+      setMembers(memberData);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error loading attribution data:', error);
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-xl">Loading attribution data...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -49,9 +93,9 @@ export default function AttributionPage() {
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">369</div>
+            <div className="text-2xl font-bold">{overview?.attributedMembers || 0}</div>
             <p className="text-xs text-muted-foreground">
-              <span className="text-green-500">+23%</span> from last month
+              of {overview?.totalMembers || 0} total members
             </p>
           </CardContent>
         </Card>
@@ -62,9 +106,11 @@ export default function AttributionPage() {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">$32,846</div>
+            <div className="text-2xl font-bold">
+              ${(overview?.totalRevenue || 0).toLocaleString()}
+            </div>
             <p className="text-xs text-muted-foreground">
-              <span className="text-green-500">+18%</span> from last month
+              {overview?.attributionRate?.toFixed(1) || 0}% attribution rate
             </p>
           </CardContent>
         </Card>
@@ -75,8 +121,8 @@ export default function AttributionPage() {
             <Target className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">84%</div>
-            <Progress value={84} className="mt-2" />
+            <div className="text-2xl font-bold">{overview?.avgConfidence || 0}%</div>
+            <Progress value={overview?.avgConfidence || 0} className="mt-2" />
           </CardContent>
         </Card>
 
@@ -137,8 +183,10 @@ export default function AttributionPage() {
                     <BarChart3 className="h-4 w-4 text-primary" />
                   </div>
                   <div>
-                    <p className="font-medium text-sm">{pathway.path}</p>
-                    <p className="text-xs text-muted-foreground">Avg time: {pathway.avgTime}</p>
+                    <p className="font-medium text-sm">{pathway.name}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {pathway.touchpoints} touchpoints • Avg: {pathway.avgTime}
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -148,6 +196,11 @@ export default function AttributionPage() {
                 </div>
               </div>
             ))}
+            {pathways.length === 0 && (
+              <div className="text-center py-8 text-muted-foreground">
+                No conversion pathways tracked yet. Start by creating tracking links.
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
