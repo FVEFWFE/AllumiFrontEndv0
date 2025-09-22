@@ -9,16 +9,25 @@ const supabase = createClient(
 
 function verifyWhopSignature(payload: string, signature: string | null): boolean {
   if (!signature || !process.env.WHOP_WEBHOOK_SECRET) return false;
-  
+
   const expectedSignature = crypto
     .createHmac('sha256', process.env.WHOP_WEBHOOK_SECRET)
     .update(payload)
     .digest('hex');
-  
-  return crypto.timingSafeEqual(
-    Buffer.from(signature),
-    Buffer.from(expectedSignature)
-  );
+
+  // Handle length mismatch gracefully
+  if (signature.length !== expectedSignature.length) {
+    return false;
+  }
+
+  try {
+    return crypto.timingSafeEqual(
+      Buffer.from(signature, 'hex'),
+      Buffer.from(expectedSignature, 'hex')
+    );
+  } catch {
+    return false;
+  }
 }
 
 export async function POST(request: NextRequest) {
