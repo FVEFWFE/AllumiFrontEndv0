@@ -89,53 +89,35 @@ export default function ImportPage() {
   };
 
   const processImport = async () => {
-    if (members.length === 0) return;
+    if (!file) {
+      setError('Please select a file to upload');
+      return;
+    }
 
     setUploading(true);
     setError('');
 
     try {
-      let totalAttributed = 0;
-      let newConversions = 0;
-      let totalRevenue = 0;
+      const formData = new FormData();
+      formData.append('file', file);
 
-      // Process each member
-      for (const member of members) {
-        // Extract tracking ID from referrer if present
-        const allumiIdMatch = member.referrer?.match(/allumi_id=([a-zA-Z0-9]+)/);
-        const allumiId = allumiIdMatch ? allumiIdMatch[1] : undefined;
-
-        const response = await fetch('/api/conversions/track', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            skool_email: member.email,
-            skool_name: member.name,
-            skool_username: member.username,
-            joined_at: member.joined_date || new Date().toISOString(),
-            membership_type: member.amount_paid > 0 ? 'paid' : 'free',
-            price_paid: member.amount_paid || 0,
-            allumi_id: allumiId
-          })
-        });
-
-        const result = await response.json();
-
-        if (result.success !== false) {
-          newConversions++;
-          if (result.attributed) {
-            totalAttributed++;
-          }
-          totalRevenue += member.amount_paid || 0;
-        }
-      }
-
-      setResults({
-        total: members.length,
-        attributed: totalAttributed,
-        newConversions,
-        totalRevenue
+      const response = await fetch('/api/import/csv', {
+        method: 'POST',
+        body: formData
       });
+
+      const result = await response.json();
+
+      if (result.success) {
+        setResults({
+          total: result.results.total,
+          attributed: result.results.attributed || 0,
+          newConversions: result.results.imported,
+          totalRevenue: result.results.totalRevenue || 0
+        });
+      } else {
+        setError(result.error || 'Import failed');
+      }
 
     } catch (err: any) {
       setError(err.message || 'Import failed');
