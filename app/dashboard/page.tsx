@@ -9,6 +9,7 @@ import TooltipGuide from '@/components/onboarding/TooltipGuide';
 import EmptyState from '@/components/dashboard/EmptyState';
 import SetupProgress from '@/components/dashboard/SetupProgress';
 import IntegrationStatus from '@/components/dashboard/IntegrationStatus';
+import DemoModeDashboard from '@/components/dashboard/DemoModeDashboard';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -38,6 +39,7 @@ export default function Dashboard() {
   const [recentLinks, setRecentLinks] = useState<any[]>([]);
   const [recentConversions, setRecentConversions] = useState<any[]>([]);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showDemoMode, setShowDemoMode] = useState(false);
 
   useEffect(() => {
     checkAuth();
@@ -104,8 +106,13 @@ export default function Dashboard() {
 
       // Check if user needs onboarding (no links created yet)
       if (!links || links.length === 0) {
+        const hasSeenDemo = localStorage.getItem('demo_completed');
         const hasSeenOnboarding = localStorage.getItem('onboarding_completed');
-        if (!hasSeenOnboarding) {
+        if (!hasSeenDemo && !hasSeenOnboarding) {
+          // Show demo mode for brand new users
+          setShowDemoMode(true);
+        } else if (!hasSeenOnboarding) {
+          // Show onboarding if they've seen demo but not onboarding
           setShowOnboarding(true);
         }
       }
@@ -186,6 +193,23 @@ export default function Dashboard() {
     );
   }
 
+  // Show demo mode for brand new users
+  if (showDemoMode && !loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="container mx-auto px-4 py-8">
+          <DemoModeDashboard
+            onStartReal={() => {
+              localStorage.setItem('demo_completed', 'true');
+              setShowDemoMode(false);
+              setShowOnboarding(true);
+            }}
+          />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background">
       {/* Onboarding Flow for New Users */}
@@ -193,6 +217,7 @@ export default function Dashboard() {
         <OnboardingFlow
           onComplete={() => {
             setShowOnboarding(false);
+            localStorage.setItem('onboarding_completed', 'true');
             loadDashboardData(); // Refresh data after onboarding
           }}
         />
