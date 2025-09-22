@@ -18,6 +18,7 @@ import Image from "next/image"
 import { useDemoModal } from "../components/layout-client"
 import GetStartedPopup from "../components/GetStartedPopup"
 import { ErrorBoundary } from "../components/error-boundary"
+import { NewsletterMailerLite } from "./_sections/newsletter/newsletter-mailerlite"
 
 // Reusable Skool logo component
 const SkoolLogo = () => (
@@ -531,6 +532,10 @@ export default function HomePage() {
           }
         }}
       />
+
+      {/* Email Capture for Attribution Tracking */}
+      <NewsletterMailerLite />
+
       <Companies {...companiesData} />
       <div data-section="features">
         <FeaturesGrid {...featuresData} eventsKey="allumi-events" onActionClick={(action) => {

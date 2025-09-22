@@ -209,6 +209,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             />
           </Providers>
         </PHProvider>
+
+        {/* Universal Pixel for Attribution Tracking */}
+        <script src="/pixel.js" async />
       </body>
     </html>
   )
@@ -217,4 +220,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 export const metadata = {
   title: "Allumi - Illuminate Your Empire",
   generator: "v0.dev",
+  icons: {
+    icon: '/favicon.png',
+  },
 }

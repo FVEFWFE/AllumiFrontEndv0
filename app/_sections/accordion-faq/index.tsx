@@ -17,7 +17,7 @@ export function AccordionFaq(faq: Faq & { eventsKey: GeneralEvents["ingestKey"] 
         <h4>{faq.heading.title}</h4>
       </Heading>
       <div className="mx-auto w-full max-w-5xl px-4 sm:pl-[4.5rem] sm:pr-6">
-        <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:gap-12">
+        <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-2 lg:gap-12">
           <div className="flex flex-col w-full">
             <Accordion items={leftColumnItems} eventsKey={faq.eventsKey} />
           </div>

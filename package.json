@@ -6,7 +6,10 @@
     "build": "next build",
     "dev": "next dev",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "generate-test-data": "node scripts/generate-test-data.js",
+    "test:e2e": "node scripts/test-attribution-flow.js",
+    "test:e2e:cleanup": "node scripts/test-attribution-flow.js --cleanup"
   },
   "dependencies": {
     "@emotion/is-prop-valid": "latest",
@@ -68,6 +71,7 @@
     "motion": "^12.23.13",
     "next": "15.2.4",
     "next-themes": "latest",
+    "node-fetch": "^2.7.0",
     "papaparse": "^5.5.3",
     "posthog-js": "^1.266.0",
     "react": "^19",

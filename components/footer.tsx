@@ -6,7 +6,6 @@ import { DarkLightImageAutoscale } from "@/common/dark-light-image"
 import type { DarkLightImageFragment, FooterFragment } from "@/lib/basehub/fragments"
 import Link from "next/link"
 import Image from "next/image"
-import { ThemeSwitcher } from "./theme-switcher"
 import { trackEvent } from "./posthog-provider"
 
 declare global {
@@ -43,11 +42,11 @@ export const Footer = ({
             className="hidden h-8 w-auto dark:block" 
           />
         </Link>
-        <nav className="col-start-1 row-start-2 flex flex-row flex-wrap gap-x-2 gap-y-3 self-center sm:col-span-1 sm:col-start-2 sm:row-start-1 sm:items-center sm:place-self-center md:gap-x-4 lg:gap-x-8">
+        <nav className="col-start-1 row-start-2 flex flex-row gap-x-1 overflow-x-auto self-center sm:col-span-1 sm:col-start-2 sm:row-start-1 sm:flex-wrap sm:gap-x-2 sm:gap-y-3 sm:items-center sm:place-self-center md:gap-x-4 lg:gap-x-8">
           <Link
             href="/about"
             onClick={() => trackEvent('footer_navigation_clicked', { link: 'about' })}
-            className="px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"
+            className="whitespace-nowrap px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"
           >
             About
           </Link>
@@ -58,14 +57,14 @@ export const Footer = ({
                 window.Featurebase('showNewMessage', 'Hi! I need help with Allumi.');
               }
             }}
-            className="px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"
+            className="whitespace-nowrap px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"
           >
             Help
           </button>
           <button
             data-featurebase-feedback
             onClick={() => trackEvent('footer_navigation_clicked', { link: 'feedback' })}
-            className="px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"
+            className="whitespace-nowrap px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"
           >
             Feedback
           </button>
@@ -81,29 +80,25 @@ export const Footer = ({
                 }, '*');
               }
             }}
-            className="px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"
+            className="whitespace-nowrap px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"
           >
             Bug Report
           </button>
           <button
             data-featurebase-feedback
             onClick={() => trackEvent('footer_navigation_clicked', { link: 'feature-request' })}
-            className="px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"
+            className="whitespace-nowrap px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"
           >
             Feature Request
           </button>
           <Link
             href="/affiliate"
             onClick={() => trackEvent('footer_navigation_clicked', { link: 'affiliate' })}
-            className="px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"
+            className="whitespace-nowrap px-2 font-light tracking-tight text-[--text-tertiary] hover:text-[--text-primary] dark:text-[--dark-text-secondary] dark:hover:text-[--dark-text-primary]"
           >
             Affiliate Program
           </Link>
         </nav>
-        <div className="col-start-2 row-start-1 flex items-center gap-3 self-center justify-self-end sm:col-span-1 sm:col-start-3 sm:row-start-1">
-          <p className="hidden text-[--text-tertiary] dark:text-[--dark-text-tertiary] sm:block">Appearance</p>
-          <ThemeSwitcher />
-        </div>
       </div>
     </footer>
   )

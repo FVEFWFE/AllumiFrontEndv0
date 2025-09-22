@@ -17,6 +17,15 @@ export function NewsletterMailerLite() {
     setIsLoading(true)
     setMessage(null)
 
+    // Track email capture with Universal Pixel
+    if (typeof window !== 'undefined' && (window as any).Allumi) {
+      (window as any).Allumi.identify({ email });
+      (window as any).Allumi.track('email_captured', {
+        source: 'newsletter_form',
+        page: window.location.pathname
+      });
+    }
+
     try {
       const response = await fetch("https://connect.mailerlite.com/api/subscribers", {
         method: "POST",
