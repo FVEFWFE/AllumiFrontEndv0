@@ -1,6 +1,7 @@
 import { NextResponse, NextRequest } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { calculateAttribution, generateFingerprint } from '@/lib/click-tracking';
+import { findOrCreateIdentity, matchPendingConversions } from '@/lib/identity-manager';
 import crypto from 'crypto';
 
 const supabase = createClient(
@@ -57,6 +58,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // First, create or find identity by email (95% confidence)
+    const identity = await findOrCreateIdentity(email, {
+      name,
+      skool_member_id,
+      source: 'zapier_webhook',
+      imported_at: new Date().toISOString()
+    });
+
     // Check if member already exists
     const { data: existingMember } = await supabase
       .from('users')
@@ -69,19 +78,20 @@ export async function POST(request: NextRequest) {
     if (existingMember) {
       userId = existingMember.id;
 
-      // Update existing member
+      // Update existing member with identity
       await supabase
         .from('users')
         .update({
           full_name: name,
           skool_member_id,
           skool_community: skool_community_name,
-        subscription_status,
+          subscription_status,
+          identity_id: identity.id, // Link to identity
           updated_at: new Date().toISOString()
         })
         .eq('id', userId);
     } else {
-      // Create new user
+      // Create new user with identity
       const { data: newUser, error: userError } = await supabase
         .from('users')
         .insert({
@@ -90,6 +100,7 @@ export async function POST(request: NextRequest) {
           skool_member_id,
           skool_community: skool_community_name,
           subscription_status,
+          identity_id: identity.id, // Link to identity
           created_at: joined_date || new Date().toISOString()
         })
         .select()
@@ -101,6 +112,9 @@ export async function POST(request: NextRequest) {
 
       userId = newUser.id;
     }
+
+    // Match any pending conversions to this identity
+    const matchedConversions = await matchPendingConversions(email, identity.id);
 
     // Calculate attribution if we have tracking data
     const fingerprint = generateFingerprint(request);
@@ -119,10 +133,11 @@ export async function POST(request: NextRequest) {
       .from('conversions')
       .insert({
         user_id: userId,
+        identity_id: identity.id, // Link to identity
         attributed_link_id: attribution?.click?.link_id || null,
         attributed_click_id: attribution?.click?.id || null,
         attribution_method: attribution?.method || 'zapier_import',
-        confidence_score: attribution?.confidence || 50, // Lower confidence for imports
+        confidence_score: identity.confidence_score || attribution?.confidence || 95, // High confidence from email
         conversion_type: subscription_status === 'paid' ? 'paid' : 'trial',
         revenue: monthly_revenue || 0,
         currency: 'USD',
@@ -133,6 +148,7 @@ export async function POST(request: NextRequest) {
 
         // Additional metadata
         device_fingerprint: fingerprint,
+        email, // Store email for future matching
         metadata: {
           skool_member_id,
           skool_community_name,
@@ -140,7 +156,8 @@ export async function POST(request: NextRequest) {
           imported_via: 'zapier',
           import_timestamp: new Date().toISOString(),
           custom_fields: custom_fields || {},
-          tags: tags || []
+          tags: tags || [],
+          matched_conversions: matchedConversions
         },
 
         converted_at: joined_date || new Date().toISOString()
@@ -212,13 +229,15 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: 'Member imported successfully',
+      message: 'Member imported successfully with identity',
       data: {
         user_id: userId,
+        identity_id: identity.id,
         conversion_id: conversion?.id,
+        matched_conversions: matchedConversions,
         attribution: {
-          method: attribution?.method || 'zapier_import',
-          confidence: attribution?.confidence || 50,
+          method: attribution?.method || 'email_match',
+          confidence: identity.confidence_score || 95,
           source: utm_source || 'zapier'
         }
       }

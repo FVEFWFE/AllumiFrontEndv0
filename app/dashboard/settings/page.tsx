@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { createClient } from '@supabase/supabase-js';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -25,6 +26,11 @@ import {
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
+
 export default function SettingsPage() {
   const [showApiKey, setShowApiKey] = useState(false);
   const [notifications, setNotifications] = useState({
@@ -33,9 +39,104 @@ export default function SettingsPage() {
     trialReminders: true,
     newConversions: false,
   });
+  const [apiKey, setApiKey] = useState('Loading...');
+  const [webhookUrl, setWebhookUrl] = useState('Loading...');
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
-  const apiKey = 'ak_live_xKj9Nm2Lp8Qr5Tv7Wx3Yz1Ab4Cd6Ef9Gh2Ij5Km8';
-  const webhookUrl = 'https://allumi.to/api/webhooks/conversions';
+  useEffect(() => {
+    fetchSettings();
+  }, []);
+
+  const fetchSettings = async () => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+
+      const response = await fetch('/api/settings', {
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.settings) {
+          setApiKey(data.settings.api_key);
+          setWebhookUrl(data.settings.webhook_url || `https://allumi.to/api/webhooks/${data.settings.user_id}`);
+          setNotifications(data.settings.notifications || notifications);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching settings:', error);
+      toast.error('Failed to load settings');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateNotifications = async (newNotifications: typeof notifications) => {
+    setSaving(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+
+      const response = await fetch('/api/settings', {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ notifications: newNotifications })
+      });
+
+      if (response.ok) {
+        setNotifications(newNotifications);
+        toast.success('Notification preferences updated');
+      } else {
+        toast.error('Failed to update notifications');
+      }
+    } catch (error) {
+      console.error('Error updating notifications:', error);
+      toast.error('Failed to update notifications');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const regenerateApiKey = async () => {
+    if (!confirm('Are you sure you want to regenerate your API key? This will invalidate your current key.')) {
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+
+      const response = await fetch('/api/settings', {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ regenerateApiKey: true })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setApiKey(data.settings.api_key);
+        toast.success('API key regenerated successfully');
+      } else {
+        toast.error('Failed to regenerate API key');
+      }
+    } catch (error) {
+      console.error('Error regenerating API key:', error);
+      toast.error('Failed to regenerate API key');
+    } finally {
+      setSaving(false);
+    }
+  };
 
   const copyToClipboard = (text: string, label: string) => {
     navigator.clipboard.writeText(text);
@@ -99,8 +200,13 @@ export default function SettingsPage() {
                   Keep this key secret. Regenerate if compromised.
                 </p>
               </div>
-              <Button variant="destructive" size="sm">
-                Regenerate API Key
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={regenerateApiKey}
+                disabled={saving || loading}
+              >
+                {saving ? 'Regenerating...' : 'Regenerate API Key'}
               </Button>
             </CardContent>
           </Card>
@@ -246,9 +352,11 @@ export default function SettingsPage() {
                 <Switch
                   id="email-alerts"
                   checked={notifications.emailAlerts}
-                  onCheckedChange={(checked) =>
-                    setNotifications({...notifications, emailAlerts: checked})
-                  }
+                  disabled={saving || loading}
+                  onCheckedChange={(checked) => {
+                    const newNotifications = {...notifications, emailAlerts: checked};
+                    updateNotifications(newNotifications);
+                  }}
                 />
               </div>
 
@@ -262,9 +370,11 @@ export default function SettingsPage() {
                 <Switch
                   id="weekly-reports"
                   checked={notifications.weeklyReports}
-                  onCheckedChange={(checked) =>
-                    setNotifications({...notifications, weeklyReports: checked})
-                  }
+                  disabled={saving || loading}
+                  onCheckedChange={(checked) => {
+                    const newNotifications = {...notifications, weeklyReports: checked};
+                    updateNotifications(newNotifications);
+                  }}
                 />
               </div>
 
@@ -278,9 +388,11 @@ export default function SettingsPage() {
                 <Switch
                   id="trial-reminders"
                   checked={notifications.trialReminders}
-                  onCheckedChange={(checked) =>
-                    setNotifications({...notifications, trialReminders: checked})
-                  }
+                  disabled={saving || loading}
+                  onCheckedChange={(checked) => {
+                    const newNotifications = {...notifications, trialReminders: checked};
+                    updateNotifications(newNotifications);
+                  }}
                 />
               </div>
 
@@ -294,9 +406,11 @@ export default function SettingsPage() {
                 <Switch
                   id="new-conversions"
                   checked={notifications.newConversions}
-                  onCheckedChange={(checked) =>
-                    setNotifications({...notifications, newConversions: checked})
-                  }
+                  disabled={saving || loading}
+                  onCheckedChange={(checked) => {
+                    const newNotifications = {...notifications, newConversions: checked};
+                    updateNotifications(newNotifications);
+                  }}
                 />
               </div>
             </CardContent>
