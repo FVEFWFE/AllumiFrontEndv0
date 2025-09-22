@@ -1,8 +1,9 @@
 const crypto = require('crypto');
 
 // Test Whop webhook endpoint
-const WEBHOOK_URL = 'http://localhost:3005/api/webhooks/whop';
-const WEBHOOK_SECRET = 'ws_2da9fdb5e2cfd79c4cb668767da6d19439aebfad60393d25124c65de44076ec0'; // Full secret from Whop
+const WEBHOOK_URL = 'https://5282a2052c86.ngrok-free.app/api/webhooks/whop';
+// UPDATE THIS with the actual secret from Whop Dashboard
+const WEBHOOK_SECRET = process.env.WHOP_WEBHOOK_SECRET || 'ws_7a732d8f4b2c9e1a6f3d8e9b2c7a1f4e8d3b6a9c2e7f1d4a8b3c6e9d2f7a1b4e';
 
 // Test events
 const testEvents = [

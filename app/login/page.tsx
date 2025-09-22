@@ -135,20 +135,36 @@ export default function LoginPage() {
 
               <div className="text-center text-sm text-muted-foreground">
                 Don't have an account?{' '}
-                <Link href="/signup" className="text-purple-600 hover:underline font-medium">
-                  Start free trial
-                </Link>
+                <a
+                  href={`https://whop.com/checkout/${process.env.NEXT_PUBLIC_WHOP_CHECKOUT_LINK || 'plan_ufRzE7PHJgEXR'}`}
+                  className="text-purple-600 hover:underline font-medium"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Start 7-Day Free Trial
+                </a>
               </div>
             </CardFooter>
           </form>
         </Card>
 
-        {/* Demo Account Info */}
-        <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-          <p className="text-sm text-blue-800 font-medium">Demo Account</p>
-          <p className="text-xs text-blue-600 mt-1">
-            Email: demo@allumi.com<br />
-            Password: demo123
+        {/* Trial CTA */}
+        <div className="mt-6 p-4 bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg border border-purple-200">
+          <p className="text-sm text-purple-800 font-medium mb-2">New to Allumi?</p>
+          <p className="text-xs text-purple-600 mb-3">
+            Get 95% attribution accuracy for your Skool community
+          </p>
+          <a
+            href={`https://whop.com/checkout/${process.env.NEXT_PUBLIC_WHOP_CHECKOUT_LINK || 'plan_ufRzE7PHJgEXR'}`}
+            className="inline-flex items-center justify-center w-full px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors text-sm font-medium"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Start Your 7-Day Free Trial
+            <ArrowRight className="ml-2 h-3 w-3" />
+          </a>
+          <p className="text-xs text-purple-500 mt-2 text-center">
+            No credit card required • Cancel anytime
           </p>
         </div>
       </div>
