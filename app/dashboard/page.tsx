@@ -10,34 +10,34 @@ import EmptyState from '@/components/dashboard/EmptyState';
 import SetupProgress from '@/components/dashboard/SetupProgress';
 import IntegrationStatus from '@/components/dashboard/IntegrationStatus';
 import DemoModeDashboard from '@/components/dashboard/DemoModeDashboard';
+import {
+  getDashboardStats,
+  getAttributionSources,
+  getConversionPaths,
+  getRecentActivity,
+  getCampaignPerformance,
+  type DashboardStats as DashboardStatsType
+} from '@/lib/dashboard-data';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-interface DashboardStats {
-  totalLinks: number;
-  totalClicks: number;
-  totalConversions: number;
-  conversionRate: number;
-}
-
 interface CampaignData {
-  campaign_name: string;
+  name: string;
   clicks: number;
-  conversions: number;
-  conversion_rate: number;
-  attributed_revenue: number;
+  sources: string;
+  status: string;
 }
 
 export default function Dashboard() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [stats, setStats] = useState<DashboardStatsType | null>(null);
   const [campaigns, setCampaigns] = useState<CampaignData[]>([]);
   const [recentLinks, setRecentLinks] = useState<any[]>([]);
-  const [recentConversions, setRecentConversions] = useState<any[]>([]);
+  const [recentActivity, setRecentActivity] = useState<any[]>([]);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showDemoMode, setShowDemoMode] = useState(false);
 
@@ -60,108 +60,37 @@ export default function Dashboard() {
 
       const userId = session.user.id;
 
-      // Get all user's links with their click counts from the clicks column
-      const { data: links, error: linksError } = await supabase
+      // Use new dashboard data functions
+      const dashboardStats = await getDashboardStats(userId);
+      setStats(dashboardStats);
+
+      // Get campaign performance
+      const campaignData = await getCampaignPerformance(userId);
+      setCampaigns(campaignData);
+
+      // Get recent activity
+      const activity = await getRecentActivity(userId, 10);
+      setRecentActivity(activity);
+
+      // Get all user's links for recent links display
+      const { data: links } = await supabase
         .from('links')
         .select('*')
         .eq('user_id', userId)
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .limit(5);
 
-      if (linksError) {
-        console.error('Error loading links:', linksError);
-        return;
-      }
+      setRecentLinks(links || []);
 
-      // Get all clicks for this user
-      const { data: clicks } = await supabase
-        .from('clicks')
-        .select('*')
-        .eq('user_id', userId);
-
-      // Get conversions count
-      const { data: conversions, count: conversionsCount } = await supabase
-        .from('conversions')
-        .select('*', { count: 'exact', head: false })
-        .eq('user_id', userId);
-
-      // Calculate total clicks from links table (using the clicks column)
-      const totalClicks = links?.reduce((sum, link) => {
-        return sum + (link.clicks || 0);
-      }, 0) || 0;
-
-      const totalLinks = links?.length || 0;
-      const totalConversions = conversionsCount || 0;
-      const conversionRate = totalClicks > 0
-        ? (totalConversions / totalClicks) * 100
-        : 0;
-
-      setStats({
-        totalLinks,
-        totalClicks,
-        totalConversions,
-        conversionRate
-      });
-
-      setRecentLinks(links?.slice(0, 5) || []);
-
-      // Check if user needs onboarding (no links created yet)
+      // Check if user needs onboarding
       if (!links || links.length === 0) {
         const hasSeenDemo = localStorage.getItem('demo_completed');
         const hasSeenOnboarding = localStorage.getItem('onboarding_completed');
         if (!hasSeenDemo && !hasSeenOnboarding) {
-          // Show demo mode for brand new users
           setShowDemoMode(true);
         } else if (!hasSeenOnboarding) {
-          // Show onboarding if they've seen demo but not onboarding
           setShowOnboarding(true);
         }
-      }
-
-      // Load recent conversions
-      const { data: recentConversionsData } = await supabase
-        .from('conversions')
-        .select('*')
-        .eq('user_id', userId)
-        .order('created_at', { ascending: false })
-        .limit(10);
-
-      setRecentConversions(recentConversionsData || []);
-
-      // Calculate campaign performance from links data
-      if (links && links.length > 0) {
-        const campaignStats = links.map(link => {
-          // Calculate conversions for this specific link/campaign
-          const linkConversions = conversions?.filter(conv => {
-            // Check if conversion is attributed to this campaign
-            if (conv.attribution_data) {
-              return Object.keys(conv.attribution_data).includes(link.campaign_name);
-            }
-            return false;
-          }).length || 0;
-
-          const linkClicks = link.clicks || 0;
-          const conversionRate = linkClicks > 0 ? (linkConversions / linkClicks) * 100 : 0;
-
-          // Calculate attributed revenue for this campaign
-          const attributedRevenue = conversions?.reduce((sum, conv) => {
-            if (conv.attribution_data && conv.attribution_data[link.campaign_name]) {
-              return sum + (conv.revenue_tracked || 0);
-            }
-            return sum;
-          }, 0) || 0;
-
-          return {
-            campaign_name: link.campaign_name,
-            clicks: linkClicks,
-            conversions: linkConversions,
-            conversion_rate: conversionRate,
-            attributed_revenue: attributedRevenue
-          };
-        });
-
-        setCampaigns(campaignStats);
-      } else {
-        setCampaigns([]);
       }
 
       setLoading(false);
@@ -257,29 +186,30 @@ export default function Dashboard() {
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <div className="bg-card border border-border rounded-lg p-6">
-            <div className="text-sm text-muted-foreground mb-2">Total Links</div>
-            <div className="text-3xl font-bold text-foreground">{stats?.totalLinks || 0}</div>
-            {stats?.totalLinks === 0 && (
-              <button
-                onClick={() => router.push('/dashboard/links/create')}
-                className="text-xs text-accent hover:underline mt-2"
-              >
-                Create your first →
-              </button>
-            )}
+            <div className="text-sm text-muted-foreground mb-2">Attributed Members</div>
+            <div className="text-3xl font-bold text-foreground">{stats?.attributedMembers || 0}</div>
+            <div className="text-xs text-muted-foreground mt-1">
+              of {stats?.totalMembers || 0} total
+            </div>
           </div>
           <div className="bg-card border border-border rounded-lg p-6">
-            <div className="text-sm text-muted-foreground mb-2">Total Clicks</div>
-            <div className="text-3xl font-bold text-foreground">{stats?.totalClicks || 0}</div>
-          </div>
-          <div className="bg-card border border-border rounded-lg p-6">
-            <div className="text-sm text-muted-foreground mb-2">Conversions</div>
-            <div className="text-3xl font-bold text-foreground">{stats?.totalConversions || 0}</div>
-          </div>
-          <div className="bg-card border border-border rounded-lg p-6">
-            <div className="text-sm text-muted-foreground mb-2">Conversion Rate</div>
+            <div className="text-sm text-muted-foreground mb-2">Revenue</div>
             <div className="text-3xl font-bold text-foreground">
-              {stats?.conversionRate.toFixed(1)}%
+              ${(stats?.revenue || 0).toLocaleString()}
+            </div>
+          </div>
+          <div className="bg-card border border-border rounded-lg p-6">
+            <div className="text-sm text-muted-foreground mb-2">Avg Confidence</div>
+            <div className="text-3xl font-bold text-foreground">{stats?.avgConfidence || 0}%</div>
+            <div className="text-xs text-muted-foreground mt-1">attribution accuracy</div>
+          </div>
+          <div className="bg-card border border-border rounded-lg p-6">
+            <div className="text-sm text-muted-foreground mb-2">Top Source</div>
+            <div className="text-2xl font-bold text-foreground capitalize">
+              {stats?.topSource || 'Direct'}
+            </div>
+            <div className="text-xs text-muted-foreground mt-1">
+              {stats?.conversionRate.toFixed(1)}% CVR
             </div>
           </div>
         </div>
@@ -293,23 +223,23 @@ export default function Dashboard() {
                 <tr className="border-b border-border">
                   <th className="text-left p-2 text-muted-foreground">Campaign</th>
                   <th className="text-right p-2 text-muted-foreground">Clicks</th>
-                  <th className="text-right p-2 text-muted-foreground">Conversions</th>
-                  <th className="text-right p-2 text-muted-foreground">CVR</th>
+                  <th className="text-right p-2 text-muted-foreground">Sources</th>
+                  <th className="text-right p-2 text-muted-foreground">Status</th>
                   <th className="text-right p-2 text-muted-foreground">Revenue</th>
                 </tr>
               </thead>
               <tbody>
                 {campaigns.map((campaign, i) => (
                   <tr key={i} className="border-b border-border/50">
-                    <td className="p-2 text-foreground">{campaign.campaign_name}</td>
+                    <td className="p-2 text-foreground">{campaign.name}</td>
                     <td className="text-right p-2 text-foreground">{campaign.clicks}</td>
-                    <td className="text-right p-2 text-foreground">{campaign.conversions}</td>
+                    <td className="text-right p-2 text-foreground">{campaign.sources || 'direct'}</td>
                     <td className="text-right p-2 text-foreground">
-                      {campaign.conversion_rate.toFixed(1)}%
+                      <span className="px-2 py-1 text-xs bg-accent/10 text-accent rounded">
+                        {campaign.status}
+                      </span>
                     </td>
-                    <td className="text-right p-2 text-foreground">
-                      ${campaign.attributed_revenue.toFixed(2)}
-                    </td>
+                    <td className="text-right p-2 text-foreground">-</td>
                   </tr>
                 ))}
                 {campaigns.length === 0 && (
@@ -370,34 +300,33 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Recent Conversions */}
+          {/* Recent Activity */}
           <div className="bg-card border border-border rounded-lg p-6">
-            <h2 className="text-xl font-bold text-foreground mb-4">Recent Conversions</h2>
+            <h2 className="text-xl font-bold text-foreground mb-4">Recent Activity</h2>
             <div className="space-y-3">
-              {recentConversions.map(conversion => (
-                <div key={conversion.id} className="p-3 bg-background rounded-lg">
+              {recentActivity.map(activity => (
+                <div key={activity.id} className="p-3 bg-background rounded-lg">
                   <div className="flex justify-between items-start">
                     <div>
                       <div className="text-sm font-medium text-foreground">
-                        {conversion.skool_name || conversion.skool_email}
+                        {activity.type === 'click' ? '👆 Click' : '✅ Conversion'}
+                        {' on '}{activity.linkName}
                       </div>
                       <div className="text-xs text-muted-foreground">
-                        {formatDate(conversion.joined_at)}
+                        {formatDate(activity.timestamp)}
                       </div>
                     </div>
                     <div className="text-xs text-accent">
-                      {conversion.confidence_score}% confidence
+                      {activity.source || 'direct'}
                     </div>
                   </div>
-                  {conversion.attribution_data && (
-                    <div className="mt-2 text-xs text-muted-foreground">
-                      Source: {Object.keys(conversion.attribution_data)[0]}
-                    </div>
-                  )}
+                  <div className="mt-1 text-xs text-muted-foreground">
+                    {activity.device} • {activity.location}
+                  </div>
                 </div>
               ))}
-              {recentConversions.length === 0 && (
-                <EmptyState type="conversions" />
+              {recentActivity.length === 0 && (
+                <EmptyState type="activity" />
               )}
             </div>
           </div>
